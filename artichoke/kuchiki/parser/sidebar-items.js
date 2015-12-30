@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Html","The HTML parser."],["ParseOpts","Options for the HTML parser."]]});
