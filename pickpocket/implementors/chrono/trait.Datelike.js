@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors['hyper'] = ["impl <a class='trait' href='serialize/serialize/trait.Encodable.html' title='serialize::serialize::Encodable'>Encodable</a> for <a class='struct' href='hyper/struct.Url.html' title='hyper::Url'>Url</a>",];
+implementors['chrono'] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);
