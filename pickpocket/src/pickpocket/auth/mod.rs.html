@@ -171,7 +171,7 @@
 
         <span class='ident'>AuthorizationRequest</span> {
             <span class='ident'>consumer_key</span>: <span class='self'>self</span>.<span class='ident'>consumer_key</span>,
-            <span class='ident'>request_code</span>: <span class='ident'>code</span>.<span class='ident'>to_string</span>(),
+            <span class='ident'>request_code</span>: <span class='ident'>code</span>.<span class='ident'>to_owned</span>(),
         }
     }
 
@@ -204,7 +204,7 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>request_authorized_code</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Client</span> {
         <span class='kw'>let</span> <span class='ident'>body</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>request</span>();
         <span class='kw'>let</span> <span class='ident'>first_value</span> <span class='op'>=</span> <span class='ident'>body</span>.<span class='ident'>split</span>(<span class='string'>&quot;=&quot;</span>).<span class='ident'>skip</span>(<span class='number'>1</span>).<span class='ident'>next</span>().<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>code</span> <span class='op'>=</span> <span class='ident'>first_value</span>.<span class='ident'>split</span>(<span class='string'>&quot;&amp;&quot;</span>).<span class='ident'>next</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>();
+        <span class='kw'>let</span> <span class='ident'>code</span> <span class='op'>=</span> <span class='ident'>first_value</span>.<span class='ident'>split</span>(<span class='string'>&quot;&amp;&quot;</span>).<span class='ident'>next</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_owned</span>();
 
         <span class='ident'>Client</span> {
             <span class='ident'>consumer_key</span>: <span class='self'>self</span>.<span class='ident'>consumer_key</span>,
