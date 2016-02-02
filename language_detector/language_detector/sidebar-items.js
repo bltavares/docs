@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["English","This is the English detector structure."]]});
