@@ -46,10 +46,31 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-1659' class='srclink' href='../../src/chrono/date.rs.html#26-29' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-1659' class='srclink' href='../../src/chrono/date.rs.html#48-51' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Date&lt;Tz: <a class='trait' href='../../chrono/offset/trait.TimeZone.html' title='chrono::offset::TimeZone'>TimeZone</a>&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>ISO 8601 calendar date with time zone.</p>
+
+<p>This type should be considered ambiguous at best,
+due to the inherent lack of precision required for the time zone resolution.
+There are some guarantees on the usage of <code>Date&lt;Tz&gt;</code>:</p>
+
+<ul>
+<li><p>If properly constructed via <code>TimeZone::ymd</code> and others without an error,
+the corresponding local date should exist for at least a moment.
+(It may still have a gap from the offset changes.)</p></li>
+<li><p>The <code>TimeZone</code> is free to assign <em>any</em> <code>Offset</code> to the local date,
+as long as that offset did occur in given day.
+For example, if <code>2015-03-08T01:59-08:00</code> is followed by <code>2015-03-08T03:00-07:00</code>,
+it may produce either <code>2015-03-08-08:00</code> or <code>2015-03-08-07:00</code>
+but <em>not</em> <code>2015-03-08+00:00</code> and others.</p></li>
+<li><p>Once constructed as a full <code>DateTime</code>,
+<code>DateTime::date</code> and other associated methods should return those for the original <code>Date</code>.
+For example, if <code>dt = tz.ymd(y,m,d).hms(h,n,s)</code> were valid, <code>dt.date() == tz.ymd(y,m,d)</code>.</p></li>
+<li><p>The date is timezone-agnostic up to one day (i.e. practically always),
+so the local date and UTC date should be equal for most cases
+even though the raw calculation between <code>NaiveDate</code> and <code>Duration</code> may not.</p></li>
+</ul>
 </div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;Tz: <a class='trait' href='../../chrono/offset/trait.TimeZone.html' title='chrono::offset::TimeZone'>TimeZone</a>&gt; <a class='struct' href='../../chrono/date/struct.Date.html' title='chrono::date::Date'>Date</a>&lt;Tz&gt;</code></h3><div class='impl-items'><h4 id='method.from_utc' class='method'><code>fn <a href='#method.from_utc' class='fnname'>from_utc</a>(date: <a class='struct' href='../../chrono/naive/date/struct.NaiveDate.html' title='chrono::naive::date::NaiveDate'>NaiveDate</a>, offset: Tz::Offset) -&gt; <a class='struct' href='../../chrono/date/struct.Date.html' title='chrono::date::Date'>Date</a>&lt;Tz&gt;</code></h4>
 <div class='docblock'><p>Makes a new <code>Date</code> with given <em>UTC</em> date and offset.
 The local date should be constructed via the <code>TimeZone</code> trait.</p>
