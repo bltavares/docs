@@ -135,6 +135,7 @@
 <span id="92">92</span>
 <span id="93">93</span>
 <span id="94">94</span>
+<span id="95">95</span>
 </pre><pre class='rust '>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>hyper</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span>;
@@ -147,7 +148,8 @@
 <span class='kw'>const</span> <span class='ident'>REDIRECT_URL</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;https://getpocket.com&quot;</span>;
 
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>url</span>(<span class='ident'>method</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>Url</span> {
-    <span class='ident'>Url</span>::<span class='ident'>parse</span>(<span class='kw-2'>&amp;</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}{}&quot;</span>, <span class='ident'>ENDPOINT</span>, <span class='ident'>method</span>)).<span class='ident'>unwrap</span>()
+    <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}{}&quot;</span>, <span class='ident'>ENDPOINT</span>, <span class='ident'>method</span>);
+    <span class='ident'>Url</span>::<span class='ident'>parse</span>(<span class='kw-2'>&amp;</span><span class='ident'>url</span>).<span class='ident'>expect</span>(<span class='kw-2'>&amp;</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;Could not parse url: {}&quot;</span>, <span class='ident'>url</span>))
 }
 
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Client</span> {
@@ -167,7 +169,7 @@
 <span class='kw'>impl</span> <span class='ident'>BeginAuthentication</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>request_authorization_code</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>AuthorizationRequest</span> {
         <span class='kw'>let</span> <span class='ident'>body</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>request</span>();
-        <span class='kw'>let</span> <span class='ident'>code</span> <span class='op'>=</span> <span class='ident'>body</span>.<span class='ident'>split</span>(<span class='string'>&quot;=&quot;</span>).<span class='ident'>skip</span>(<span class='number'>1</span>).<span class='ident'>next</span>().<span class='ident'>unwrap</span>();
+        <span class='kw'>let</span> <span class='ident'>code</span> <span class='op'>=</span> <span class='ident'>body</span>.<span class='ident'>split</span>(<span class='string'>&#39;=&#39;</span>).<span class='ident'>skip</span>(<span class='number'>1</span>).<span class='ident'>next</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Could not retrieve the authorization code from the authentication request&quot;</span>);
 
         <span class='ident'>AuthorizationRequest</span> {
             <span class='ident'>consumer_key</span>: <span class='self'>self</span>.<span class='ident'>consumer_key</span>,
@@ -186,10 +188,10 @@
             .<span class='ident'>header</span>(<span class='ident'>ContentType</span>::<span class='ident'>form_url_encoded</span>())
             .<span class='ident'>header</span>(<span class='ident'>Connection</span>::<span class='ident'>close</span>())
             .<span class='ident'>send</span>()
-            .<span class='ident'>unwrap</span>();
+            .<span class='ident'>expect</span>(<span class='string'>&quot;Could not request OAuth authorization&quot;</span>);
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>body</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
-        <span class='ident'>res</span>.<span class='ident'>read_to_string</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>body</span>).<span class='ident'>unwrap</span>();
+        <span class='ident'>res</span>.<span class='ident'>read_to_string</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>body</span>).<span class='ident'>expect</span>(<span class='string'>&quot;Could not read OAuth request body&quot;</span>);
         <span class='ident'>body</span>
     }
 }
@@ -203,8 +205,8 @@
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>request_authorized_code</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Client</span> {
         <span class='kw'>let</span> <span class='ident'>body</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>request</span>();
-        <span class='kw'>let</span> <span class='ident'>first_value</span> <span class='op'>=</span> <span class='ident'>body</span>.<span class='ident'>split</span>(<span class='string'>&quot;=&quot;</span>).<span class='ident'>skip</span>(<span class='number'>1</span>).<span class='ident'>next</span>().<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>code</span> <span class='op'>=</span> <span class='ident'>first_value</span>.<span class='ident'>split</span>(<span class='string'>&quot;&amp;&quot;</span>).<span class='ident'>next</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_owned</span>();
+        <span class='kw'>let</span> <span class='ident'>first_value</span> <span class='op'>=</span> <span class='ident'>body</span>.<span class='ident'>split</span>(<span class='string'>&#39;=&#39;</span>).<span class='ident'>skip</span>(<span class='number'>1</span>).<span class='ident'>next</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Could not extract authorization line from response&quot;</span>);
+        <span class='kw'>let</span> <span class='ident'>code</span> <span class='op'>=</span> <span class='ident'>first_value</span>.<span class='ident'>split</span>(<span class='string'>&#39;&amp;&#39;</span>).<span class='ident'>next</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Could not extract authorization code from response&quot;</span>).<span class='ident'>to_owned</span>();
 
         <span class='ident'>Client</span> {
             <span class='ident'>consumer_key</span>: <span class='self'>self</span>.<span class='ident'>consumer_key</span>,
@@ -223,10 +225,10 @@
             .<span class='ident'>header</span>(<span class='ident'>ContentType</span>::<span class='ident'>form_url_encoded</span>())
             .<span class='ident'>header</span>(<span class='ident'>Connection</span>::<span class='ident'>close</span>())
             .<span class='ident'>send</span>()
-            .<span class='ident'>unwrap</span>();
+            .<span class='ident'>expect</span>(<span class='string'>&quot;Could not make authorization request&quot;</span>);
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>body</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
-        <span class='ident'>res</span>.<span class='ident'>read_to_string</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>body</span>).<span class='ident'>unwrap</span>();
+        <span class='ident'>res</span>.<span class='ident'>read_to_string</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>body</span>).<span class='ident'>expect</span>(<span class='string'>&quot;Could not read authorization body response&quot;</span>);
         <span class='ident'>body</span>
     }
 }
