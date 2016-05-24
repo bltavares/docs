@@ -46,7 +46,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-923' class='srclink' href='../../src/hyper/header/mod.rs.html#1-808' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-1091' class='srclink' href='../../src/hyper/header/mod.rs.html#1-808' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Headers container, and common header fields.</p>
 
 <p>hyper has the opinion that Headers should be strongly-typed, because that&#39;s
@@ -493,6 +493,22 @@ that via the numerals <code>1</code> and <code>0</code>.</p>
                     </tr>
                 
                     <tr class=' module-item'>
+                        <td><a class='struct' href='struct.Prefer.html'
+                               title='hyper::header::Prefer'>Prefer</a></td>
+                        <td class='docblock short'>
+                             <p><code>Prefer</code> header, defined in <a href="http://tools.ietf.org/html/rfc7240">RFC7240</a></p>
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='struct' href='struct.PreferenceApplied.html'
+                               title='hyper::header::PreferenceApplied'>PreferenceApplied</a></td>
+                        <td class='docblock short'>
+                             <p><code>Preference-Applied</code> header, defined in <a href="http://tools.ietf.org/html/rfc7240">RFC7240</a></p>
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
                         <td><a class='struct' href='struct.Protocol.html'
                                title='hyper::header::Protocol'>Protocol</a></td>
                         <td class='docblock short'>
@@ -590,8 +606,8 @@ part of <a href="http://www.w3.org/TR/cors/#access-control-allow-origin-response
                         <td><a class='enum' href='enum.ByteRangeSpec.html'
                                title='hyper::header::ByteRangeSpec'>ByteRangeSpec</a></td>
                         <td class='docblock short'>
-                             <p>Each Range::Bytes header can contain one or more ByteRangeSpecs.
-Each ByteRangeSpec defines a range of bytes to fetch</p>
+                             <p>Each <code>Range::Bytes</code> header can contain one or more <code>ByteRangeSpecs</code>.
+Each <code>ByteRangeSpec</code> defines a range of bytes to fetch</p>
                         </td>
                     </tr>
                 
@@ -599,7 +615,7 @@ Each ByteRangeSpec defines a range of bytes to fetch</p>
                         <td><a class='enum' href='enum.CacheDirective.html'
                                title='hyper::header::CacheDirective'>CacheDirective</a></td>
                         <td class='docblock short'>
-                             <p>CacheControl contains a list of these directives.</p>
+                             <p><code>CacheControl</code> contains a list of these directives.</p>
                         </td>
                     </tr>
                 
@@ -691,6 +707,14 @@ or <code>Accept-Encoding</code> header.</p>
                                title='hyper::header::Pragma'>Pragma</a></td>
                         <td class='docblock short'>
                              <p>The <code>Pragma</code> header defined by HTTP/1.0.</p>
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.Preference.html'
+                               title='hyper::header::Preference'>Preference</a></td>
+                        <td class='docblock short'>
+                             <p>Prefer contains a list of these preferences.</p>
                         </td>
                     </tr>
                 

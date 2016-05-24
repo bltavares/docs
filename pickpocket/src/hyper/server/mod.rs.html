@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/hyper-0.7.2/src/server/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-88ac128001ac3a9a/hyper-0.9.6/src/server/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -548,6 +548,9 @@
 <span id="505">505</span>
 <span id="506">506</span>
 <span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! HTTP Server</span>
 <span class='doccomment'>//!</span>
@@ -676,7 +679,7 @@
 <span class='kw'>use</span> <span class='ident'>header</span>::{<span class='ident'>Headers</span>, <span class='ident'>Expect</span>, <span class='ident'>Connection</span>};
 <span class='kw'>use</span> <span class='ident'>http</span>;
 <span class='kw'>use</span> <span class='ident'>method</span>::<span class='ident'>Method</span>;
-<span class='kw'>use</span> <span class='ident'>net</span>::{<span class='ident'>NetworkListener</span>, <span class='ident'>NetworkStream</span>, <span class='ident'>HttpListener</span>, <span class='ident'>HttpsListener</span>, <span class='ident'>Ssl</span>};
+<span class='kw'>use</span> <span class='ident'>net</span>::{<span class='ident'>NetworkListener</span>, <span class='ident'>NetworkStream</span>, <span class='ident'>HttpListener</span>, <span class='ident'>HttpsListener</span>, <span class='ident'>SslServer</span>};
 <span class='kw'>use</span> <span class='ident'>status</span>::<span class='ident'>StatusCode</span>;
 <span class='kw'>use</span> <span class='ident'>uri</span>::<span class='ident'>RequestUri</span>;
 <span class='kw'>use</span> <span class='ident'>version</span>::<span class='ident'>HttpVersion</span>::<span class='ident'>Http11</span>;
@@ -765,7 +768,7 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Ssl</span> <span class='op'>+</span> <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Send</span><span class='op'>&gt;</span> <span class='ident'>Server</span><span class='op'>&lt;</span><span class='ident'>HttpsListener</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>SslServer</span> <span class='op'>+</span> <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Send</span><span class='op'>&gt;</span> <span class='ident'>Server</span><span class='op'>&lt;</span><span class='ident'>HttpsListener</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;&gt;</span> {
     <span class='doccomment'>/// Creates a new server that will handle `HttpStream`s over SSL.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// You can use any SSL implementation, as long as implements `hyper::net::Ssl`.</span>
@@ -958,6 +961,9 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>Listening</span> {
+    <span class='doccomment'>/// Warning: This function doesn&#39;t work. The server remains listening after you called</span>
+    <span class='doccomment'>/// it. See https://github.com/hyperium/hyper/issues/338 for more details.</span>
+    <span class='doccomment'>///</span>
     <span class='doccomment'>/// Stop the server from listening to its socket address.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>close</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> ::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
         <span class='kw'>let</span> _ <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>_guard</span>.<span class='ident'>take</span>();
