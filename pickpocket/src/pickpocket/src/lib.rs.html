@@ -227,6 +227,8 @@
 <span id="183">183</span>
 <span id="184">184</span>
 <span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
 </pre><pre class='rust '>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>hyper</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span>;
@@ -381,7 +383,10 @@
 
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cleanup_url</span>(<span class='ident'>url</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
     <span class='kw'>let</span> <span class='ident'>parsed</span> <span class='op'>=</span> <span class='ident'>Url</span>::<span class='ident'>parse</span>(<span class='ident'>url</span>).<span class='ident'>expect</span>(<span class='string'>&quot;Could not parse cleanup url&quot;</span>);
-    <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}://{}{}&quot;</span>, <span class='ident'>parsed</span>.<span class='ident'>scheme</span>(), <span class='ident'>parsed</span>.<span class='ident'>host_str</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Cleaned up an url without a host&quot;</span>) , <span class='ident'>parsed</span>.<span class='ident'>path</span>())
+    <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}://{}{}&quot;</span>,
+            <span class='ident'>parsed</span>.<span class='ident'>scheme</span>(),
+            <span class='ident'>parsed</span>.<span class='ident'>host_str</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Cleaned up an url without a host&quot;</span>),
+            <span class='ident'>parsed</span>.<span class='ident'>path</span>())
 }
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
@@ -412,7 +417,6 @@
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cleanup_url</span>(<span class='ident'>url</span>), <span class='string'>&quot;https://another.example.com/&quot;</span>);
     }
 }
-
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
