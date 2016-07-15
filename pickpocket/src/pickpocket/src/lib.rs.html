@@ -244,7 +244,7 @@
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>cli</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>auth</span>::<span class='op'>*</span>;
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>RustcDecodable</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>RustcDecodable</span>, <span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Item</span> {
     <span class='ident'>given_url</span>: <span class='ident'>String</span>,
     <span class='ident'>resolved_url</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,

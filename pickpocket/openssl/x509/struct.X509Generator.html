@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-3346' class='srclink' href='../../src/openssl/x509/mod.rs.html#150-156' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-3351' class='srclink' href='../../src/openssl/x509/mod.rs.html#150-156' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct X509Generator {
     // some fields omitted
 }</pre><div class='docblock'><p>Generator of private key/certificate pairs</p>
@@ -79,7 +79,7 @@
 <span class='kw'>let</span> <span class='ident'>pkey_path</span> <span class='op'>=</span> <span class='string'>&quot;doc_key.pem&quot;</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>file</span> <span class='op'>=</span> <span class='ident'>File</span>::<span class='ident'>create</span>(<span class='ident'>pkey_path</span>).<span class='ident'>unwrap</span>();
 <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>pkey</span>.<span class='ident'>write_pem</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>file</span>).<span class='ident'>is_ok</span>());</pre>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../openssl/x509/struct.X509Generator.html' title='openssl::x509::X509Generator'>X509Generator</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3352' class='srclink' href='../../src/openssl/x509/mod.rs.html#158-415' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../openssl/x509/struct.X509Generator.html' title='openssl::x509::X509Generator'>X509Generator</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3357' class='srclink' href='../../src/openssl/x509/mod.rs.html#158-415' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../openssl/x509/struct.X509Generator.html' title='openssl::x509::X509Generator'>X509Generator</a></code></h4>
 <div class='docblock'><p>Creates a new generator with the following defaults:</p>
 
