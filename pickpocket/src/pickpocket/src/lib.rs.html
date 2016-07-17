@@ -229,6 +229,31 @@
 <span id="185">185</span>
 <span id="186">186</span>
 <span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
 </pre><pre class='rust '>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>hyper</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span>;
@@ -381,11 +406,22 @@
     }
 }
 
+<span class='kw'>fn</span> <span class='ident'>fixup_blogspot</span>(<span class='ident'>url</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
+    <span class='kw'>let</span> <span class='ident'>split</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span>_<span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>url</span>.<span class='ident'>split</span>(<span class='string'>&quot;.blogspot.&quot;</span>).<span class='ident'>collect</span>();
+    <span class='kw'>if</span> <span class='ident'>split</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>2</span> {
+        <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}.blogspot.com&quot;</span>, <span class='ident'>split</span>[<span class='number'>0</span>])
+    } <span class='kw'>else</span> {
+        <span class='ident'>url</span>.<span class='ident'>into</span>()
+    }
+}
+
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>cleanup_url</span>(<span class='ident'>url</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
     <span class='kw'>let</span> <span class='ident'>parsed</span> <span class='op'>=</span> <span class='ident'>Url</span>::<span class='ident'>parse</span>(<span class='ident'>url</span>).<span class='ident'>expect</span>(<span class='string'>&quot;Could not parse cleanup url&quot;</span>);
+    <span class='kw'>let</span> <span class='ident'>current_host</span> <span class='op'>=</span> <span class='ident'>parsed</span>.<span class='ident'>host_str</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Cleaned up an url without a host&quot;</span>);
+
     <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}://{}{}&quot;</span>,
             <span class='ident'>parsed</span>.<span class='ident'>scheme</span>(),
-            <span class='ident'>parsed</span>.<span class='ident'>host_str</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Cleaned up an url without a host&quot;</span>),
+            <span class='ident'>fixup_blogspot</span>(<span class='ident'>current_host</span>),
             <span class='ident'>parsed</span>.<span class='ident'>path</span>())
 }
 
@@ -415,6 +451,20 @@
     <span class='kw'>fn</span> <span class='ident'>test_clean_url_keep_https</span>() {
         <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='string'>&quot;https://another.example.com&quot;</span>;
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cleanup_url</span>(<span class='ident'>url</span>), <span class='string'>&quot;https://another.example.com/&quot;</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>test_cleanup_blogspot_first_tld</span>() {
+        <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='string'>&quot;https://this-is-a.blogspot.cl/asdf/asdf/asdf?asdf=1&quot;</span>;
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cleanup_url</span>(<span class='ident'>url</span>),
+                   <span class='string'>&quot;https://this-is-a.blogspot.com/asdf/asdf/asdf&quot;</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>test_cleanup_blogspot_second_tld</span>() {
+        <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='string'>&quot;https://this-is-a.blogspot.com.br/asdf/asdf/asdf?asdf=1&quot;</span>;
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>cleanup_url</span>(<span class='ident'>url</span>),
+                   <span class='string'>&quot;https://this-is-a.blogspot.com/asdf/asdf/asdf&quot;</span>);
     }
 }
 </pre>
