@@ -340,14 +340,18 @@
 <span id="296">296</span>
 <span id="297">297</span>
 <span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
 </pre><pre class='rust '>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>bincode</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>chrono</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>flate2</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>hyper</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>chrono</span>;
 
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>hyper</span>::<span class='ident'>header</span>::{<span class='ident'>Connection</span>, <span class='ident'>ContentType</span>};
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>hyper</span>::<span class='ident'>Url</span>;
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>rustc_serialize</span>::<span class='ident'>json</span>;
+<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>header</span>::{<span class='ident'>Connection</span>, <span class='ident'>ContentType</span>};
+<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>Url</span>;
+<span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>json</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>BTreeMap</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Read</span>;
 

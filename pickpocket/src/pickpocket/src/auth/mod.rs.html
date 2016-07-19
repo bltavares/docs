@@ -144,14 +144,10 @@
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
-<span id="103">103</span>
-<span id="104">104</span>
 </pre><pre class='rust '>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>hyper</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span>;
-
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>hyper</span>::<span class='ident'>header</span>::{<span class='ident'>Connection</span>, <span class='ident'>ContentType</span>};
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>hyper</span>::<span class='ident'>Url</span>;
+<span class='kw'>use</span> <span class='ident'>hyper</span>;
+<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>header</span>::{<span class='ident'>Connection</span>, <span class='ident'>ContentType</span>};
+<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>Url</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Read</span>;
 
 <span class='kw'>const</span> <span class='ident'>ENDPOINT</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;https://getpocket.com/v3&quot;</span>;
