@@ -9,7 +9,9 @@
 
     <title>cssparser::QualifiedRuleParser - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -42,15 +44,15 @@
 
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>cssparser</a>::<wbr><a class='trait' href=''>QualifiedRuleParser</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-55' class='srclink' href='../src/cssparser/rules_and_declarations.rs.html#152-184' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-55' class='srclink' href='../src/cssparser/rules_and_declarations.rs.html#152-184' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait QualifiedRuleParser {
-    type Prelude;
-    type QualifiedRule;
-    fn <a href='#method.parse_prelude' class='fnname'>parse_prelude</a>(&amp;self, input: &amp;mut <a class='struct' href='../cssparser/struct.Parser.html' title='cssparser::Parser'>Parser</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self::<a class='trait' href='../cssparser/trait.QualifiedRuleParser.html' title='cssparser::QualifiedRuleParser'>Prelude</a>, <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; { ... }
-    fn <a href='#method.parse_block' class='fnname'>parse_block</a>(&amp;self, prelude: Self::<a class='trait' href='../cssparser/trait.QualifiedRuleParser.html' title='cssparser::QualifiedRuleParser'>Prelude</a>, input: &amp;mut <a class='struct' href='../cssparser/struct.Parser.html' title='cssparser::Parser'>Parser</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self::<a class='trait' href='../cssparser/trait.QualifiedRuleParser.html' title='cssparser::QualifiedRuleParser'>QualifiedRule</a>, <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; { ... }
+    type <a href='#associatedtype.Prelude' class='type'>Prelude</a>;
+    type <a href='#associatedtype.QualifiedRule' class='type'>QualifiedRule</a>;
+    fn <a href='#method.parse_prelude' class='fnname'>parse_prelude</a>(&amp;self, input: &amp;mut <a class='struct' href='../cssparser/struct.Parser.html' title='cssparser::Parser'>Parser</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self::<a class='trait' href='../cssparser/trait.QualifiedRuleParser.html' title='cssparser::QualifiedRuleParser'>Prelude</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; { ... }
+    fn <a href='#method.parse_block' class='fnname'>parse_block</a>(&amp;self, prelude: Self::<a class='trait' href='../cssparser/trait.QualifiedRuleParser.html' title='cssparser::QualifiedRuleParser'>Prelude</a>, input: &amp;mut <a class='struct' href='../cssparser/struct.Parser.html' title='cssparser::Parser'>Parser</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self::<a class='trait' href='../cssparser/trait.QualifiedRuleParser.html' title='cssparser::QualifiedRuleParser'>QualifiedRule</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; { ... }
 }</pre><div class='docblock'><p>A trait to provide various parsing of qualified rules.</p>
 
 <p>For example, there could be different implementations
@@ -64,12 +66,12 @@ for example for using <code>RuleListParser</code> to parse a rule list with only
 </div>
             <h2 id='associated-types'>Associated Types</h2>
             <div class='methods'>
-        <h3 id='associatedtype.Prelude' class='method stab '><code>type Prelude</code></h3><div class='docblock'><p>The intermediate representation of a qualified rule prelude.</p>
-</div><h3 id='associatedtype.QualifiedRule' class='method stab '><code>type QualifiedRule</code></h3><div class='docblock'><p>The finished representation of a qualified rule.</p>
+        <h3 id='associatedtype.Prelude' class='method stab '><code>type <a href='#associatedtype.Prelude' class='type'>Prelude</a></code></h3><div class='docblock'><p>The intermediate representation of a qualified rule prelude.</p>
+</div><h3 id='associatedtype.QualifiedRule' class='method stab '><code>type <a href='#associatedtype.QualifiedRule' class='type'>QualifiedRule</a></code></h3><div class='docblock'><p>The finished representation of a qualified rule.</p>
 </div></div>
             <h2 id='provided-methods'>Provided Methods</h2>
             <div class='methods'>
-        <h3 id='method.parse_prelude' class='method stab '><code>fn <a href='#method.parse_prelude' class='fnname'>parse_prelude</a>(&amp;self, input: &amp;mut <a class='struct' href='../cssparser/struct.Parser.html' title='cssparser::Parser'>Parser</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self::<a class='trait' href='../cssparser/trait.QualifiedRuleParser.html' title='cssparser::QualifiedRuleParser'>Prelude</a>, <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h3><div class='docblock'><p>Parse the prelude of a qualified rule. For style rules, this is as Selector list.</p>
+        <h3 id='method.parse_prelude' class='method stab '><code>fn <a href='#method.parse_prelude' class='fnname'>parse_prelude</a>(&amp;self, input: &amp;mut <a class='struct' href='../cssparser/struct.Parser.html' title='cssparser::Parser'>Parser</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self::<a class='trait' href='../cssparser/trait.QualifiedRuleParser.html' title='cssparser::QualifiedRuleParser'>Prelude</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h3><div class='docblock'><p>Parse the prelude of a qualified rule. For style rules, this is as Selector list.</p>
 
 <p>Return the representation of the prelude,
 or <code>Err(())</code> to ignore the entire at-rule as invalid.</p>
@@ -78,7 +80,7 @@ or <code>Err(())</code> to ignore the entire at-rule as invalid.</p>
 
 <p>The given <code>input</code> is a &quot;delimited&quot; parser
 that ends where the prelude should end (before the next <code>{</code>).</p>
-</div><h3 id='method.parse_block' class='method stab '><code>fn <a href='#method.parse_block' class='fnname'>parse_block</a>(&amp;self, prelude: Self::<a class='trait' href='../cssparser/trait.QualifiedRuleParser.html' title='cssparser::QualifiedRuleParser'>Prelude</a>, input: &amp;mut <a class='struct' href='../cssparser/struct.Parser.html' title='cssparser::Parser'>Parser</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self::<a class='trait' href='../cssparser/trait.QualifiedRuleParser.html' title='cssparser::QualifiedRuleParser'>QualifiedRule</a>, <a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h3><div class='docblock'><p>Parse the content of a <code>{ /* ... */ }</code> block for the body of the qualified rule.</p>
+</div><h3 id='method.parse_block' class='method stab '><code>fn <a href='#method.parse_block' class='fnname'>parse_block</a>(&amp;self, prelude: Self::<a class='trait' href='../cssparser/trait.QualifiedRuleParser.html' title='cssparser::QualifiedRuleParser'>Prelude</a>, input: &amp;mut <a class='struct' href='../cssparser/struct.Parser.html' title='cssparser::Parser'>Parser</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self::<a class='trait' href='../cssparser/trait.QualifiedRuleParser.html' title='cssparser::QualifiedRuleParser'>QualifiedRule</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h3><div class='docblock'><p>Parse the content of a <code>{ /* ... */ }</code> block for the body of the qualified rule.</p>
 
 <p>Return the finished representation of the qualified rule
 as returned by <code>RuleListParser::next</code>,
@@ -87,8 +89,8 @@ or <code>Err(())</code> to ignore the entire at-rule as invalid.</p>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
     </ul><script type="text/javascript" async
-                              src="../implementors/cssparser/trait.QualifiedRuleParser.js">
-                      </script></section>
+                         src="../implementors/cssparser/trait.QualifiedRuleParser.js">
+                 </script></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -111,6 +113,8 @@ or <code>Err(())</code> to ignore the entire at-rule as invalid.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -131,7 +135,7 @@ or <code>Err(())</code> to ignore the entire at-rule as invalid.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -147,6 +151,6 @@ or <code>Err(())</code> to ignore the entire at-rule as invalid.</p>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

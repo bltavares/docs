@@ -9,7 +9,9 @@
 
     <title>mac::ext_expect! - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -42,18 +44,13 @@
 
     <section id='main' class="content macro">
 <h1 class='fqn'><span class='in-band'><a href='index.html'>mac</a>::<wbr><a class='macro' href=''>ext_expect!</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-19' class='srclink' href='../src/mac/syntax_ext.rs.html#24-31' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-19' class='srclink' href='../src/mac/syntax_ext.rs.html#24-31' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>ext_expect</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>cx</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>sp</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>e</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> {{
-        <span class='kw'>match</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>e</span> {
-            <span class='prelude-val'>Some</span>(<span class='ident'>x</span>) <span class='op'>=&gt;</span> <span class='ident'>x</span>,
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>ext_bail</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>cx</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>sp</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>),
-        }
-    }}
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>cx</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>sp</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>e</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>msg</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> { ... };
 }</pre>
 <div class='docblock'><p>Unwrap the <code>Option</code> <code>$e</code>, or <code>ext_bail!</code>.</p>
 </div></section>
@@ -79,6 +76,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -99,7 +98,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -115,6 +114,6 @@
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

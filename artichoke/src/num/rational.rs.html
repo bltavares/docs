@@ -4,12 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/num-0.1.28/src/rational.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/num-0.1.28/src/rational.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>rational.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     <link rel="shortcut icon" href="http://rust-num.github.io/num/favicon.ico">
     
@@ -25,7 +27,7 @@
     
 
     <nav class="sidebar">
-        <a href='../../num/index.html'><img src='http://rust-num.github.io/num/rust-logo-128x128-blk-v2.png' alt='' width='100'></a>
+        <a href='../../num/index.html'><img src='http://rust-num.github.io/num/rust-logo-128x128-blk-v2.png' alt='logo' width='100'></a>
         
     </nav>
 
@@ -1473,9 +1475,9 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
 
-    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>Ratio</span>, <span class='ident'>Rational</span>};
+    <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Ratio</span>, <span class='ident'>Rational</span>};
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;bigint&quot;</span>)]</span>
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>BigRational</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>BigRational</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>::<span class='ident'>FromStr</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>i32</span>;
     <span class='kw'>use</span> {<span class='ident'>Zero</span>, <span class='ident'>One</span>, <span class='ident'>Signed</span>, <span class='ident'>FromPrimitive</span>, <span class='ident'>Float</span>};
@@ -1595,8 +1597,8 @@
     }
 
     <span class='kw'>mod</span> <span class='ident'>arith</span> {
-        <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>_0</span>, <span class='ident'>_1</span>, <span class='ident'>_2</span>, <span class='ident'>_1_2</span>, <span class='ident'>_3_2</span>, <span class='ident'>_NEG1_2</span>, <span class='ident'>to_big</span>};
-        <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>super</span>::{<span class='ident'>Ratio</span>, <span class='ident'>Rational</span>};
+        <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>_0</span>, <span class='ident'>_1</span>, <span class='ident'>_2</span>, <span class='ident'>_1_2</span>, <span class='ident'>_3_2</span>, <span class='ident'>_NEG1_2</span>, <span class='ident'>to_big</span>};
+        <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw'>super</span>::{<span class='ident'>Ratio</span>, <span class='ident'>Rational</span>};
 
         <span class='attribute'>#[<span class='ident'>test</span>]</span>
         <span class='kw'>fn</span> <span class='ident'>test_add</span>() {
@@ -1881,6 +1883,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -1901,7 +1905,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -1917,6 +1921,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script src="../../playpen.js"></script>
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

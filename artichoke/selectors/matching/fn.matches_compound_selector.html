@@ -9,7 +9,9 @@
 
     <title>selectors::matching::matches_compound_selector - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -42,11 +44,11 @@
 
     <section id='main' class="content fn">
 <h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>selectors</a>::<wbr><a href='index.html'>matching</a>::<wbr><a class='fn' href=''>matches_compound_selector</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-403' class='srclink' href='../../src/selectors/matching.rs.html#312-322' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn matches_compound_selector&lt;E&gt;(selector: &amp;<a class='struct' href='../../selectors/parser/struct.CompoundSelector.html' title='selectors::parser::CompoundSelector'>CompoundSelector</a>, element: &amp;E, parent_bf: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='../../selectors/bloom/struct.BloomFilter.html' title='selectors::bloom::BloomFilter'>BloomFilter</a>&gt;, shareable: &amp;mut <a href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; <a href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> <span class='where'>where E: <a class='trait' href='../../selectors/trait.Element.html' title='selectors::Element'>Element</a></span></pre><div class='docblock'><p>Determines whether the given element matches the given single or compound selector.</p>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-397' class='srclink' href='../../src/selectors/matching.rs.html#312-322' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn matches_compound_selector&lt;E&gt;(selector: &amp;<a class='struct' href='../../selectors/parser/struct.CompoundSelector.html' title='selectors::parser::CompoundSelector'>CompoundSelector</a>, element: &amp;E, parent_bf: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='../../selectors/bloom/struct.BloomFilter.html' title='selectors::bloom::BloomFilter'>BloomFilter</a>&gt;, shareable: &amp;mut <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> <span class='where'>where E: <a class='trait' href='../../selectors/trait.Element.html' title='selectors::Element'>Element</a></span></pre><div class='docblock'><p>Determines whether the given element matches the given single or compound selector.</p>
 
 <p>NB: If you add support for any new kinds of selectors to this routine, be sure to set
 <code>shareable</code> to false unless you are willing to update the style sharing logic. Otherwise things
@@ -75,6 +77,8 @@ will almost certainly break as elements will start mistakenly sharing styles. (S
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -95,7 +99,7 @@ will almost certainly break as elements will start mistakenly sharing styles. (S
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -111,6 +115,6 @@ will almost certainly break as elements will start mistakenly sharing styles. (S
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

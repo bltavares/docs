@@ -4,12 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/cssparser-0.4.0/src/parser.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/cssparser-0.4.0/src/parser.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>parser.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -847,7 +849,7 @@
 <span class='doccomment'>/// `Delimiters` constants.</span>
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>non_upper_case_globals</span>, <span class='ident'>non_snake_case</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>Delimiter</span> {
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>Delimiters</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>Delimiters</span>;
 
     <span class='doccomment'>/// The empty delimiter set</span>
     <span class='kw'>pub</span> <span class='kw'>const</span> <span class='prelude-val'>None</span>: <span class='ident'>Delimiters</span> <span class='op'>=</span> <span class='ident'>Delimiters</span> { <span class='ident'>bits</span>: <span class='number'>0</span> };
@@ -863,7 +865,7 @@
 
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>non_upper_case_globals</span>, <span class='ident'>non_snake_case</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>ClosingDelimiter</span> {
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>Delimiters</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>Delimiters</span>;
 
     <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CloseCurlyBracket</span>: <span class='ident'>Delimiters</span> <span class='op'>=</span> <span class='ident'>Delimiters</span> { <span class='ident'>bits</span>: <span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='number'>5</span> };
     <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>CloseSquareBracket</span>: <span class='ident'>Delimiters</span> <span class='op'>=</span> <span class='ident'>Delimiters</span> { <span class='ident'>bits</span>: <span class='number'>1</span> <span class='op'>&lt;&lt;</span> <span class='number'>6</span> };
@@ -1441,6 +1443,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -1461,7 +1465,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -1477,6 +1481,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

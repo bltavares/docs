@@ -9,7 +9,9 @@
 
     <title>fnv - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -42,25 +44,23 @@
 
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>fnv</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-0' class='srclink' href='../src/fnv/lib.rs.html#1-254' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-0' class='srclink' href='../src/fnv/lib.rs.html#1-254' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>This file stolen wholesale from <a href="https://github.com/rust-lang/rust/blob/master/src/librustc/util/nodemap.rs">https://github.com/rust-lang/rust/blob/master/src/librustc/util/nodemap.rs</a></p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.FnvHasher.html'
-                               title='fnv::FnvHasher'>FnvHasher</a></td>
-                        <td class='docblock short'>
-                             <p>A speedy hash algorithm for node ids and def ids. The hashmap in
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.FnvHasher.html'
+                                  title='fnv::FnvHasher'>FnvHasher</a></td>
+                           <td class='docblock short'>
+                                <p>A speedy hash algorithm for node ids and def ids. The hashmap in
 libcollections by default uses SipHash which isn&#39;t quite as speedy as we
 want. In the compiler we&#39;re not really worried about DOS attempts, so we
 just default to a non-cryptographic hash.</p>
-
-                        </td>
-                    </tr>
-                </table></section>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -83,6 +83,8 @@ just default to a non-cryptographic hash.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -103,7 +105,7 @@ just default to a non-cryptographic hash.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -119,6 +121,6 @@ just default to a non-cryptographic hash.</p>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

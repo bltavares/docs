@@ -4,12 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/string_cache-0.2.1/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/string_cache-0.2.1/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -150,13 +152,13 @@
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>qualname</span> {
     (<span class='string'>&quot;&quot;</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>local</span>:<span class='ident'>tt</span>) <span class='op'>=&gt;</span> {
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>namespace</span>::<span class='ident'>QualName</span> {
+        <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>namespace</span>::<span class='ident'>QualName</span> {
             <span class='ident'>ns</span>: <span class='macro'>ns</span><span class='macro'>!</span>(),
             <span class='ident'>local</span>: <span class='macro'>atom</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>local</span>),
         }
     };
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ns</span>:<span class='ident'>tt</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>local</span>:<span class='ident'>tt</span>) <span class='op'>=&gt;</span> {
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>namespace</span>::<span class='ident'>QualName</span> {
+        <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>namespace</span>::<span class='ident'>QualName</span> {
             <span class='ident'>ns</span>: <span class='macro'>ns</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ns</span>),
             <span class='ident'>local</span>: <span class='macro'>atom</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>local</span>),
         }
@@ -165,13 +167,13 @@
 
 <span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>ns</span> {
-    () <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Namespace</span>(<span class='macro'>atom</span><span class='macro'>!</span>(<span class='string'>&quot;&quot;</span>)) };
-    (<span class='ident'>html</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Namespace</span>(<span class='macro'>atom</span><span class='macro'>!</span>(<span class='string'>&quot;http://www.w3.org/1999/xhtml&quot;</span>)) };
-    (<span class='ident'>xml</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Namespace</span>(<span class='macro'>atom</span><span class='macro'>!</span>(<span class='string'>&quot;http://www.w3.org/XML/1998/namespace&quot;</span>)) };
-    (<span class='ident'>xmlns</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Namespace</span>(<span class='macro'>atom</span><span class='macro'>!</span>(<span class='string'>&quot;http://www.w3.org/2000/xmlns/&quot;</span>)) };
-    (<span class='ident'>xlink</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Namespace</span>(<span class='macro'>atom</span><span class='macro'>!</span>(<span class='string'>&quot;http://www.w3.org/1999/xlink&quot;</span>)) };
-    (<span class='ident'>svg</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Namespace</span>(<span class='macro'>atom</span><span class='macro'>!</span>(<span class='string'>&quot;http://www.w3.org/2000/svg&quot;</span>)) };
-    (<span class='ident'>mathml</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>Namespace</span>(<span class='macro'>atom</span><span class='macro'>!</span>(<span class='string'>&quot;http://www.w3.org/1998/Math/MathML&quot;</span>)) };
+    () <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>Namespace</span>(<span class='macro'>atom</span><span class='macro'>!</span>(<span class='string'>&quot;&quot;</span>)) };
+    (<span class='ident'>html</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>Namespace</span>(<span class='macro'>atom</span><span class='macro'>!</span>(<span class='string'>&quot;http://www.w3.org/1999/xhtml&quot;</span>)) };
+    (<span class='ident'>xml</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>Namespace</span>(<span class='macro'>atom</span><span class='macro'>!</span>(<span class='string'>&quot;http://www.w3.org/XML/1998/namespace&quot;</span>)) };
+    (<span class='ident'>xmlns</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>Namespace</span>(<span class='macro'>atom</span><span class='macro'>!</span>(<span class='string'>&quot;http://www.w3.org/2000/xmlns/&quot;</span>)) };
+    (<span class='ident'>xlink</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>Namespace</span>(<span class='macro'>atom</span><span class='macro'>!</span>(<span class='string'>&quot;http://www.w3.org/1999/xlink&quot;</span>)) };
+    (<span class='ident'>svg</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>Namespace</span>(<span class='macro'>atom</span><span class='macro'>!</span>(<span class='string'>&quot;http://www.w3.org/2000/svg&quot;</span>)) };
+    (<span class='ident'>mathml</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>Namespace</span>(<span class='macro'>atom</span><span class='macro'>!</span>(<span class='string'>&quot;http://www.w3.org/1998/Math/MathML&quot;</span>)) };
 }
 
 <span class='macro'>include</span><span class='macro'>!</span>(<span class='macro'>concat</span><span class='macro'>!</span>(<span class='macro'>env</span><span class='macro'>!</span>(<span class='string'>&quot;OUT_DIR&quot;</span>), <span class='string'>&quot;/atom_macro.rs&quot;</span>));
@@ -217,6 +219,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -237,7 +241,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -253,6 +257,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

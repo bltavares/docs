@@ -4,12 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/num-0.1.28/src/integer.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/num-0.1.28/src/integer.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>integer.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     <link rel="shortcut icon" href="http://rust-num.github.io/num/favicon.ico">
     
@@ -25,7 +27,7 @@
     
 
     <nav class="sidebar">
-        <a href='../../num/index.html'><img src='http://rust-num.github.io/num/rust-logo-128x128-blk-v2.png' alt='' width='100'></a>
+        <a href='../../num/index.html'><img src='http://rust-num.github.io/num/rust-logo-128x128-blk-v2.png' alt='logo' width='100'></a>
         
     </nav>
 
@@ -706,7 +708,7 @@
     <span class='doccomment'>/// assert!((-1).div_floor(&amp; 2) == -1);</span>
     <span class='doccomment'>/// assert!((-1).div_floor(&amp;-2) ==  0);</span>
     <span class='doccomment'>/// ~~~</span>
-    <span class='kw'>fn</span> <span class='ident'>div_floor</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>div_floor</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
 
     <span class='doccomment'>/// Floored integer modulo, satisfying:</span>
     <span class='doccomment'>///</span>
@@ -730,7 +732,7 @@
     <span class='doccomment'>/// assert!((-1).mod_floor(&amp; 2) ==  1);</span>
     <span class='doccomment'>/// assert!((-1).mod_floor(&amp;-2) == -1);</span>
     <span class='doccomment'>/// ~~~</span>
-    <span class='kw'>fn</span> <span class='ident'>mod_floor</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>mod_floor</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
 
     <span class='doccomment'>/// Greatest Common Divisor (GCD).</span>
     <span class='doccomment'>///</span>
@@ -741,7 +743,7 @@
     <span class='doccomment'>/// assert_eq!(6.gcd(&amp;8), 2);</span>
     <span class='doccomment'>/// assert_eq!(7.gcd(&amp;3), 1);</span>
     <span class='doccomment'>/// ~~~</span>
-    <span class='kw'>fn</span> <span class='ident'>gcd</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>gcd</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
 
     <span class='doccomment'>/// Lowest Common Multiple (LCM).</span>
     <span class='doccomment'>///</span>
@@ -752,10 +754,10 @@
     <span class='doccomment'>/// assert_eq!(7.lcm(&amp;3), 21);</span>
     <span class='doccomment'>/// assert_eq!(2.lcm(&amp;4), 4);</span>
     <span class='doccomment'>/// ~~~</span>
-    <span class='kw'>fn</span> <span class='ident'>lcm</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) <span class='op'>-&gt;</span> <span class='kw'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>lcm</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
 
     <span class='doccomment'>/// Deprecated, use `is_multiple_of` instead.</span>
-    <span class='kw'>fn</span> <span class='ident'>divides</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>;
+    <span class='kw'>fn</span> <span class='ident'>divides</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>;
 
     <span class='doccomment'>/// Returns `true` if `other` is a multiple of `self`.</span>
     <span class='doccomment'>///</span>
@@ -766,7 +768,7 @@
     <span class='doccomment'>/// assert_eq!(9.is_multiple_of(&amp;3), true);</span>
     <span class='doccomment'>/// assert_eq!(3.is_multiple_of(&amp;9), false);</span>
     <span class='doccomment'>/// ~~~</span>
-    <span class='kw'>fn</span> <span class='ident'>is_multiple_of</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>;
+    <span class='kw'>fn</span> <span class='ident'>is_multiple_of</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>;
 
     <span class='doccomment'>/// Returns `true` if the number is even.</span>
     <span class='doccomment'>///</span>
@@ -808,7 +810,7 @@
     <span class='doccomment'>/// assert_eq!((-1).div_rem(&amp;-2), ( 0, -1));</span>
     <span class='doccomment'>/// ~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>div_rem</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) <span class='op'>-&gt;</span> (<span class='kw'>Self</span>, <span class='kw'>Self</span>);
+    <span class='kw'>fn</span> <span class='ident'>div_rem</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='self'>Self</span>) <span class='op'>-&gt;</span> (<span class='self'>Self</span>, <span class='self'>Self</span>);
 
     <span class='doccomment'>/// Simultaneous floored integer division and modulus.</span>
     <span class='doccomment'>/// Returns `(quotient, remainder)`.</span>
@@ -827,7 +829,7 @@
     <span class='doccomment'>/// assert_eq!((-1).div_mod_floor( &amp;2), (-1,  1));</span>
     <span class='doccomment'>/// assert_eq!((-1).div_mod_floor(&amp;-2), ( 0, -1));</span>
     <span class='doccomment'>/// ~~~</span>
-    <span class='kw'>fn</span> <span class='ident'>div_mod_floor</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='kw'>Self</span>) <span class='op'>-&gt;</span> (<span class='kw'>Self</span>, <span class='kw'>Self</span>) {
+    <span class='kw'>fn</span> <span class='ident'>div_mod_floor</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='self'>Self</span>) <span class='op'>-&gt;</span> (<span class='self'>Self</span>, <span class='self'>Self</span>) {
         (<span class='self'>self</span>.<span class='ident'>div_floor</span>(<span class='ident'>other</span>), <span class='self'>self</span>.<span class='ident'>mod_floor</span>(<span class='ident'>other</span>))
     }
 }
@@ -1110,28 +1112,28 @@
 
             <span class='attribute'>#[<span class='ident'>test</span>]</span>
             <span class='kw'>fn</span> <span class='ident'>test_even</span>() {
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>4</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolval'>true</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>3</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolval'>false</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>2</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolval'>true</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolval'>false</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>0</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolval'>true</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>1</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolval'>false</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>2</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolval'>true</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>3</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolval'>false</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>4</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolval'>true</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>4</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolvalue'>true</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>3</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolvalue'>false</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>2</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolvalue'>true</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolvalue'>false</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>0</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolvalue'>true</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>1</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolvalue'>false</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>2</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolvalue'>true</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>3</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolvalue'>false</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>4</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolvalue'>true</span>);
             }
 
             <span class='attribute'>#[<span class='ident'>test</span>]</span>
             <span class='kw'>fn</span> <span class='ident'>test_odd</span>() {
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>4</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolval'>false</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>3</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolval'>true</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>2</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolval'>false</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolval'>true</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>0</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolval'>false</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>1</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolval'>true</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>2</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolval'>false</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>3</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolval'>true</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>4</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolval'>false</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>4</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolvalue'>false</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>3</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolvalue'>true</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>2</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolvalue'>false</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='number'>1</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolvalue'>true</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>0</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolvalue'>false</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>1</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolvalue'>true</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>2</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolvalue'>false</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>3</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolvalue'>true</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>4</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolvalue'>false</span>);
             }
         }
     )
@@ -1277,20 +1279,20 @@
 
             <span class='attribute'>#[<span class='ident'>test</span>]</span>
             <span class='kw'>fn</span> <span class='ident'>test_even</span>() {
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>0</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolval'>true</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>1</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolval'>false</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>2</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolval'>true</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>3</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolval'>false</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>4</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolval'>true</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>0</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolvalue'>true</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>1</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolvalue'>false</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>2</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolvalue'>true</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>3</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolvalue'>false</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>4</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_even</span>(), <span class='boolvalue'>true</span>);
             }
 
             <span class='attribute'>#[<span class='ident'>test</span>]</span>
             <span class='kw'>fn</span> <span class='ident'>test_odd</span>() {
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>0</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolval'>false</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>1</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolval'>true</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>2</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolval'>false</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>3</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolval'>true</span>);
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>4</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolval'>false</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>0</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolvalue'>false</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>1</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolvalue'>true</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>2</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolvalue'>false</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>3</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolvalue'>true</span>);
+                <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='number'>4</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>).<span class='ident'>is_odd</span>(), <span class='boolvalue'>false</span>);
             }
         }
     )
@@ -1325,6 +1327,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -1345,7 +1349,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -1361,6 +1365,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script src="../../playpen.js"></script>
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

@@ -9,7 +9,9 @@
 
     <title>kuchiki - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -42,115 +44,93 @@
 
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>kuchiki</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-0' class='srclink' href='../src/kuchiki/lib.rs.html#1-31' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-0' class='srclink' href='../src/kuchiki/lib.rs.html#1-31' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Kuchiki (朽木), a HTML/XML tree manipulation library for Rust.</p>
 </div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
 <table><tr><td><code>pub use iter::{<a class='trait' href='../kuchiki/iter/trait.NodeIterator.html' title='kuchiki::iter::NodeIterator'>NodeIterator</a>, <a class='trait' href='../kuchiki/iter/trait.ElementIterator.html' title='kuchiki::iter::ElementIterator'>ElementIterator</a>};</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='mod' href='iter/index.html'
-                               title='kuchiki::iter'>iter</a></td>
-                        <td class='docblock short'>
-                             <p>Node iterators</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='iter/index.html'
+                                  title='kuchiki::iter'>iter</a></td>
+                           <td class='docblock short'>
+                                <p>Node iterators</p>
+                           </td>
+                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Doctype.html'
-                               title='kuchiki::Doctype'>Doctype</a></td>
-                        <td class='docblock short'>
-                             <p>Data specific to doctype nodes.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.DocumentData.html'
-                               title='kuchiki::DocumentData'>DocumentData</a></td>
-                        <td class='docblock short'>
-                             <p>Data specific to document nodes.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.ElementData.html'
-                               title='kuchiki::ElementData'>ElementData</a></td>
-                        <td class='docblock short'>
-                             <p>Data specific to element nodes.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Html.html'
-                               title='kuchiki::Html'>Html</a></td>
-                        <td class='docblock short'>
-                             <p>The HTML parser.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Node.html'
-                               title='kuchiki::Node'>Node</a></td>
-                        <td class='docblock short'>
-                             <p>A node inside a DOM-like tree.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.NodeDataRef.html'
-                               title='kuchiki::NodeDataRef'>NodeDataRef</a></td>
-                        <td class='docblock short'>
-                             <p>Holds a strong reference to a node, but dereferences to some component inside of it.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.NodeRef.html'
-                               title='kuchiki::NodeRef'>NodeRef</a></td>
-                        <td class='docblock short'>
-                             <p>A strong reference to a node.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.ParseOpts.html'
-                               title='kuchiki::ParseOpts'>ParseOpts</a></td>
-                        <td class='docblock short'>
-                             <p>Options for the HTML parser.</p>
-
-                        </td>
-                    </tr>
-                
-                    <tr class=' module-item'>
-                        <td><a class='struct' href='struct.Selectors.html'
-                               title='kuchiki::Selectors'>Selectors</a></td>
-                        <td class='docblock short'>
-                             <p>A pre-compiled list of CSS Selectors.</p>
-
-                        </td>
-                    </tr>
-                </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Doctype.html'
+                                  title='kuchiki::Doctype'>Doctype</a></td>
+                           <td class='docblock short'>
+                                <p>Data specific to doctype nodes.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.DocumentData.html'
+                                  title='kuchiki::DocumentData'>DocumentData</a></td>
+                           <td class='docblock short'>
+                                <p>Data specific to document nodes.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.ElementData.html'
+                                  title='kuchiki::ElementData'>ElementData</a></td>
+                           <td class='docblock short'>
+                                <p>Data specific to element nodes.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Html.html'
+                                  title='kuchiki::Html'>Html</a></td>
+                           <td class='docblock short'>
+                                <p>The HTML parser.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Node.html'
+                                  title='kuchiki::Node'>Node</a></td>
+                           <td class='docblock short'>
+                                <p>A node inside a DOM-like tree.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.NodeDataRef.html'
+                                  title='kuchiki::NodeDataRef'>NodeDataRef</a></td>
+                           <td class='docblock short'>
+                                <p>Holds a strong reference to a node, but dereferences to some component inside of it.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.NodeRef.html'
+                                  title='kuchiki::NodeRef'>NodeRef</a></td>
+                           <td class='docblock short'>
+                                <p>A strong reference to a node.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.ParseOpts.html'
+                                  title='kuchiki::ParseOpts'>ParseOpts</a></td>
+                           <td class='docblock short'>
+                                <p>Options for the HTML parser.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Selectors.html'
+                                  title='kuchiki::Selectors'>Selectors</a></td>
+                           <td class='docblock short'>
+                                <p>A pre-compiled list of CSS Selectors.</p>
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
-                    <tr class=' module-item'>
-                        <td><a class='enum' href='enum.NodeData.html'
-                               title='kuchiki::NodeData'>NodeData</a></td>
-                        <td class='docblock short'>
-                             <p>Node data specific to the node type.</p>
-
-                        </td>
-                    </tr>
-                </table></section>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.NodeData.html'
+                                  title='kuchiki::NodeData'>NodeData</a></td>
+                           <td class='docblock short'>
+                                <p>Node data specific to the node type.</p>
+                           </td>
+                       </tr></table></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -173,6 +153,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -193,7 +175,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -209,6 +191,6 @@
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

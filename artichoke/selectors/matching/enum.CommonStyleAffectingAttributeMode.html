@@ -9,7 +9,9 @@
 
     <title>selectors::matching::CommonStyleAffectingAttributeMode - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -42,17 +44,21 @@
 
     <section id='main' class="content enum">
 <h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>selectors</a>::<wbr><a href='index.html'>matching</a>::<wbr><a class='enum' href=''>CommonStyleAffectingAttributeMode</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-646' class='srclink' href='../../src/selectors/matching.rs.html#522-525' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-631' class='srclink' href='../../src/selectors/matching.rs.html#522-525' title='goto source code'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum CommonStyleAffectingAttributeMode {
     IsPresent(<a class='struct' href='../../selectors/matching/struct.CommonStyleAffectingAttributes.html' title='selectors::matching::CommonStyleAffectingAttributes'>CommonStyleAffectingAttributes</a>),
-    IsEqual(&amp;'static <a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, <a class='struct' href='../../selectors/matching/struct.CommonStyleAffectingAttributes.html' title='selectors::matching::CommonStyleAffectingAttributes'>CommonStyleAffectingAttributes</a>),
+    IsEqual(&amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, <a class='struct' href='../../selectors/matching/struct.CommonStyleAffectingAttributes.html' title='selectors::matching::CommonStyleAffectingAttributes'>CommonStyleAffectingAttributes</a>),
 }</pre><h2 class='variants'>Variants</h2>
-<table><tr><td id='variant.IsPresent'><code>IsPresent</code></td><td></td></tr><tr><td id='variant.IsEqual'><code>IsEqual</code></td><td></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../../selectors/matching/enum.CommonStyleAffectingAttributeMode.html' title='selectors::matching::CommonStyleAffectingAttributeMode'>CommonStyleAffectingAttributeMode</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../../selectors/matching/enum.CommonStyleAffectingAttributeMode.html' title='selectors::matching::CommonStyleAffectingAttributeMode'>CommonStyleAffectingAttributeMode</a></code></h4>
-<h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
-</div><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../../selectors/matching/enum.CommonStyleAffectingAttributeMode.html' title='selectors::matching::CommonStyleAffectingAttributeMode'>CommonStyleAffectingAttributeMode</a></code></h3><div class='impl-items'></div></section>
+<table class='variants_table'><tr><td id='variant.IsPresent'><code>IsPresent</code></td><td></td><td></td></tr><tr><td id='variant.IsEqual'><code>IsEqual</code></td><td></td><td></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../../selectors/matching/enum.CommonStyleAffectingAttributeMode.html' title='selectors::matching::CommonStyleAffectingAttributeMode'>CommonStyleAffectingAttributeMode</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-637' class='srclink' href='../../src/selectors/matching.rs.html#521' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../../selectors/matching/enum.CommonStyleAffectingAttributeMode.html' title='selectors::matching::CommonStyleAffectingAttributeMode'>CommonStyleAffectingAttributeMode</a></code></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../../selectors/matching/enum.CommonStyleAffectingAttributeMode.html' title='selectors::matching::CommonStyleAffectingAttributeMode'>CommonStyleAffectingAttributeMode</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-643' class='srclink' href='../../src/selectors/matching.rs.html#521' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -75,6 +81,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -95,7 +103,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -111,6 +119,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

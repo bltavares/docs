@@ -9,7 +9,9 @@
 
     <title>tendril::Atomicity - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -42,10 +44,10 @@
 
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>tendril</a>::<wbr><a class='trait' href=''>Atomicity</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-460' class='srclink' href='../src/tendril/tendril.rs.html#57-69' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-468' class='srclink' href='../src/tendril/tendril.rs.html#57-69' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub unsafe trait Atomicity: 'static { }</pre><div class='docblock'><p>The multithreadedness of a tendril.</p>
 
 <p>Exactly two types implement this trait:</p>
@@ -62,11 +64,11 @@ for it is used for reference counting.</p>
 </div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl <a class='trait' href='../tendril/trait.Atomicity.html' title='tendril::Atomicity'>Atomicity</a> for <a class='struct' href='../tendril/struct.NonAtomic.html' title='tendril::NonAtomic'>NonAtomic</a></code></li>
-<li><code>impl <a class='trait' href='../tendril/trait.Atomicity.html' title='tendril::Atomicity'>Atomicity</a> for <a class='struct' href='../tendril/struct.Atomic.html' title='tendril::Atomic'>Atomic</a></code></li>
+    <li><code>impl Atomicity for <a class='struct' href='../tendril/struct.NonAtomic.html' title='tendril::NonAtomic'>NonAtomic</a></code></li>
+<li><code>impl Atomicity for <a class='struct' href='../tendril/struct.Atomic.html' title='tendril::Atomic'>Atomic</a></code></li>
 </ul><script type="text/javascript" async
-                              src="../implementors/tendril/trait.Atomicity.js">
-                      </script></section>
+                         src="../implementors/tendril/trait.Atomicity.js">
+                 </script></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -89,6 +91,8 @@ for it is used for reference counting.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -109,7 +113,7 @@ for it is used for reference counting.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -125,6 +129,6 @@ for it is used for reference counting.</p>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

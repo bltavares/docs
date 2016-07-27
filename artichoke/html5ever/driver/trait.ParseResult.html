@@ -9,7 +9,9 @@
 
     <title>html5ever::driver::ParseResult - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -42,12 +44,12 @@
 
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>html5ever</a>::<wbr><a href='index.html'>driver</a>::<wbr><a class='trait' href=''>ParseResult</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-3845' class='srclink' href='../../src/html5ever/driver.rs.html#111-114' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-3799' class='srclink' href='../../src/html5ever/driver.rs.html#111-114' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait ParseResult {
-    type Sink: <a class='trait' href='../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>TreeSink</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a>;
+    type <a href='#associatedtype.Sink' class='type'>Sink</a>: <a class='trait' href='../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>TreeSink</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a>;
     fn <a href='#tymethod.get_result' class='fnname'>get_result</a>(sink: Self::<a class='trait' href='../../html5ever/driver/trait.ParseResult.html' title='html5ever::driver::ParseResult'>Sink</a>) -&gt; Self;
 }</pre><div class='docblock'><p>Results which can be extracted from a <code>TreeSink</code>.</p>
 
@@ -56,16 +58,16 @@ can be returned by <code>parse()</code>.</p>
 </div>
             <h2 id='associated-types'>Associated Types</h2>
             <div class='methods'>
-        <h3 id='associatedtype.Sink' class='method stab '><code>type Sink: <a class='trait' href='../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>TreeSink</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a></code></h3></div>
+        <h3 id='associatedtype.Sink' class='method stab '><code>type <a href='#associatedtype.Sink' class='type'>Sink</a>: <a class='trait' href='../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>TreeSink</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a></code></h3></div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
         <h3 id='tymethod.get_result' class='method stab '><code>fn <a href='#tymethod.get_result' class='fnname'>get_result</a>(sink: Self::<a class='trait' href='../../html5ever/driver/trait.ParseResult.html' title='html5ever::driver::ParseResult'>Sink</a>) -&gt; Self</code></h3></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl <a class='trait' href='../../html5ever/driver/trait.ParseResult.html' title='html5ever::driver::ParseResult'>ParseResult</a> for <a class='struct' href='../../html5ever/rcdom/struct.RcDom.html' title='html5ever::rcdom::RcDom'>RcDom</a></code></li>
+    <li><code>impl ParseResult for <a class='struct' href='../../html5ever/rcdom/struct.RcDom.html' title='html5ever::rcdom::RcDom'>RcDom</a></code></li>
 </ul><script type="text/javascript" async
-                              src="../../implementors/html5ever/driver/trait.ParseResult.js">
-                      </script></section>
+                         src="../../implementors/html5ever/driver/trait.ParseResult.js">
+                 </script></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -88,6 +90,8 @@ can be returned by <code>parse()</code>.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -108,7 +112,7 @@ can be returned by <code>parse()</code>.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -124,6 +128,6 @@ can be returned by <code>parse()</code>.</p>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

@@ -9,7 +9,9 @@
 
     <title>kuchiki::ParseOpts - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -42,24 +44,26 @@
 
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>kuchiki</a>::<wbr><a class='struct' href=''>ParseOpts</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-517' class='srclink' href='../src/kuchiki/parser.rs.html#68-77' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-511' class='srclink' href='../src/kuchiki/parser.rs.html#68-77' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct ParseOpts {
     pub tokenizer: <a class='struct' href='../html5ever/tokenizer/struct.TokenizerOpts.html' title='html5ever::tokenizer::TokenizerOpts'>TokenizerOpts</a>,
     pub tree_builder: <a class='struct' href='../html5ever/tree_builder/struct.TreeBuilderOpts.html' title='html5ever::tree_builder::TreeBuilderOpts'>TreeBuilderOpts</a>,
-    pub on_parse_error: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(<a class='enum' href='https://doc.rust-lang.org/nightly/collections/borrow/enum.Cow.html' title='collections::borrow::Cow'>Cow</a>&lt;'static, <a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;)&gt;&gt;,
+    pub on_parse_error: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnMut.html' title='core::ops::FnMut'>FnMut</a>(<a class='enum' href='https://doc.rust-lang.org/nightly/collections/borrow/enum.Cow.html' title='collections::borrow::Cow'>Cow</a>&lt;'static, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;)&gt;&gt;,
 }</pre><div class='docblock'><p>Options for the HTML parser.</p>
 </div><h2 class='fields'>Fields</h2>
 <table><tr class='stab '>
-                                  <td id='structfield.tokenizer'><code>tokenizer</code></td><td><div class='docblock'><p>Options for the HTML tokenizer.</p>
+                             <td id='structfield.tokenizer'><code>tokenizer</code></td><td><div class='docblock'><p>Options for the HTML tokenizer.</p>
 </div></td></tr><tr class='stab '>
-                                  <td id='structfield.tree_builder'><code>tree_builder</code></td><td><div class='docblock'><p>Options for the HTML tree builder.</p>
+                             <td id='structfield.tree_builder'><code>tree_builder</code></td><td><div class='docblock'><p>Options for the HTML tree builder.</p>
 </div></td></tr><tr class='stab '>
-                                  <td id='structfield.on_parse_error'><code>on_parse_error</code></td><td><div class='docblock'><p>A callback for HTML parse errors (which are never fatal).</p>
-</div></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a> for <a class='struct' href='../kuchiki/struct.ParseOpts.html' title='kuchiki::ParseOpts'>ParseOpts</a></code></h3><div class='impl-items'><h4 id='method.default' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#method.default' class='fnname'>default</a>() -&gt; <a class='struct' href='../kuchiki/struct.ParseOpts.html' title='kuchiki::ParseOpts'>ParseOpts</a></code></h4>
-</div></section>
+                             <td id='structfield.on_parse_error'><code>on_parse_error</code></td><td><div class='docblock'><p>A callback for HTML parse errors (which are never fatal).</p>
+</div></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a> for <a class='struct' href='../kuchiki/struct.ParseOpts.html' title='kuchiki::ParseOpts'>ParseOpts</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-515' class='srclink' href='../src/kuchiki/parser.rs.html#67' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; <a class='struct' href='../kuchiki/struct.ParseOpts.html' title='kuchiki::ParseOpts'>ParseOpts</a></code></h4>
+<div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -82,6 +86,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -102,7 +108,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -118,6 +124,6 @@
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

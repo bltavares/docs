@@ -9,7 +9,9 @@
 
     <title>html5ever::serialize::Serializer - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -42,18 +44,19 @@
 
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>html5ever</a>::<wbr><a href='index.html'>serialize</a>::<wbr><a class='struct' href=''>Serializer</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-3671' class='srclink' href='../../src/html5ever/serialize/mod.rs.html#60-64' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-3635' class='srclink' href='../../src/html5ever/serialize/mod.rs.html#60-64' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Serializer&lt;'wr, Wr: 'wr&gt; {
     // some fields omitted
-}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;'wr, Wr: <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>&gt; <a class='struct' href='../../html5ever/serialize/struct.Serializer.html' title='html5ever::serialize::Serializer'>Serializer</a>&lt;'wr, Wr&gt;</code></h3><div class='impl-items'><h4 id='method.start_elem' class='method'><code>fn <a href='#method.start_elem' class='fnname'>start_elem</a>&lt;'a, AttrIter: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/trait.Iterator.html' title='core::iter::Iterator'>Iterator</a>&lt;Item=<a class='type' href='../../html5ever/serialize/type.AttrRef.html' title='html5ever::serialize::AttrRef'>AttrRef</a>&lt;'a&gt;&gt;&gt;(&amp;mut self, name: <a class='struct' href='../../string_cache/namespace/struct.QualName.html' title='string_cache::namespace::QualName'>QualName</a>, attrs: AttrIter) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
-<h4 id='method.end_elem' class='method'><code>fn <a href='#method.end_elem' class='fnname'>end_elem</a>(&amp;mut self, name: <a class='struct' href='../../string_cache/namespace/struct.QualName.html' title='string_cache::namespace::QualName'>QualName</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
-<h4 id='method.write_text' class='method'><code>fn <a href='#method.write_text' class='fnname'>write_text</a>(&amp;mut self, text: &amp;<a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
-<h4 id='method.write_comment' class='method'><code>fn <a href='#method.write_comment' class='fnname'>write_comment</a>(&amp;mut self, text: &amp;<a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
-<h4 id='method.write_doctype' class='method'><code>fn <a href='#method.write_doctype' class='fnname'>write_doctype</a>(&amp;mut self, name: &amp;<a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
-<h4 id='method.write_processing_instruction' class='method'><code>fn <a href='#method.write_processing_instruction' class='fnname'>write_processing_instruction</a>(&amp;mut self, target: &amp;<a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, data: &amp;<a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'wr, Wr: <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>&gt; <a class='struct' href='../../html5ever/serialize/struct.Serializer.html' title='html5ever::serialize::Serializer'>Serializer</a>&lt;'wr, Wr&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3648' class='srclink' href='../../src/html5ever/serialize/mod.rs.html#78-236' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.start_elem' class='method'><code>fn <a href='#method.start_elem' class='fnname'>start_elem</a>&lt;'a, AttrIter: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html' title='core::iter::iterator::Iterator'>Iterator</a>&lt;Item=<a class='type' href='../../html5ever/serialize/type.AttrRef.html' title='html5ever::serialize::AttrRef'>AttrRef</a>&lt;'a&gt;&gt;&gt;(&amp;mut self, name: <a class='struct' href='../../string_cache/namespace/struct.QualName.html' title='string_cache::namespace::QualName'>QualName</a>, attrs: AttrIter) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<h4 id='method.end_elem' class='method'><code>fn <a href='#method.end_elem' class='fnname'>end_elem</a>(&amp;mut self, name: <a class='struct' href='../../string_cache/namespace/struct.QualName.html' title='string_cache::namespace::QualName'>QualName</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<h4 id='method.write_text' class='method'><code>fn <a href='#method.write_text' class='fnname'>write_text</a>(&amp;mut self, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<h4 id='method.write_comment' class='method'><code>fn <a href='#method.write_comment' class='fnname'>write_comment</a>(&amp;mut self, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<h4 id='method.write_doctype' class='method'><code>fn <a href='#method.write_doctype' class='fnname'>write_doctype</a>(&amp;mut self, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<h4 id='method.write_processing_instruction' class='method'><code>fn <a href='#method.write_processing_instruction' class='fnname'>write_processing_instruction</a>(&amp;mut self, target: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, data: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -77,6 +80,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -97,7 +102,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -113,6 +118,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

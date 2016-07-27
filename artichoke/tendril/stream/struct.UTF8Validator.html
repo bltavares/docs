@@ -9,7 +9,9 @@
 
     <title>tendril::stream::UTF8Validator - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -42,24 +44,29 @@
 
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>tendril</a>::<wbr><a href='index.html'>stream</a>::<wbr><a class='struct' href=''>UTF8Validator</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-266' class='srclink' href='../../src/tendril/stream.rs.html#47-53' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-274' class='srclink' href='../../src/tendril/stream.rs.html#47-53' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct UTF8Validator&lt;Sink, A&gt; <span class='where'>where A: <a class='trait' href='../../tendril/trait.Atomicity.html' title='tendril::Atomicity'>Atomicity</a></span> {
     // some fields omitted
 }</pre><div class='docblock'><p>Incrementally validate a byte stream as UTF-8.</p>
 
 <p>This will copy as little as possible — only the characters that
 span a chunk boundary.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;Sink, A&gt; <a class='struct' href='../../tendril/stream/struct.UTF8Validator.html' title='tendril::stream::UTF8Validator'>UTF8Validator</a>&lt;Sink, A&gt; <span class='where'>where Sink: <a class='trait' href='../../tendril/stream/trait.TendrilSink.html' title='tendril::stream::TendrilSink'>TendrilSink</a>&lt;<a class='struct' href='../../tendril/fmt/struct.UTF8.html' title='tendril::fmt::UTF8'>UTF8</a>, A&gt;, A: <a class='trait' href='../../tendril/trait.Atomicity.html' title='tendril::Atomicity'>Atomicity</a></span></code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(sink: Sink) -&gt; <a class='struct' href='../../tendril/stream/struct.UTF8Validator.html' title='tendril::stream::UTF8Validator'>UTF8Validator</a>&lt;Sink, A&gt;</code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;Sink, A&gt; <a class='struct' href='../../tendril/stream/struct.UTF8Validator.html' title='tendril::stream::UTF8Validator'>UTF8Validator</a>&lt;Sink, A&gt; <span class='where'>where Sink: <a class='trait' href='../../tendril/stream/trait.TendrilSink.html' title='tendril::stream::TendrilSink'>TendrilSink</a>&lt;<a class='struct' href='../../tendril/fmt/struct.UTF8.html' title='tendril::fmt::UTF8'>UTF8</a>, A&gt;, A: <a class='trait' href='../../tendril/trait.Atomicity.html' title='tendril::Atomicity'>Atomicity</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-280' class='srclink' href='../../src/tendril/stream.rs.html#55-80' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(sink: Sink) -&gt; <a class='struct' href='../../tendril/stream/struct.UTF8Validator.html' title='tendril::stream::UTF8Validator'>UTF8Validator</a>&lt;Sink, A&gt;</code></h4>
 <div class='docblock'><p>Create a new incremental validator.</p>
 </div><h4 id='method.into_sink' class='method'><code>fn <a href='#method.into_sink' class='fnname'>into_sink</a>(self) -&gt; Sink</code></h4>
 <div class='docblock'><p>Consume the validator and obtain the sink.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl&lt;Sink, A&gt; <a class='trait' href='../../tendril/stream/trait.TendrilSink.html' title='tendril::stream::TendrilSink'>TendrilSink</a>&lt;<a class='struct' href='../../tendril/fmt/struct.Bytes.html' title='tendril::fmt::Bytes'>Bytes</a>, A&gt; for <a class='struct' href='../../tendril/stream/struct.UTF8Validator.html' title='tendril::stream::UTF8Validator'>UTF8Validator</a>&lt;Sink, A&gt; <span class='where'>where Sink: <a class='trait' href='../../tendril/stream/trait.TendrilSink.html' title='tendril::stream::TendrilSink'>TendrilSink</a>&lt;<a class='struct' href='../../tendril/fmt/struct.UTF8.html' title='tendril::fmt::UTF8'>UTF8</a>, A&gt;, A: <a class='trait' href='../../tendril/trait.Atomicity.html' title='tendril::Atomicity'>Atomicity</a></span></code></h3><div class='impl-items'><h4 id='method.process' class='method'><code>fn <a href='../../tendril/stream/trait.TendrilSink.html#method.process' class='fnname'>process</a>(&amp;mut self, t: <a class='struct' href='../../tendril/struct.Tendril.html' title='tendril::Tendril'>Tendril</a>&lt;<a class='struct' href='../../tendril/fmt/struct.Bytes.html' title='tendril::fmt::Bytes'>Bytes</a>, A&gt;)</code></h4>
-<h4 id='method.finish' class='method'><code>fn <a href='../../tendril/stream/trait.TendrilSink.html#method.finish' class='fnname'>finish</a>(&amp;mut self)</code></h4>
-<h4 id='method.error' class='method'><code>fn <a href='../../tendril/stream/trait.TendrilSink.html#method.error' class='fnname'>error</a>(&amp;mut self, desc: <a class='enum' href='https://doc.rust-lang.org/nightly/collections/borrow/enum.Cow.html' title='collections::borrow::Cow'>Cow</a>&lt;'static, <a href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;)</code></h4>
-</div></section>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;Sink, A&gt; <a class='trait' href='../../tendril/stream/trait.TendrilSink.html' title='tendril::stream::TendrilSink'>TendrilSink</a>&lt;<a class='struct' href='../../tendril/fmt/struct.Bytes.html' title='tendril::fmt::Bytes'>Bytes</a>, A&gt; for <a class='struct' href='../../tendril/stream/struct.UTF8Validator.html' title='tendril::stream::UTF8Validator'>UTF8Validator</a>&lt;Sink, A&gt; <span class='where'>where Sink: <a class='trait' href='../../tendril/stream/trait.TendrilSink.html' title='tendril::stream::TendrilSink'>TendrilSink</a>&lt;<a class='struct' href='../../tendril/fmt/struct.UTF8.html' title='tendril::fmt::UTF8'>UTF8</a>, A&gt;, A: <a class='trait' href='../../tendril/trait.Atomicity.html' title='tendril::Atomicity'>Atomicity</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-291' class='srclink' href='../../src/tendril/stream.rs.html#82-162' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.process' class='method'><code>fn <a href='../../tendril/stream/trait.TendrilSink.html#tymethod.process' class='fnname'>process</a>(&amp;mut self, t: <a class='struct' href='../../tendril/struct.Tendril.html' title='tendril::Tendril'>Tendril</a>&lt;<a class='struct' href='../../tendril/fmt/struct.Bytes.html' title='tendril::fmt::Bytes'>Bytes</a>, A&gt;)</code></h4>
+<div class='docblock'><p>Process this tendril.</p>
+</div><h4 id='method.finish' class='method'><code>fn <a href='../../tendril/stream/trait.TendrilSink.html#method.finish' class='fnname'>finish</a>(&amp;mut self)</code></h4>
+<div class='docblock'><p>Indicates the end of the stream. <a href="../../tendril/stream/trait.TendrilSink.html#method.finish">Read more</a></p>
+</div><h4 id='method.error' class='method'><code>fn <a href='../../tendril/stream/trait.TendrilSink.html#tymethod.error' class='fnname'>error</a>(&amp;mut self, desc: <a class='enum' href='https://doc.rust-lang.org/nightly/collections/borrow/enum.Cow.html' title='collections::borrow::Cow'>Cow</a>&lt;'static, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;)</code></h4>
+<div class='docblock'><p>Indicates that an error has occurred.</p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -82,6 +89,8 @@ span a chunk boundary.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -102,7 +111,7 @@ span a chunk boundary.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -118,6 +127,6 @@ span a chunk boundary.</p>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

@@ -4,12 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/selectors-0.2.2/src/matching.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/selectors-0.2.2/src/matching.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>matching.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -1004,7 +1006,7 @@
             <span class='ident'>local_name_hash</span>: <span class='ident'>hash_map</span>::<span class='ident'>new</span>(),
             <span class='ident'>lower_local_name_hash</span>: <span class='ident'>hash_map</span>::<span class='ident'>new</span>(),
             <span class='ident'>universal_rules</span>: <span class='macro'>vec</span><span class='macro'>!</span>(),
-            <span class='ident'>empty</span>: <span class='boolval'>true</span>,
+            <span class='ident'>empty</span>: <span class='boolvalue'>true</span>,
         }
     }
 
@@ -1107,7 +1109,7 @@
     <span class='doccomment'>/// Insert rule into the correct hash.</span>
     <span class='doccomment'>/// Order in which to try: id_hash, class_hash, local_name_hash, universal_rules.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>rule</span>: <span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>) {
-        <span class='self'>self</span>.<span class='ident'>empty</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+        <span class='self'>self</span>.<span class='ident'>empty</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
 
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>id_name</span>) <span class='op'>=</span> <span class='ident'>SelectorMap</span>::<span class='ident'>get_id_name</span>(<span class='kw-2'>&amp;</span><span class='ident'>rule</span>) {
             <span class='ident'>find_push</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>id_hash</span>, <span class='ident'>id_name</span>, <span class='ident'>rule</span>);
@@ -1235,7 +1237,7 @@
                   <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Element</span> {
     <span class='ident'>selector_list</span>.<span class='ident'>iter</span>().<span class='ident'>any</span>(<span class='op'>|</span><span class='ident'>selector</span><span class='op'>|</span> {
         <span class='ident'>selector</span>.<span class='ident'>pseudo_element</span>.<span class='ident'>is_none</span>() <span class='op'>&amp;&amp;</span>
-        <span class='ident'>matches_compound_selector</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>selector</span>.<span class='ident'>compound_selectors</span>, <span class='ident'>element</span>, <span class='ident'>parent_bf</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='boolval'>false</span>)
+        <span class='ident'>matches_compound_selector</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>selector</span>.<span class='ident'>compound_selectors</span>, <span class='ident'>element</span>, <span class='ident'>parent_bf</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='boolvalue'>false</span>)
     })
 }
 
@@ -1252,8 +1254,8 @@
                                     <span class='op'>-&gt;</span> <span class='ident'>bool</span>
                                     <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Element</span> {
     <span class='kw'>match</span> <span class='ident'>matches_compound_selector_internal</span>(<span class='ident'>selector</span>, <span class='ident'>element</span>, <span class='ident'>parent_bf</span>, <span class='ident'>shareable</span>) {
-        <span class='ident'>SelectorMatchingResult</span>::<span class='ident'>Matched</span> <span class='op'>=&gt;</span> <span class='boolval'>true</span>,
-        _ <span class='op'>=&gt;</span> <span class='boolval'>false</span>
+        <span class='ident'>SelectorMatchingResult</span>::<span class='ident'>Matched</span> <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
+        _ <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>
     }
 }
 
@@ -1385,10 +1387,10 @@
         <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>SelectorMatchingResult</span>::<span class='ident'>Matched</span>,
         <span class='prelude-val'>Some</span>((<span class='kw-2'>ref</span> <span class='ident'>next_selector</span>, <span class='ident'>combinator</span>)) <span class='op'>=&gt;</span> {
             <span class='kw'>let</span> (<span class='ident'>siblings</span>, <span class='ident'>candidate_not_found</span>) <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>combinator</span> {
-                <span class='ident'>Combinator</span>::<span class='ident'>Child</span> <span class='op'>=&gt;</span> (<span class='boolval'>false</span>, <span class='ident'>SelectorMatchingResult</span>::<span class='ident'>NotMatchedGlobally</span>),
-                <span class='ident'>Combinator</span>::<span class='ident'>Descendant</span> <span class='op'>=&gt;</span> (<span class='boolval'>false</span>, <span class='ident'>SelectorMatchingResult</span>::<span class='ident'>NotMatchedGlobally</span>),
-                <span class='ident'>Combinator</span>::<span class='ident'>NextSibling</span> <span class='op'>=&gt;</span> (<span class='boolval'>true</span>, <span class='ident'>SelectorMatchingResult</span>::<span class='ident'>NotMatchedAndRestartFromClosestDescendant</span>),
-                <span class='ident'>Combinator</span>::<span class='ident'>LaterSibling</span> <span class='op'>=&gt;</span> (<span class='boolval'>true</span>, <span class='ident'>SelectorMatchingResult</span>::<span class='ident'>NotMatchedAndRestartFromClosestDescendant</span>),
+                <span class='ident'>Combinator</span>::<span class='ident'>Child</span> <span class='op'>=&gt;</span> (<span class='boolvalue'>false</span>, <span class='ident'>SelectorMatchingResult</span>::<span class='ident'>NotMatchedGlobally</span>),
+                <span class='ident'>Combinator</span>::<span class='ident'>Descendant</span> <span class='op'>=&gt;</span> (<span class='boolvalue'>false</span>, <span class='ident'>SelectorMatchingResult</span>::<span class='ident'>NotMatchedGlobally</span>),
+                <span class='ident'>Combinator</span>::<span class='ident'>NextSibling</span> <span class='op'>=&gt;</span> (<span class='boolvalue'>true</span>, <span class='ident'>SelectorMatchingResult</span>::<span class='ident'>NotMatchedAndRestartFromClosestDescendant</span>),
+                <span class='ident'>Combinator</span>::<span class='ident'>LaterSibling</span> <span class='op'>=&gt;</span> (<span class='boolvalue'>true</span>, <span class='ident'>SelectorMatchingResult</span>::<span class='ident'>NotMatchedAndRestartFromClosestDescendant</span>),
             };
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>next_element</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>siblings</span> {
                 <span class='ident'>element</span>.<span class='ident'>prev_sibling_element</span>()
@@ -1517,8 +1519,8 @@
         }
         <span class='comment'>// TODO: case-sensitivity depends on the document type and quirks mode</span>
         <span class='ident'>SimpleSelector</span>::<span class='ident'>ID</span>(<span class='kw-2'>ref</span> <span class='ident'>id</span>) <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
-            <span class='ident'>element</span>.<span class='ident'>get_id</span>().<span class='ident'>map_or</span>(<span class='boolval'>false</span>, <span class='op'>|</span><span class='ident'>attr</span><span class='op'>|</span> {
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+            <span class='ident'>element</span>.<span class='ident'>get_id</span>().<span class='ident'>map_or</span>(<span class='boolvalue'>false</span>, <span class='op'>|</span><span class='ident'>attr</span><span class='op'>|</span> {
                 <span class='ident'>attr</span> <span class='op'>==</span> <span class='op'>*</span><span class='ident'>id</span>
             })
         }
@@ -1531,25 +1533,25 @@
             <span class='comment'>// `can_share_style_with()` as well.</span>
             <span class='kw'>if</span> <span class='ident'>common_style_affecting_attributes</span>().<span class='ident'>iter</span>().<span class='ident'>all</span>(<span class='op'>|</span><span class='ident'>common_attr_info</span><span class='op'>|</span> {
                 <span class='op'>!</span>(<span class='ident'>common_attr_info</span>.<span class='ident'>atom</span> <span class='op'>==</span> <span class='ident'>attr</span>.<span class='ident'>name</span> <span class='op'>&amp;&amp;</span> <span class='kw'>match</span> <span class='ident'>common_attr_info</span>.<span class='ident'>mode</span> {
-                    <span class='ident'>CommonStyleAffectingAttributeMode</span>::<span class='ident'>IsPresent</span>(_) <span class='op'>=&gt;</span> <span class='boolval'>true</span>,
-                    <span class='ident'>CommonStyleAffectingAttributeMode</span>::<span class='ident'>IsEqual</span>(..) <span class='op'>=&gt;</span> <span class='boolval'>false</span>,
+                    <span class='ident'>CommonStyleAffectingAttributeMode</span>::<span class='ident'>IsPresent</span>(_) <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
+                    <span class='ident'>CommonStyleAffectingAttributeMode</span>::<span class='ident'>IsEqual</span>(..) <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
                 })
             }) {
-                <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+                <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             }
-            <span class='ident'>element</span>.<span class='ident'>match_attr</span>(<span class='ident'>attr</span>, <span class='op'>|</span>_<span class='op'>|</span> <span class='boolval'>true</span>)
+            <span class='ident'>element</span>.<span class='ident'>match_attr</span>(<span class='ident'>attr</span>, <span class='op'>|</span>_<span class='op'>|</span> <span class='boolvalue'>true</span>)
         }
         <span class='ident'>SimpleSelector</span>::<span class='ident'>AttrEqual</span>(<span class='kw-2'>ref</span> <span class='ident'>attr</span>, <span class='kw-2'>ref</span> <span class='ident'>value</span>, <span class='ident'>case_sensitivity</span>) <span class='op'>=&gt;</span> {
             <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>value</span> <span class='op'>!=</span> <span class='string'>&quot;DIR&quot;</span> <span class='op'>&amp;&amp;</span>
                     <span class='ident'>common_style_affecting_attributes</span>().<span class='ident'>iter</span>().<span class='ident'>all</span>(<span class='op'>|</span><span class='ident'>common_attr_info</span><span class='op'>|</span> {
                         <span class='op'>!</span>(<span class='ident'>common_attr_info</span>.<span class='ident'>atom</span> <span class='op'>==</span> <span class='ident'>attr</span>.<span class='ident'>name</span> <span class='op'>&amp;&amp;</span> <span class='kw'>match</span> <span class='ident'>common_attr_info</span>.<span class='ident'>mode</span> {
                             <span class='ident'>CommonStyleAffectingAttributeMode</span>::<span class='ident'>IsEqual</span>(<span class='ident'>target_value</span>, _) <span class='op'>=&gt;</span> <span class='op'>*</span><span class='ident'>value</span> <span class='op'>==</span> <span class='ident'>target_value</span>,
-                            <span class='ident'>CommonStyleAffectingAttributeMode</span>::<span class='ident'>IsPresent</span>(_) <span class='op'>=&gt;</span> <span class='boolval'>false</span>,
+                            <span class='ident'>CommonStyleAffectingAttributeMode</span>::<span class='ident'>IsPresent</span>(_) <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
                         })
                     }) {
                 <span class='comment'>// FIXME(pcwalton): Remove once we start actually supporting RTL text. This is in</span>
                 <span class='comment'>// here because the UA style otherwise disables all style sharing completely.</span>
-                <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>
+                <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>
             }
             <span class='ident'>element</span>.<span class='ident'>match_attr</span>(<span class='ident'>attr</span>, <span class='op'>|</span><span class='ident'>attr_value</span><span class='op'>|</span> {
                 <span class='kw'>match</span> <span class='ident'>case_sensitivity</span> {
@@ -1559,39 +1561,39 @@
             })
         }
         <span class='ident'>SimpleSelector</span>::<span class='ident'>AttrIncludes</span>(<span class='kw-2'>ref</span> <span class='ident'>attr</span>, <span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>element</span>.<span class='ident'>match_attr</span>(<span class='ident'>attr</span>, <span class='op'>|</span><span class='ident'>attr_value</span><span class='op'>|</span> {
                 <span class='ident'>attr_value</span>.<span class='ident'>split</span>(<span class='ident'>SELECTOR_WHITESPACE</span>).<span class='ident'>any</span>(<span class='op'>|</span><span class='ident'>v</span><span class='op'>|</span> <span class='ident'>v</span> <span class='op'>==</span> <span class='op'>*</span><span class='ident'>value</span>)
             })
         }
         <span class='ident'>SimpleSelector</span>::<span class='ident'>AttrDashMatch</span>(<span class='kw-2'>ref</span> <span class='ident'>attr</span>, <span class='kw-2'>ref</span> <span class='ident'>value</span>, <span class='kw-2'>ref</span> <span class='ident'>dashing_value</span>) <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>element</span>.<span class='ident'>match_attr</span>(<span class='ident'>attr</span>, <span class='op'>|</span><span class='ident'>attr_value</span><span class='op'>|</span> {
                 <span class='ident'>attr_value</span> <span class='op'>==</span> <span class='op'>*</span><span class='ident'>value</span> <span class='op'>||</span>
                 <span class='ident'>attr_value</span>.<span class='ident'>starts_with</span>(<span class='ident'>dashing_value</span>)
             })
         }
         <span class='ident'>SimpleSelector</span>::<span class='ident'>AttrPrefixMatch</span>(<span class='kw-2'>ref</span> <span class='ident'>attr</span>, <span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>element</span>.<span class='ident'>match_attr</span>(<span class='ident'>attr</span>, <span class='op'>|</span><span class='ident'>attr_value</span><span class='op'>|</span> {
                 <span class='ident'>attr_value</span>.<span class='ident'>starts_with</span>(<span class='ident'>value</span>)
             })
         }
         <span class='ident'>SimpleSelector</span>::<span class='ident'>AttrSubstringMatch</span>(<span class='kw-2'>ref</span> <span class='ident'>attr</span>, <span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>element</span>.<span class='ident'>match_attr</span>(<span class='ident'>attr</span>, <span class='op'>|</span><span class='ident'>attr_value</span><span class='op'>|</span> {
                 <span class='ident'>attr_value</span>.<span class='ident'>contains</span>(<span class='ident'>value</span>)
             })
         }
         <span class='ident'>SimpleSelector</span>::<span class='ident'>AttrSuffixMatch</span>(<span class='kw-2'>ref</span> <span class='ident'>attr</span>, <span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>element</span>.<span class='ident'>match_attr</span>(<span class='ident'>attr</span>, <span class='op'>|</span><span class='ident'>attr_value</span><span class='op'>|</span> {
                 <span class='ident'>attr_value</span>.<span class='ident'>ends_with</span>(<span class='ident'>value</span>)
             })
         }
 
         <span class='ident'>SimpleSelector</span>::<span class='ident'>AnyLink</span> <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>element</span>.<span class='ident'>is_link</span>()
         }
         <span class='ident'>SimpleSelector</span>::<span class='ident'>Link</span> <span class='op'>=&gt;</span> {
@@ -1602,71 +1604,71 @@
         }
         $(
             <span class='ident'>SimpleSelector</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>variant</span> <span class='op'>=&gt;</span> {
-                <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+                <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
                 <span class='ident'>element</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>method</span>()
             },
         )<span class='op'>+</span>
         <span class='ident'>SimpleSelector</span>::<span class='ident'>FirstChild</span> <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>matches_first_child</span>(<span class='ident'>element</span>)
         }
         <span class='ident'>SimpleSelector</span>::<span class='ident'>LastChild</span> <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>matches_last_child</span>(<span class='ident'>element</span>)
         }
         <span class='ident'>SimpleSelector</span>::<span class='ident'>OnlyChild</span> <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>matches_first_child</span>(<span class='ident'>element</span>) <span class='op'>&amp;&amp;</span> <span class='ident'>matches_last_child</span>(<span class='ident'>element</span>)
         }
 
         <span class='ident'>SimpleSelector</span>::<span class='ident'>Root</span> <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>element</span>.<span class='ident'>is_root</span>()
         }
 
         <span class='ident'>SimpleSelector</span>::<span class='ident'>Empty</span> <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>element</span>.<span class='ident'>is_empty</span>()
         }
 
         <span class='ident'>SimpleSelector</span>::<span class='ident'>NthChild</span>(<span class='ident'>a</span>, <span class='ident'>b</span>) <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
-            <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='ident'>a</span>, <span class='ident'>b</span>, <span class='boolval'>false</span>, <span class='boolval'>false</span>)
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+            <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='ident'>a</span>, <span class='ident'>b</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>)
         }
         <span class='ident'>SimpleSelector</span>::<span class='ident'>NthLastChild</span>(<span class='ident'>a</span>, <span class='ident'>b</span>) <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
-            <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='ident'>a</span>, <span class='ident'>b</span>, <span class='boolval'>false</span>, <span class='boolval'>true</span>)
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+            <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='ident'>a</span>, <span class='ident'>b</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>true</span>)
         }
         <span class='ident'>SimpleSelector</span>::<span class='ident'>NthOfType</span>(<span class='ident'>a</span>, <span class='ident'>b</span>) <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
-            <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='ident'>a</span>, <span class='ident'>b</span>, <span class='boolval'>true</span>, <span class='boolval'>false</span>)
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+            <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='ident'>a</span>, <span class='ident'>b</span>, <span class='boolvalue'>true</span>, <span class='boolvalue'>false</span>)
         }
         <span class='ident'>SimpleSelector</span>::<span class='ident'>NthLastOfType</span>(<span class='ident'>a</span>, <span class='ident'>b</span>) <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
-            <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='ident'>a</span>, <span class='ident'>b</span>, <span class='boolval'>true</span>, <span class='boolval'>true</span>)
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+            <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='ident'>a</span>, <span class='ident'>b</span>, <span class='boolvalue'>true</span>, <span class='boolvalue'>true</span>)
         }
 
         <span class='ident'>SimpleSelector</span>::<span class='ident'>FirstOfType</span> <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
-            <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='boolval'>true</span>, <span class='boolval'>false</span>)
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+            <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='boolvalue'>true</span>, <span class='boolvalue'>false</span>)
         }
         <span class='ident'>SimpleSelector</span>::<span class='ident'>LastOfType</span> <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
-            <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='boolval'>true</span>, <span class='boolval'>true</span>)
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+            <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='boolvalue'>true</span>, <span class='boolvalue'>true</span>)
         }
         <span class='ident'>SimpleSelector</span>::<span class='ident'>OnlyOfType</span> <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
-            <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='boolval'>true</span>, <span class='boolval'>false</span>) <span class='op'>&amp;&amp;</span>
-                <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='boolval'>true</span>, <span class='boolval'>true</span>)
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
+            <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='boolvalue'>true</span>, <span class='boolvalue'>false</span>) <span class='op'>&amp;&amp;</span>
+                <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='boolvalue'>true</span>, <span class='boolvalue'>true</span>)
         }
 
         <span class='ident'>SimpleSelector</span>::<span class='ident'>ServoNonzeroBorder</span> <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>element</span>.<span class='ident'>has_servo_nonzero_border</span>()
         }
 
         <span class='ident'>SimpleSelector</span>::<span class='ident'>Negation</span>(<span class='kw-2'>ref</span> <span class='ident'>negated</span>) <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolval'>false</span>;
+            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='op'>!</span><span class='ident'>negated</span>.<span class='ident'>iter</span>().<span class='ident'>all</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>matches_simple_selector</span>(<span class='ident'>s</span>, <span class='ident'>element</span>, <span class='ident'>shareable</span>))
         },
     }
@@ -1686,8 +1688,8 @@
 
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>index</span> <span class='op'>=</span> <span class='number'>1</span>;
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>next_sibling</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>is_from_end</span> {
-        <span class='boolval'>true</span> <span class='op'>=&gt;</span> <span class='ident'>element</span>.<span class='ident'>next_sibling_element</span>(),
-        <span class='boolval'>false</span> <span class='op'>=&gt;</span> <span class='ident'>element</span>.<span class='ident'>prev_sibling_element</span>(),
+        <span class='boolvalue'>true</span> <span class='op'>=&gt;</span> <span class='ident'>element</span>.<span class='ident'>next_sibling_element</span>(),
+        <span class='boolvalue'>false</span> <span class='op'>=&gt;</span> <span class='ident'>element</span>.<span class='ident'>prev_sibling_element</span>(),
     };
     <span class='kw'>loop</span> {
         <span class='kw'>let</span> <span class='ident'>sibling</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>next_sibling</span> {
@@ -1704,8 +1706,8 @@
           <span class='ident'>index</span> <span class='op'>+=</span> <span class='number'>1</span>;
         }
         <span class='ident'>next_sibling</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>is_from_end</span> {
-            <span class='boolval'>true</span> <span class='op'>=&gt;</span> <span class='ident'>sibling</span>.<span class='ident'>next_sibling_element</span>(),
-            <span class='boolval'>false</span> <span class='op'>=&gt;</span> <span class='ident'>sibling</span>.<span class='ident'>prev_sibling_element</span>(),
+            <span class='boolvalue'>true</span> <span class='op'>=&gt;</span> <span class='ident'>sibling</span>.<span class='ident'>next_sibling_element</span>(),
+            <span class='boolvalue'>false</span> <span class='op'>=&gt;</span> <span class='ident'>sibling</span>.<span class='ident'>prev_sibling_element</span>(),
         };
     }
 
@@ -1746,7 +1748,7 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
-    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>DeclarationBlock</span>, <span class='ident'>Rule</span>, <span class='ident'>SelectorMap</span>};
+    <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>DeclarationBlock</span>, <span class='ident'>Rule</span>, <span class='ident'>SelectorMap</span>};
     <span class='kw'>use</span> <span class='ident'>parser</span>::<span class='ident'>LocalName</span>;
     <span class='kw'>use</span> <span class='ident'>string_cache</span>::<span class='ident'>Atom</span>;
     <span class='kw'>use</span> <span class='ident'>cssparser</span>::<span class='ident'>Parser</span>;
@@ -1851,6 +1853,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -1871,7 +1875,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -1887,6 +1891,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

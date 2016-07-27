@@ -9,7 +9,9 @@
 
     <title>string_cache::qualname! - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -42,24 +44,14 @@
 
     <section id='main' class="content macro">
 <h1 class='fqn'><span class='in-band'><a href='index.html'>string_cache</a>::<wbr><a class='macro' href=''>qualname!</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-423' class='srclink' href='../src/string_cache/lib.rs.html#32-45' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-431' class='srclink' href='../src/string_cache/lib.rs.html#32-45' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>qualname</span> {
-    (<span class='string'>&quot;&quot;</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>local</span>:<span class='ident'>tt</span>) <span class='op'>=&gt;</span> {
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>namespace</span>::<span class='ident'>QualName</span> {
-            <span class='ident'>ns</span>: <span class='macro'>ns</span><span class='macro'>!</span>(),
-            <span class='ident'>local</span>: <span class='macro'>atom</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>local</span>),
-        }
-    };
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ns</span>:<span class='ident'>tt</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>local</span>:<span class='ident'>tt</span>) <span class='op'>=&gt;</span> {
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>crate</span>::<span class='ident'>namespace</span>::<span class='ident'>QualName</span> {
-            <span class='ident'>ns</span>: <span class='macro'>ns</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ns</span>),
-            <span class='ident'>local</span>: <span class='macro'>atom</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>local</span>),
-        }
-    }
+    (<span class='string'>&quot;&quot;</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>local</span>:<span class='ident'>tt</span>) <span class='op'>=&gt;</span> { ... };
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ns</span>:<span class='ident'>tt</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>local</span>:<span class='ident'>tt</span>) <span class='op'>=&gt;</span> { ... };
 }</pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -84,6 +76,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -104,7 +98,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -120,6 +114,6 @@
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

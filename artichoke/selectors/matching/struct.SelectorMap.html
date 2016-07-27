@@ -9,7 +9,9 @@
 
     <title>selectors::matching::SelectorMap - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -42,10 +44,10 @@
 
     <section id='main' class="content struct">
 <h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>selectors</a>::<wbr><a href='index.html'>matching</a>::<wbr><a class='struct' href=''>SelectorMap</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-288' class='srclink' href='../../src/selectors/matching.rs.html#49-61' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-289' class='srclink' href='../../src/selectors/matching.rs.html#49-61' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct SelectorMap&lt;T&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>Map element data to Rules whose last simple selector starts with them.</p>
@@ -67,8 +69,9 @@ either with &quot;#id1&quot; or with &quot;.foo&quot; or with &quot;.bar&quot;.<
 <p>Hence, the union of the rules keyed on each of element&#39;s classes, ID,
 element name, etc. will contain the Rules that actually match that
 element.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;T&gt; <a class='struct' href='../../selectors/matching/struct.SelectorMap.html' title='selectors::matching::SelectorMap'>SelectorMap</a>&lt;T&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../selectors/matching/struct.SelectorMap.html' title='selectors::matching::SelectorMap'>SelectorMap</a>&lt;T&gt;</code></h4>
-<h4 id='method.get_all_matching_rules' class='method'><code>fn <a href='#method.get_all_matching_rules' class='fnname'>get_all_matching_rules</a>&lt;E, V&gt;(&amp;self, element: &amp;E, parent_bf: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='../../selectors/bloom/struct.BloomFilter.html' title='selectors::bloom::BloomFilter'>BloomFilter</a>&gt;, matching_rules_list: &amp;mut V, shareable: &amp;mut <a href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) <span class='where'>where E: <a class='trait' href='../../selectors/trait.Element.html' title='selectors::Element'>Element</a>, V: <a class='trait' href='../../smallvec/trait.VecLike.html' title='smallvec::VecLike'>VecLike</a>&lt;<a class='struct' href='../../selectors/matching/struct.DeclarationBlock.html' title='selectors::matching::DeclarationBlock'>DeclarationBlock</a>&lt;T&gt;&gt;</span></code></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;T&gt; <a class='struct' href='../../selectors/matching/struct.SelectorMap.html' title='selectors::matching::SelectorMap'>SelectorMap</a>&lt;T&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-297' class='srclink' href='../../src/selectors/matching.rs.html#63-236' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../selectors/matching/struct.SelectorMap.html' title='selectors::matching::SelectorMap'>SelectorMap</a>&lt;T&gt;</code></h4>
+<h4 id='method.get_all_matching_rules' class='method'><code>fn <a href='#method.get_all_matching_rules' class='fnname'>get_all_matching_rules</a>&lt;E, V&gt;(&amp;self, element: &amp;E, parent_bf: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='../../selectors/bloom/struct.BloomFilter.html' title='selectors::bloom::BloomFilter'>BloomFilter</a>&gt;, matching_rules_list: &amp;mut V, shareable: &amp;mut <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) <span class='where'>where E: <a class='trait' href='../../selectors/trait.Element.html' title='selectors::Element'>Element</a>, V: <a class='trait' href='../../smallvec/trait.VecLike.html' title='smallvec::VecLike'>VecLike</a>&lt;<a class='struct' href='../../selectors/matching/struct.DeclarationBlock.html' title='selectors::matching::DeclarationBlock'>DeclarationBlock</a>&lt;T&gt;&gt;</span></code></h4>
 <div class='docblock'><p>Append to <code>rule_list</code> all Rules in <code>self</code> that match element.</p>
 
 <p>Extract matching rules as per element&#39;s ID, classes, tag name, etc..
@@ -99,6 +102,8 @@ Order in which to try: id_hash, class_hash, local_name_hash, universal_rules.</p
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -119,7 +124,7 @@ Order in which to try: id_hash, class_hash, local_name_hash, universal_rules.</p
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -135,6 +140,6 @@ Order in which to try: id_hash, class_hash, local_name_hash, universal_rules.</p
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

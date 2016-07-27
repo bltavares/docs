@@ -9,7 +9,9 @@
 
     <title>html5ever::tokenizer::TokenSink - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -42,14 +44,14 @@
 
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>html5ever</a>::<wbr><a href='index.html'>tokenizer</a>::<wbr><a class='trait' href=''>TokenSink</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-1046' class='srclink' href='../../src/html5ever/tokenizer/interface.rs.html#101-119' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-1029' class='srclink' href='../../src/html5ever/tokenizer/interface.rs.html#101-119' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait TokenSink {
     fn <a href='#tymethod.process_token' class='fnname'>process_token</a>(&amp;mut self, token: <a class='enum' href='../../html5ever/tokenizer/enum.Token.html' title='html5ever::tokenizer::Token'>Token</a>);
 
-    fn <a href='#method.adjusted_current_node_present_but_not_in_html_namespace' class='fnname'>adjusted_current_node_present_but_not_in_html_namespace</a>(&amp;self) -&gt; <a href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> { ... }
+    fn <a href='#method.adjusted_current_node_present_but_not_in_html_namespace' class='fnname'>adjusted_current_node_present_but_not_in_html_namespace</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> { ... }
     fn <a href='#method.query_state_change' class='fnname'>query_state_change</a>(&amp;mut self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../../html5ever/tokenizer/states/enum.State.html' title='html5ever::tokenizer::states::State'>State</a>&gt; { ... }
 }</pre><div class='docblock'><p>Types which can receive tokens from the tokenizer.</p>
 </div>
@@ -59,7 +61,7 @@
 </div></div>
             <h2 id='provided-methods'>Provided Methods</h2>
             <div class='methods'>
-        <h3 id='method.adjusted_current_node_present_but_not_in_html_namespace' class='method stab '><code>fn <a href='#method.adjusted_current_node_present_but_not_in_html_namespace' class='fnname'>adjusted_current_node_present_but_not_in_html_namespace</a>(&amp;self) -&gt; <a href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h3><div class='docblock'><p>Used in the markup declaration open state. By default, this always
+        <h3 id='method.adjusted_current_node_present_but_not_in_html_namespace' class='method stab '><code>fn <a href='#method.adjusted_current_node_present_but_not_in_html_namespace' class='fnname'>adjusted_current_node_present_but_not_in_html_namespace</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h3><div class='docblock'><p>Used in the markup declaration open state. By default, this always
 returns false and thus all CDATA sections are tokenized as bogus
 comments.
 <a href="https://html.spec.whatwg.org/multipage/#markup-declaration-open-state">https://html.spec.whatwg.org/multipage/#markup-declaration-open-state</a></p>
@@ -69,10 +71,10 @@ By default no state changes occur.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl&lt;Handle, Sink&gt; <a class='trait' href='../../html5ever/tokenizer/trait.TokenSink.html' title='html5ever::tokenizer::TokenSink'>TokenSink</a> for <a class='struct' href='../../html5ever/tree_builder/struct.TreeBuilder.html' title='html5ever::tree_builder::TreeBuilder'>TreeBuilder</a>&lt;Handle, Sink&gt; <span class='where'>where Handle: <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>, Sink: <a class='trait' href='../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>TreeSink</a>&lt;Handle=Handle&gt;</span></code></li>
+    <li><code>impl&lt;Handle, Sink&gt; TokenSink for <a class='struct' href='../../html5ever/tree_builder/struct.TreeBuilder.html' title='html5ever::tree_builder::TreeBuilder'>TreeBuilder</a>&lt;Handle, Sink&gt; <span class='where'>where Handle: <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>, Sink: <a class='trait' href='../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>TreeSink</a>&lt;Handle=Handle&gt;</span></code></li>
 </ul><script type="text/javascript" async
-                              src="../../implementors/html5ever/tokenizer/trait.TokenSink.js">
-                      </script></section>
+                         src="../../implementors/html5ever/tokenizer/trait.TokenSink.js">
+                 </script></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -95,6 +97,8 @@ By default no state changes occur.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -115,7 +119,7 @@ By default no state changes occur.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -131,6 +135,6 @@ By default no state changes occur.</p>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

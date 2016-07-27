@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors['cssparser'] = [];
+implementors["cssparser"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

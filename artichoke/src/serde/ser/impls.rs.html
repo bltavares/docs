@@ -4,12 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/serde-0.6.1/src/ser/impls.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.6.1/src/ser/impls.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>impls.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
 
     
     
@@ -771,7 +773,7 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;nightly&quot;</span>)]</span>
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>nonzero</span>::{<span class='ident'>NonZero</span>, <span class='ident'>Zeroable</span>};
 
-<span class='kw'>use</span> <span class='ident'>super</span>::{
+<span class='kw'>use</span> <span class='kw'>super</span>::{
     <span class='ident'>Serialize</span>,
     <span class='ident'>Serializer</span>,
     <span class='ident'>SeqVisitor</span>,
@@ -1469,6 +1471,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -1489,7 +1493,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -1505,6 +1509,6 @@
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
     
-    <script async src="../../../search-index.js"></script>
+    <script defer src="../../../search-index.js"></script>
 </body>
 </html>

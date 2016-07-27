@@ -9,7 +9,9 @@
 
     <title>tendril::fmt::SliceFormat - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -42,25 +44,25 @@
 
     <section id='main' class="content trait">
 <h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>tendril</a>::<wbr><a href='index.html'>fmt</a>::<wbr><a class='trait' href=''>SliceFormat</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-61' class='srclink' href='../../src/tendril/fmt.rs.html#159-161' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-63' class='srclink' href='../../src/tendril/fmt.rs.html#159-161' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub unsafe trait SliceFormat: <a class='trait' href='../../tendril/fmt/trait.Format.html' title='tendril::fmt::Format'>Format</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> {
-    type Slice: ?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../../tendril/fmt/trait.Slice.html' title='tendril::fmt::Slice'>Slice</a>&lt;Format=Self&gt;;
+    type <a href='#associatedtype.Slice' class='type'>Slice</a>: ?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../../tendril/fmt/trait.Slice.html' title='tendril::fmt::Slice'>Slice</a>&lt;Format=Self&gt;;
 }</pre><div class='docblock'><p>Indicates a format which corresponds to a Rust slice type,
 representing exactly the same invariants.</p>
 </div>
             <h2 id='associated-types'>Associated Types</h2>
             <div class='methods'>
-        <h3 id='associatedtype.Slice' class='method stab '><code>type Slice: ?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../../tendril/fmt/trait.Slice.html' title='tendril::fmt::Slice'>Slice</a>&lt;Format=Self&gt;</code></h3></div>
+        <h3 id='associatedtype.Slice' class='method stab '><code>type <a href='#associatedtype.Slice' class='type'>Slice</a>: ?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a> + <a class='trait' href='../../tendril/fmt/trait.Slice.html' title='tendril::fmt::Slice'>Slice</a>&lt;Format=Self&gt;</code></h3></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl <a class='trait' href='../../tendril/fmt/trait.SliceFormat.html' title='tendril::fmt::SliceFormat'>SliceFormat</a> for <a class='struct' href='../../tendril/fmt/struct.Bytes.html' title='tendril::fmt::Bytes'>Bytes</a></code></li>
-<li><code>impl <a class='trait' href='../../tendril/fmt/trait.SliceFormat.html' title='tendril::fmt::SliceFormat'>SliceFormat</a> for <a class='struct' href='../../tendril/fmt/struct.UTF8.html' title='tendril::fmt::UTF8'>UTF8</a></code></li>
+    <li><code>impl SliceFormat for <a class='struct' href='../../tendril/fmt/struct.Bytes.html' title='tendril::fmt::Bytes'>Bytes</a></code></li>
+<li><code>impl SliceFormat for <a class='struct' href='../../tendril/fmt/struct.UTF8.html' title='tendril::fmt::UTF8'>UTF8</a></code></li>
 </ul><script type="text/javascript" async
-                              src="../../implementors/tendril/fmt/trait.SliceFormat.js">
-                      </script></section>
+                         src="../../implementors/tendril/fmt/trait.SliceFormat.js">
+                 </script></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -83,6 +85,8 @@ representing exactly the same invariants.</p>
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -103,7 +107,7 @@ representing exactly the same invariants.</p>
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -119,6 +123,6 @@ representing exactly the same invariants.</p>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

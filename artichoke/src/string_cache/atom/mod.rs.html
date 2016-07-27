@@ -4,12 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/string_cache-0.2.1/src/atom/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/string_cache-0.2.1/src/atom/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
 
     
     
@@ -1117,8 +1119,8 @@
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>thread</span>;
-    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>Atom</span>, <span class='ident'>StringCacheEntry</span>, <span class='ident'>STATIC_ATOM_SET</span>};
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>UnpackedAtom</span>::{<span class='ident'>Dynamic</span>, <span class='ident'>Inline</span>, <span class='ident'>Static</span>};
+    <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Atom</span>, <span class='ident'>StringCacheEntry</span>, <span class='ident'>STATIC_ATOM_SET</span>};
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>UnpackedAtom</span>::{<span class='ident'>Dynamic</span>, <span class='ident'>Inline</span>, <span class='ident'>Static</span>};
     <span class='kw'>use</span> <span class='ident'>shared</span>::<span class='ident'>ENTRY_ALIGNMENT</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -1285,8 +1287,8 @@
     <span class='kw'>fn</span> <span class='ident'>assert_sizes</span>() {
         <span class='comment'>// Guard against accidental changes to the sizes of things.</span>
         <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>if</span> <span class='macro'>cfg</span><span class='macro'>!</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;unstable&quot;</span>) { <span class='number'>8</span> } <span class='kw'>else</span> { <span class='number'>16</span> }, <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>super</span>::<span class='ident'>Atom</span><span class='op'>&gt;</span>());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>48</span>, <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>super</span>::<span class='ident'>StringCacheEntry</span><span class='op'>&gt;</span>());
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>if</span> <span class='macro'>cfg</span><span class='macro'>!</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;unstable&quot;</span>) { <span class='number'>8</span> } <span class='kw'>else</span> { <span class='number'>16</span> }, <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='kw'>super</span>::<span class='ident'>Atom</span><span class='op'>&gt;</span>());
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>48</span>, <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='kw'>super</span>::<span class='ident'>StringCacheEntry</span><span class='op'>&gt;</span>());
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
@@ -1346,7 +1348,7 @@
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;unstable&quot;</span>)]</span>
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>atom_drop_is_idempotent</span>() {
-        <span class='kw'>use</span> <span class='ident'>super</span>::<span class='ident'>from_packed_dynamic</span>;
+        <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>from_packed_dynamic</span>;
         <span class='kw'>unsafe</span> {
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>from_packed_dynamic</span>(<span class='ident'>mem</span>::<span class='ident'>POST_DROP_U64</span>), <span class='prelude-val'>None</span>);
         }
@@ -1381,6 +1383,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -1401,7 +1405,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -1417,6 +1421,6 @@
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
     
-    <script async src="../../../search-index.js"></script>
+    <script defer src="../../../search-index.js"></script>
 </body>
 </html>

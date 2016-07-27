@@ -4,12 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-0a35038f75765ae4/tendril-0.1.6/src/stream.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/tendril-0.1.6/src/stream.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>stream.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -688,7 +690,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>TendrilSink</span>, <span class='ident'>Decoder</span>, <span class='ident'>UTF8Validator</span>};
+    <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>TendrilSink</span>, <span class='ident'>Decoder</span>, <span class='ident'>UTF8Validator</span>};
     <span class='kw'>use</span> <span class='ident'>tendril</span>::{<span class='ident'>Tendril</span>, <span class='ident'>Atomicity</span>, <span class='ident'>SliceExt</span>, <span class='ident'>NonAtomic</span>};
     <span class='kw'>use</span> <span class='ident'>fmt</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Cow</span>;
@@ -873,6 +875,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -893,7 +897,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -909,6 +913,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>

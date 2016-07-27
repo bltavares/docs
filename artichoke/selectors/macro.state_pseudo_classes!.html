@@ -9,7 +9,9 @@
 
     <title>selectors::state_pseudo_classes! - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
+    
 
     
     
@@ -42,35 +44,13 @@
 
     <section id='main' class="content macro">
 <h1 class='fqn'><span class='in-band'><a href='index.html'>selectors</a>::<wbr><a class='macro' href=''>state_pseudo_classes!</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-1654' class='srclink' href='../src/selectors/states.rs.html#6-30' title='goto source code'>[src]</a></span></h1>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-1675' class='srclink' href='../src/selectors/states.rs.html#6-30' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>state_pseudo_classes</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>macro_name</span>: <span class='ident'>ident</span>) <span class='op'>=&gt;</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>macro_name</span><span class='op'>!</span> {
-        <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;The mouse is down on this element. \
-                 (https://html.spec.whatwg.org/multipage/#selector-active). \
-                 FIXME(#7333): set/unset this when appropriate&quot;</span>]</span>
-        <span class='ident'>state</span> <span class='string'>&quot;active&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>Active</span> <span class='op'>/</span> <span class='ident'>get_active_state</span> <span class='op'>/</span> <span class='ident'>IN_ACTIVE_STATE</span> <span class='op'>=</span> <span class='number'>0x01</span>,
-        <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;This element has focus.
-                 https://html.spec.whatwg.org/multipage/scripting.html#selector-focus&quot;</span>]</span>
-        <span class='ident'>state</span> <span class='string'>&quot;focus&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>Focus</span> <span class='op'>/</span> <span class='ident'>get_focus_state</span> <span class='op'>/</span> <span class='ident'>IN_FOCUS_STATE</span> <span class='op'>=</span> <span class='number'>0x02</span>,
-        <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;The mouse is hovering over this element. \
-                 https://html.spec.whatwg.org/multipage/scripting.html#selector-hover&quot;</span>]</span>
-        <span class='ident'>state</span> <span class='string'>&quot;hover&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>Hover</span> <span class='op'>/</span> <span class='ident'>get_hover_state</span> <span class='op'>/</span> <span class='ident'>IN_HOVER_STATE</span> <span class='op'>=</span> <span class='number'>0x04</span>,
-        <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;Content is enabled (and can be disabled). \
-                 http://www.whatwg.org/html/#selector-enabled&quot;</span>]</span>
-        <span class='ident'>state</span> <span class='string'>&quot;enabled&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>Enabled</span> <span class='op'>/</span> <span class='ident'>get_enabled_state</span> <span class='op'>/</span> <span class='ident'>IN_ENABLED_STATE</span> <span class='op'>=</span> <span class='number'>0x08</span>,
-        <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;Content is disabled. \
-                 http://www.whatwg.org/html/#selector-disabled&quot;</span>]</span>
-        <span class='ident'>state</span> <span class='string'>&quot;disabled&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>Disabled</span> <span class='op'>/</span> <span class='ident'>get_disabled_state</span> <span class='op'>/</span> <span class='ident'>IN_DISABLED_STATE</span> <span class='op'>=</span> <span class='number'>0x10</span>,
-        <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;Content is checked. \
-                 https://html.spec.whatwg.org/multipage/scripting.html#selector-checked&quot;</span>]</span>
-        <span class='ident'>state</span> <span class='string'>&quot;checked&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>Checked</span> <span class='op'>/</span> <span class='ident'>get_checked_state</span> <span class='op'>/</span> <span class='ident'>IN_CHECKED_STATE</span> <span class='op'>=</span> <span class='number'>0x20</span>,
-        <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;https://html.spec.whatwg.org/multipage/scripting.html#selector-indeterminate&quot;</span>]</span>
-        <span class='ident'>state</span> <span class='string'>&quot;indeterminate&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>Indeterminate</span> <span class='op'>/</span> <span class='ident'>get_intermediate_state</span> <span class='op'>/</span> <span class='ident'>IN_INDETERMINATE_STATE</span> <span class='op'>=</span> <span class='number'>0x40</span>,
-    }}
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>macro_name</span>: <span class='ident'>ident</span>) <span class='op'>=&gt;</span> { ... };
 }</pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -95,6 +75,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -115,7 +97,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -131,6 +113,6 @@
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     
-    <script async src="../search-index.js"></script>
+    <script defer src="../search-index.js"></script>
 </body>
 </html>

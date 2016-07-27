@@ -9,7 +9,9 @@
 
     <title>selectors::matching::SELECTOR_WHITESPACE - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
+    
 
     
     
@@ -42,11 +44,11 @@
 
     <section id='main' class="content static">
 <h1 class='fqn'><span class='in-band'><a href='../index.html'>selectors</a>::<wbr><a href='index.html'>matching</a>::<wbr><a class='static' href=''>SELECTOR_WHITESPACE</a></span><span class='out-of-band'><span id='render-detail'>
-            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                [<span class='inner'>&#x2212;</span>]
-            </a>
-        </span><a id='src-287' class='srclink' href='../../src/selectors/matching.rs.html#27' title='goto source code'>[src]</a></span></h1>
-<pre class='rust static'>pub static SELECTOR_WHITESPACE: <a href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'static [</a><a href='https://doc.rust-lang.org/nightly/std/primitive.char.html'>char</a><a href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a><code> = </code><code>&[' ', '\t', '\n', '\r', '\x0C']</code></pre><div class='docblock'><p>The definition of whitespace per CSS Selectors Level 3 § 4.</p>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-288' class='srclink' href='../../src/selectors/matching.rs.html#27' title='goto source code'>[src]</a></span></h1>
+<pre class='rust static'>pub static SELECTOR_WHITESPACE: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'static [</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.char.html'>char</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a><code> = </code><code>&amp;[&#39; &#39;, &#39;\t&#39;, &#39;\n&#39;, &#39;\r&#39;, &#39;\u{c}&#39;]</code></pre><div class='docblock'><p>The definition of whitespace per CSS Selectors Level 3 § 4.</p>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -70,6 +72,8 @@
                     <dd>Move down in search results</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
 
@@ -90,7 +94,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -106,6 +110,6 @@
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../search-index.js"></script>
 </body>
 </html>
