@@ -47,18 +47,64 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/fnv/lib.rs.html#1-254' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'><p>This file stolen wholesale from <a href="https://github.com/rust-lang/rust/blob/master/src/librustc/util/nodemap.rs">https://github.com/rust-lang/rust/blob/master/src/librustc/util/nodemap.rs</a></p>
+               </span><a id='src-0' class='srclink' href='../src/fnv/lib.rs.html#1-326' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>An implementation of the <a href="http://www.isthe.com/chongo/tech/comp/fnv/index.html">Fowler–Noll–Vo hash function</a>.</p>
+
+<h2 id='about' class='section-header'><a href='#about'>About</a></h2>
+<p>The FNV hash function is a custom <code>Hasher</code> implementation that is more
+efficient for smaller hash keys.</p>
+
+<p><a href="https://www.rust-lang.org/faq.html#why-are-rusts-hashmaps-slow">The Rust FAQ states that</a> while the default <code>Hasher</code> implementation,
+SipHash, is good in many cases, it is notably slower than other algorithms
+with short keys, such as when you have a map of integers to other values.
+In cases like these, <a href="http://cglab.ca/%7Eabeinges/blah/hash-rs/">FNV is demonstrably faster</a>.</p>
+
+<p>Its disadvantages are that it performs badly on larger inputs, and
+provides no protection against collision attacks, where a malicious user
+can craft specific keys designed to slow a hasher down. Thus, it is
+important to profile your program to ensure that you are using small hash
+keys, and be certain that your program could not be exposed to malicious
+inputs (including being a networked server).</p>
+
+<p>The Rust compiler itself uses FNV, as it is not worried about
+denial-of-service attacks, and can assume that its inputs are going to be
+small—a perfect use case for FNV.</p>
+
+<h2 id='using-fnv-in-a-hashmap' class='section-header'><a href='#using-fnv-in-a-hashmap'>Using FNV in a HashMap</a></h2>
+<p>To configure a <code>HashMap</code> in the standard library to use the FNV hasher, you
+must create a default instance of a <code>FnvHasher</code> state, then create a new
+map using this state with <code>HashMap::with_hash_state</code>. A full example:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashMap</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::<span class='ident'>BuildHasherDefault</span>;
+<span class='kw'>use</span> <span class='ident'>fnv</span>::<span class='ident'>FnvHasher</span>;
+
+<span class='kw'>let</span> <span class='ident'>fnv</span> <span class='op'>=</span> <span class='ident'>BuildHasherDefault</span>::<span class='op'>&lt;</span><span class='ident'>FnvHasher</span><span class='op'>&gt;</span>::<span class='ident'>default</span>();
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>HashMap</span>::<span class='ident'>with_hasher</span>(<span class='ident'>fnv</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='string'>&quot;one&quot;</span>);
+<span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='string'>&quot;two&quot;</span>);</pre>
+
+<h2 id='using-fnv-in-a-hashset' class='section-header'><a href='#using-fnv-in-a-hashset'>Using FNV in a HashSet</a></h2>
+<p>The standard library’s <code>HashSet</code> can be configured to use the FNV hasher
+with the same mechanism.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashSet</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::<span class='ident'>BuildHasherDefault</span>;
+<span class='kw'>use</span> <span class='ident'>fnv</span>::<span class='ident'>FnvHasher</span>;
+
+<span class='kw'>let</span> <span class='ident'>fnv</span> <span class='op'>=</span> <span class='ident'>BuildHasherDefault</span>::<span class='op'>&lt;</span><span class='ident'>FnvHasher</span><span class='op'>&gt;</span>::<span class='ident'>default</span>();
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>set</span> <span class='op'>=</span> <span class='ident'>HashSet</span>::<span class='ident'>with_hasher</span>(<span class='ident'>fnv</span>);
+<span class='ident'>set</span>.<span class='ident'>insert</span>(<span class='number'>1</span>);
+<span class='ident'>set</span>.<span class='ident'>insert</span>(<span class='number'>2</span>);</pre>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.FnvHasher.html'
                                   title='fnv::FnvHasher'>FnvHasher</a></td>
                            <td class='docblock short'>
-                                <p>A speedy hash algorithm for node ids and def ids. The hashmap in
-libcollections by default uses SipHash which isn&#39;t quite as speedy as we
-want. In the compiler we&#39;re not really worried about DOS attempts, so we
-just default to a non-cryptographic hash.</p>
+                                <p>An implementation of the Fowler–Noll–Vo hash function.</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>

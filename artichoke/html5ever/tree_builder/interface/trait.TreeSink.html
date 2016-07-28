@@ -47,9 +47,11 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1934' class='srclink' href='../../../src/html5ever/tree_builder/interface.rs.html#51-136' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-1932' class='srclink' href='../../../src/html5ever/tree_builder/interface.rs.html#51-155' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait TreeSink {
+    type <a href='#associatedtype.Output' class='type'>Output</a>;
     type <a href='#associatedtype.Handle' class='type'>Handle</a>: <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>;
+    fn <a href='#tymethod.finish' class='fnname'>finish</a>(self) -&gt; Self::<a class='trait' href='../../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>Output</a>;
     fn <a href='#tymethod.parse_error' class='fnname'>parse_error</a>(&amp;mut self, msg: <a class='enum' href='https://doc.rust-lang.org/nightly/collections/borrow/enum.Cow.html' title='collections::borrow::Cow'>Cow</a>&lt;'static, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;);
     fn <a href='#tymethod.get_document' class='fnname'>get_document</a>(&amp;mut self) -&gt; Self::<a class='trait' href='../../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>Handle</a>;
     fn <a href='#tymethod.get_template_contents' class='fnname'>get_template_contents</a>(&amp;self, target: Self::<a class='trait' href='../../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>Handle</a>) -&gt; Self::<a class='trait' href='../../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>Handle</a>;
@@ -67,17 +69,27 @@
     fn <a href='#tymethod.mark_script_already_started' class='fnname'>mark_script_already_started</a>(&amp;mut self, node: Self::<a class='trait' href='../../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>Handle</a>);
 
     fn <a href='#method.complete_script' class='fnname'>complete_script</a>(&amp;mut self, _node: Self::<a class='trait' href='../../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>Handle</a>) -&gt; <a class='enum' href='../../../html5ever/tree_builder/interface/enum.NextParserState.html' title='html5ever::tree_builder::interface::NextParserState'>NextParserState</a> { ... }
+    fn <a href='#method.is_mathml_annotation_xml_integration_point' class='fnname'>is_mathml_annotation_xml_integration_point</a>(&amp;self, handle: Self::<a class='trait' href='../../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>Handle</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a> { ... }
 }</pre><div class='docblock'><p>Types which can process tree modifications from the tree builder.</p>
 </div>
             <h2 id='associated-types'>Associated Types</h2>
             <div class='methods'>
-        <h3 id='associatedtype.Handle' class='method stab '><code>type <a href='#associatedtype.Handle' class='type'>Handle</a>: <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a></code></h3><div class='docblock'><p><code>Handle</code> is a reference to a DOM node.  The tree builder requires
+        <h3 id='associatedtype.Output' class='method stab '><code>type <a href='#associatedtype.Output' class='type'>Output</a></code></h3><div class='docblock'><p>The overall result of parsing.</p>
+
+<p>This should default to Self, but default associated types are not stable yet.
+(<a href="https://github.com/rust-lang/rust/issues/29661">https://github.com/rust-lang/rust/issues/29661</a>)</p>
+</div><h3 id='associatedtype.Handle' class='method stab '><code>type <a href='#associatedtype.Handle' class='type'>Handle</a>: <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a></code></h3><div class='docblock'><p><code>Handle</code> is a reference to a DOM node.  The tree builder requires
 that a <code>Handle</code> implements <code>Clone</code> to get another reference to
 the same node.</p>
 </div></div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.parse_error' class='method stab '><code>fn <a href='#tymethod.parse_error' class='fnname'>parse_error</a>(&amp;mut self, msg: <a class='enum' href='https://doc.rust-lang.org/nightly/collections/borrow/enum.Cow.html' title='collections::borrow::Cow'>Cow</a>&lt;'static, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;)</code></h3><div class='docblock'><p>Signal a parse error.</p>
+        <h3 id='tymethod.finish' class='method stab '><code>fn <a href='#tymethod.finish' class='fnname'>finish</a>(self) -&gt; Self::<a class='trait' href='../../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>Output</a></code></h3><div class='docblock'><p>Consume this sink and return the overall result of parsing.</p>
+
+<p>This should default to <code>fn finish(self) -&gt; Self::Output { self }</code>,
+but default associated types are not stable yet.
+(<a href="https://github.com/rust-lang/rust/issues/29661">https://github.com/rust-lang/rust/issues/29661</a>)</p>
+</div><h3 id='tymethod.parse_error' class='method stab '><code>fn <a href='#tymethod.parse_error' class='fnname'>parse_error</a>(&amp;mut self, msg: <a class='enum' href='https://doc.rust-lang.org/nightly/collections/borrow/enum.Cow.html' title='collections::borrow::Cow'>Cow</a>&lt;'static, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;)</code></h3><div class='docblock'><p>Signal a parse error.</p>
 </div><h3 id='tymethod.get_document' class='method stab '><code>fn <a href='#tymethod.get_document' class='fnname'>get_document</a>(&amp;mut self) -&gt; Self::<a class='trait' href='../../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>Handle</a></code></h3><div class='docblock'><p>Get a handle to the <code>Document</code> node.</p>
 </div><h3 id='tymethod.get_template_contents' class='method stab '><code>fn <a href='#tymethod.get_template_contents' class='fnname'>get_template_contents</a>(&amp;self, target: Self::<a class='trait' href='../../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>Handle</a>) -&gt; Self::<a class='trait' href='../../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>Handle</a></code></h3><div class='docblock'><p>Get a handle to a template&#39;s template contents. The tree builder
 promises this will never be called with something else than
@@ -121,7 +133,7 @@ with something else than an element.</p>
             <h2 id='provided-methods'>Provided Methods</h2>
             <div class='methods'>
         <h3 id='method.complete_script' class='method stab '><code>fn <a href='#method.complete_script' class='fnname'>complete_script</a>(&amp;mut self, _node: Self::<a class='trait' href='../../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>Handle</a>) -&gt; <a class='enum' href='../../../html5ever/tree_builder/interface/enum.NextParserState.html' title='html5ever::tree_builder::interface::NextParserState'>NextParserState</a></code></h3><div class='docblock'><p>Indicate that a <code>&lt;script&gt;</code> element is complete.</p>
-</div></div>
+</div><h3 id='method.is_mathml_annotation_xml_integration_point' class='method stab '><code>fn <a href='#method.is_mathml_annotation_xml_integration_point' class='fnname'>is_mathml_annotation_xml_integration_point</a>(&amp;self, handle: Self::<a class='trait' href='../../../html5ever/tree_builder/interface/trait.TreeSink.html' title='html5ever::tree_builder::interface::TreeSink'>Handle</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h3></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
     <li><code>impl TreeSink for <a class='struct' href='../../../html5ever/rcdom/struct.RcDom.html' title='html5ever::rcdom::RcDom'>RcDom</a></code></li>

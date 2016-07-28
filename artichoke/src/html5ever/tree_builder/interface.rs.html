@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/html5ever-0.2.11/src/tree_builder/interface.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/html5ever-0.5.4/src/tree_builder/interface.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>interface.rs.html -- source</title>
@@ -187,6 +187,25 @@
 <span id="143">143</span>
 <span id="144">144</span>
 <span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 The html5ever Project Developers. See the</span>
 <span class='comment'>// COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -239,6 +258,19 @@
 
 <span class='doccomment'>/// Types which can process tree modifications from the tree builder.</span>
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>TreeSink</span> {
+    <span class='doccomment'>/// The overall result of parsing.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// This should default to Self, but default associated types are not stable yet.</span>
+    <span class='doccomment'>/// (https://github.com/rust-lang/rust/issues/29661)</span>
+    <span class='kw'>type</span> <span class='ident'>Output</span>;
+
+    <span class='doccomment'>/// Consume this sink and return the overall result of parsing.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// This should default to `fn finish(self) -&gt; Self::Output { self }`,</span>
+    <span class='doccomment'>/// but default associated types are not stable yet.</span>
+    <span class='doccomment'>/// (https://github.com/rust-lang/rust/issues/29661)</span>
+    <span class='kw'>fn</span> <span class='ident'>finish</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Output</span>;
+
     <span class='doccomment'>/// `Handle` is a reference to a DOM node.  The tree builder requires</span>
     <span class='doccomment'>/// that a `Handle` implements `Clone` to get another reference to</span>
     <span class='doccomment'>/// the same node.</span>
@@ -323,6 +355,12 @@
     <span class='kw'>fn</span> <span class='ident'>complete_script</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>_node</span>: <span class='self'>Self</span>::<span class='ident'>Handle</span>) <span class='op'>-&gt;</span> <span class='ident'>NextParserState</span> {
         <span class='ident'>NextParserState</span>::<span class='ident'>Continue</span>
     }
+
+    <span class='comment'>// Returns true if the adjusted current node is an HTML integration point</span>
+    <span class='comment'>// and the token is a start tag</span>
+    <span class='kw'>fn</span> <span class='ident'>is_mathml_annotation_xml_integration_point</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>handle</span>: <span class='self'>Self</span>::<span class='ident'>Handle</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='boolvalue'>false</span>
+    }
 }
 
 <span class='doccomment'>/// Trace hooks for a garbage-collected DOM.</span>
@@ -331,7 +369,7 @@
 
     <span class='doccomment'>/// Upon a call to `trace_handles`, the tree builder will call this method</span>
     <span class='doccomment'>/// for each handle in its internal state.</span>
-    <span class='kw'>fn</span> <span class='ident'>trace_handle</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>node</span>: <span class='self'>Self</span>::<span class='ident'>Handle</span>);
+    <span class='kw'>fn</span> <span class='ident'>trace_handle</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>node</span>: <span class='kw-2'>&amp;</span><span class='self'>Self</span>::<span class='ident'>Handle</span>);
 }
 </pre>
 </section>

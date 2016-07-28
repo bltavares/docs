@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/html5ever-0.2.11/src/rcdom.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/html5ever-0.5.4/src/rcdom.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>rcdom.rs.html -- source</title>
@@ -405,6 +405,21 @@
 <span id="361">361</span>
 <span id="362">362</span>
 <span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 The html5ever Project Developers. See the</span>
 <span class='comment'>// COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -420,6 +435,7 @@
 <span class='doccomment'>//! This is sufficient as a static parse tree, but don&#39;t build a</span>
 <span class='doccomment'>//! web browser using it. :)</span>
 
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ascii</span>::<span class='ident'>AsciiExt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>RefCell</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashSet</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>default</span>::<span class='ident'>Default</span>;
@@ -427,8 +443,8 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::{<span class='self'>self</span>, <span class='ident'>Write</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::{<span class='ident'>Deref</span>, <span class='ident'>DerefMut</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rc</span>::{<span class='ident'>Rc</span>, <span class='ident'>Weak</span>};
 
-<span class='kw'>use</span> <span class='ident'>rc</span>::{<span class='ident'>Rc</span>, <span class='ident'>Weak</span>};
 <span class='kw'>use</span> <span class='ident'>string_cache</span>::<span class='ident'>QualName</span>;
 <span class='kw'>use</span> <span class='ident'>tendril</span>::<span class='ident'>StrTendril</span>;
 
@@ -438,9 +454,8 @@
 <span class='kw'>use</span> <span class='ident'>serialize</span>::{<span class='ident'>Serializable</span>, <span class='ident'>Serializer</span>};
 <span class='kw'>use</span> <span class='ident'>serialize</span>::<span class='ident'>TraversalScope</span>;
 <span class='kw'>use</span> <span class='ident'>serialize</span>::<span class='ident'>TraversalScope</span>::{<span class='ident'>IncludeNode</span>, <span class='ident'>ChildrenOnly</span>};
-<span class='kw'>use</span> <span class='ident'>driver</span>::<span class='ident'>ParseResult</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ElementEnum</span>::{<span class='ident'>Normal</span>, <span class='ident'>Script</span>, <span class='ident'>Template</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ElementEnum</span>::{<span class='ident'>AnnotationXml</span>, <span class='ident'>Normal</span>, <span class='ident'>Script</span>, <span class='ident'>Template</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>NodeEnum</span>::{<span class='ident'>Document</span>, <span class='ident'>Doctype</span>, <span class='ident'>Text</span>, <span class='ident'>Comment</span>, <span class='ident'>Element</span>};
 
 <span class='doccomment'>/// The different kinds of elements in the DOM.</span>
@@ -453,6 +468,11 @@
     <span class='doccomment'>/// A template element and its template contents.</span>
     <span class='doccomment'>/// https://html.spec.whatwg.org/multipage/#template-contents</span>
     <span class='ident'>Template</span>(<span class='ident'>Handle</span>),
+    <span class='doccomment'>/// An annotation-xml element in the MathML namespace whose start tag token had an attribute</span>
+    <span class='doccomment'>/// with the name &quot;encoding&quot; whose value was an ASCII case-insensitive match for the string</span>
+    <span class='doccomment'>/// &quot;text/html&quot; or &quot;application/xhtml+xml&quot;</span>
+    <span class='doccomment'>/// https://html.spec.whatwg.org/multipage/embedded-content.html#math:annotation-xml</span>
+    <span class='ident'>AnnotationXml</span>(<span class='ident'>bool</span>),
 }
 
 <span class='doccomment'>/// The different kinds of nodes in the DOM.</span>
@@ -567,6 +587,9 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>TreeSink</span> <span class='kw'>for</span> <span class='ident'>RcDom</span> {
+    <span class='kw'>type</span> <span class='ident'>Output</span> <span class='op'>=</span> <span class='self'>Self</span>;
+    <span class='kw'>fn</span> <span class='ident'>finish</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> { <span class='self'>self</span> }
+
     <span class='kw'>type</span> <span class='ident'>Handle</span> <span class='op'>=</span> <span class='ident'>Handle</span>;
 
     <span class='kw'>fn</span> <span class='ident'>parse_error</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>msg</span>: <span class='ident'>Cow</span><span class='op'>&lt;</span><span class='lifetime'>&#39;static</span>, <span class='ident'>str</span><span class='op'>&gt;</span>) {
@@ -606,6 +629,14 @@
         <span class='kw'>let</span> <span class='ident'>info</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>name</span> {
             <span class='macro'>qualname</span><span class='macro'>!</span>(<span class='ident'>html</span>, <span class='string'>&quot;script&quot;</span>) <span class='op'>=&gt;</span> <span class='ident'>Script</span>(<span class='boolvalue'>false</span>),
             <span class='macro'>qualname</span><span class='macro'>!</span>(<span class='ident'>html</span>, <span class='string'>&quot;template&quot;</span>) <span class='op'>=&gt;</span> <span class='ident'>Template</span>(<span class='ident'>new_node</span>(<span class='ident'>Document</span>)),
+            <span class='macro'>qualname</span><span class='macro'>!</span>(<span class='ident'>mathml</span>, <span class='string'>&quot;annotation-xml&quot;</span>) <span class='op'>=&gt;</span> {
+                <span class='ident'>AnnotationXml</span>(<span class='ident'>attrs</span>.<span class='ident'>iter</span>().<span class='ident'>find</span>(<span class='op'>|</span><span class='ident'>attr</span><span class='op'>|</span> <span class='ident'>attr</span>.<span class='ident'>name</span> <span class='op'>==</span> <span class='macro'>qualname</span><span class='macro'>!</span>(<span class='string'>&quot;&quot;</span>, <span class='string'>&quot;encoding&quot;</span>))
+                                   .<span class='ident'>map_or</span>(<span class='boolvalue'>false</span>,
+                                           <span class='op'>|</span><span class='ident'>attr</span><span class='op'>|</span> <span class='ident'>attr</span>.<span class='ident'>value</span>
+                                                      .<span class='ident'>eq_ignore_ascii_case</span>(<span class='string'>&quot;text/html&quot;</span>) <span class='op'>||</span>
+                                                  <span class='ident'>attr</span>.<span class='ident'>value</span>
+                                                      .<span class='ident'>eq_ignore_ascii_case</span>(<span class='string'>&quot;application/xhtml+xml&quot;</span>)))
+            },
             _ <span class='op'>=&gt;</span> <span class='ident'>Normal</span>,
         };
         <span class='ident'>new_node</span>(<span class='ident'>Element</span>(<span class='ident'>name</span>, <span class='ident'>info</span>, <span class='ident'>attrs</span>))
@@ -711,6 +742,13 @@
             <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;not a script element!&quot;</span>);
         }
     }
+
+    <span class='kw'>fn</span> <span class='ident'>is_mathml_annotation_xml_integration_point</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>handle</span>: <span class='self'>Self</span>::<span class='ident'>Handle</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>match</span> (<span class='op'>*</span><span class='op'>*</span><span class='ident'>handle</span>).<span class='ident'>borrow</span>().<span class='ident'>node</span> {
+            <span class='ident'>Element</span>(_, <span class='ident'>AnnotationXml</span>(<span class='ident'>ret</span>), _) <span class='op'>=&gt;</span> <span class='ident'>ret</span>,
+            _ <span class='op'>=&gt;</span> <span class='macro'>unreachable</span><span class='macro'>!</span>(),
+        }
+    }
 }
 
 <span class='kw'>impl</span> <span class='ident'>Default</span> <span class='kw'>for</span> <span class='ident'>RcDom</span> {
@@ -720,14 +758,6 @@
             <span class='ident'>errors</span>: <span class='macro'>vec</span><span class='macro'>!</span>(),
             <span class='ident'>quirks_mode</span>: <span class='ident'>tree_builder</span>::<span class='ident'>NoQuirks</span>,
         }
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>ParseResult</span> <span class='kw'>for</span> <span class='ident'>RcDom</span> {
-    <span class='kw'>type</span> <span class='ident'>Sink</span> <span class='op'>=</span> <span class='ident'>RcDom</span>;
-
-    <span class='kw'>fn</span> <span class='ident'>get_result</span>(<span class='ident'>sink</span>: <span class='ident'>RcDom</span>) <span class='op'>-&gt;</span> <span class='ident'>RcDom</span> {
-        <span class='ident'>sink</span>
     }
 }
 

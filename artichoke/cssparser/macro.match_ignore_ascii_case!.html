@@ -47,10 +47,13 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-2161' class='srclink' href='../src/cssparser/lib.rs.html#115-127' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-2179' class='srclink' href='../src/cssparser/lib.rs.html#114-142' title='goto source code'>[src]</a></span></h1>
 <pre class='rust macro'>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>match_ignore_ascii_case</span> {
-    ( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>value</span>: <span class='ident'>expr</span>, $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>string</span>: <span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>result</span>: <span class='ident'>expr</span> ),<span class='op'>+</span> _ <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fallback</span>: <span class='ident'>expr</span> ) <span class='op'>=&gt;</span> { ... };
+    (@<span class='ident'>inner</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>value</span>:<span class='ident'>expr</span>, (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>string</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>result</span>:<span class='ident'>expr</span>, _ <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fallback</span>:<span class='ident'>expr</span>) <span class='op'>-&gt;</span> ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>parsed</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) ) <span class='op'>=&gt;</span> { ... };
+    (@<span class='ident'>inner</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>value</span>:<span class='ident'>expr</span>, (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>string</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>result</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rest</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>-&gt;</span> ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>parsed</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) ) <span class='op'>=&gt;</span> { ... };
+    (@<span class='ident'>inner</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>value</span>:<span class='ident'>expr</span>, () <span class='op'>-&gt;</span> ($((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>string</span>:<span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>result</span>:<span class='ident'>expr</span>))<span class='op'>*</span>) <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fallback</span>:<span class='ident'>expr</span> ) <span class='op'>=&gt;</span> { ... };
+    ( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>value</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>rest</span>:<span class='ident'>tt</span>)<span class='op'>*</span> ) <span class='op'>=&gt;</span> { ... };
 }</pre>
 <div class='docblock'><p>This macro is equivalent to a <code>match</code> expression on an <code>&amp;str</code> value,
 but matching is case-insensitive in the ASCII range.</p>
@@ -61,15 +64,12 @@ but matching is case-insensitive in the ASCII range.</p>
 <span class='macro'>match_ignore_ascii_case</span><span class='macro'>!</span> { <span class='ident'>string</span>,
     <span class='string'>&quot;foo&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>Foo</span>),
     <span class='string'>&quot;bar&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>Bar</span>),
-    <span class='string'>&quot;baz&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>Baz</span>)
+    <span class='string'>&quot;baz&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>Baz</span>),
     _ <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>
 }</pre>
 
 <p>The macro also takes a slice of the value,
 so that a <code>String</code> or <code>CowString</code> could be passed directly instead of a <code>&amp;str</code>.</p>
-
-<p>Note that because of <code>macro_rules</code> ambiguity resolutions quirks,
-each arm except the fallback and the one before it must end with a comma.</p>
 </div></section>
     <section id='search' class="content hidden"></section>
 

@@ -154,6 +154,21 @@
 <span id="110">110</span>
 <span id="111">111</span>
 <span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>rc</span>::{<span class='ident'>Rc</span>, <span class='ident'>Weak</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>UnsafeCell</span>;
@@ -169,12 +184,27 @@
         <span class='ident'>MoveCell</span>(<span class='ident'>UnsafeCell</span>::<span class='ident'>new</span>(<span class='ident'>x</span>))
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>x</span>: <span class='ident'>T</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='op'>*</span><span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>get</span>() <span class='op'>=</span> <span class='ident'>x</span>;
-        }
-    }
+    <span class='comment'>// Note: this is unsound:</span>
+    <span class='comment'>//</span>
+    <span class='comment'>//    #[inline]</span>
+    <span class='comment'>//    pub fn set(&amp;self, x: T) {</span>
+    <span class='comment'>//        unsafe {</span>
+    <span class='comment'>//            *self.0.get() = x;</span>
+    <span class='comment'>//        }</span>
+    <span class='comment'>//    }</span>
+    <span class='comment'>//</span>
+    <span class='comment'>// Example:</span>
+    <span class='comment'>//</span>
+    <span class='comment'>//    struct Evil(Box&lt;u32&gt;, Rc&lt;MoveCell&lt;Option&lt;Evil&gt;&gt;&gt;);</span>
+    <span class='comment'>//    impl Drop for Evil {</span>
+    <span class='comment'>//        fn drop(&amp;mut self) {</span>
+    <span class='comment'>//            mem::drop(self.1.take());  // Mess with the &quot;other&quot; node, which might be `self`.</span>
+    <span class='comment'>//            self.0.clone();  // use after free!</span>
+    <span class='comment'>//        }</span>
+    <span class='comment'>//    }</span>
+    <span class='comment'>//    let a = Rc::new(MoveCell::new(None));</span>
+    <span class='comment'>//    a.replace(Some(Evil(Box::new(5), a.clone())));  // Make a reference cycle.</span>
+    <span class='comment'>//    a.set(None);  // Trigger Evil::drop while in the cell</span>
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>replace</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>x</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>T</span> {
@@ -245,7 +275,7 @@
     Incorrect example:
 
     ```rust
-    struct Evil(Box&lt;u32&gt;, Rc&lt;MoveCell&lt;Option&lt;&lt;Evil&gt;&gt;&gt;);
+    struct Evil(Box&lt;u32&gt;, Rc&lt;MoveCell&lt;Option&lt;Evil&gt;&gt;&gt;);
     impl Clone for Evil {
         fn clone(&amp;self) -&gt; Self {
             mem::drop(self.1.take());  // Mess with the &quot;other&quot; node, which might be `self`.
@@ -263,7 +293,7 @@
     ```
 
 */</span>
-<span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>WellBehavedClone</span>: <span class='ident'>Clone</span> {}
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>WellBehavedClone</span>: <span class='ident'>Clone</span> {}
 <span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>WellBehavedClone</span> <span class='kw'>for</span> <span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {}
 <span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>WellBehavedClone</span> <span class='kw'>for</span> <span class='ident'>Weak</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {}
 <span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>WellBehavedClone</span> <span class='kw'>for</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>WellBehavedClone</span> {}

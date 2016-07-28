@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/cssparser-0.4.0/src/tokenizer.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/cssparser-0.5.6/src/tokenizer.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>tokenizer.rs.html -- source</title>
@@ -1017,6 +1017,26 @@
 <span id="973">973</span>
 <span id="974">974</span>
 <span id="975">975</span>
+<span id="976">976</span>
+<span id="977">977</span>
+<span id="978">978</span>
+<span id="979">979</span>
+<span id="980">980</span>
+<span id="981">981</span>
+<span id="982">982</span>
+<span id="983">983</span>
+<span id="984">984</span>
+<span id="985">985</span>
+<span id="986">986</span>
+<span id="987">987</span>
+<span id="988">988</span>
+<span id="989">989</span>
+<span id="990">990</span>
+<span id="991">991</span>
+<span id="992">992</span>
+<span id="993">993</span>
+<span id="994">994</span>
+<span id="995">995</span>
 </pre><pre class='rust '>
 <span class='comment'>/* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -1230,12 +1250,13 @@
     <span class='doccomment'>/// Counted in bytes, not code points. From 0.</span>
     <span class='ident'>position</span>: <span class='ident'>usize</span>,
     <span class='doccomment'>/// Cache for `source_location()`</span>
-    <span class='ident'>last_known_line_break</span>: <span class='ident'>Cell</span><span class='op'>&lt;</span>(<span class='ident'>usize</span>, <span class='ident'>usize</span>)<span class='op'>&gt;</span>,
-    <span class='ident'>var_functions</span>: <span class='ident'>VarFunctions</span>,
+    <span class='ident'>last_known_source_location</span>: <span class='ident'>Cell</span><span class='op'>&lt;</span>(<span class='ident'>SourcePosition</span>, <span class='ident'>SourceLocation</span>)<span class='op'>&gt;</span>,
+    <span class='ident'>var_functions</span>: <span class='ident'>SeenStatus</span>,
+    <span class='ident'>viewport_percentages</span>: <span class='ident'>SeenStatus</span>,
 }
 
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
-<span class='kw'>enum</span> <span class='ident'>VarFunctions</span> {
+<span class='kw'>enum</span> <span class='ident'>SeenStatus</span> {
     <span class='ident'>DontCare</span>,
     <span class='ident'>LookingForThem</span>,
     <span class='ident'>SeenAtLeastOne</span>,
@@ -1248,20 +1269,34 @@
         <span class='ident'>Tokenizer</span> {
             <span class='ident'>input</span>: <span class='ident'>input</span>,
             <span class='ident'>position</span>: <span class='number'>0</span>,
-            <span class='ident'>last_known_line_break</span>: <span class='ident'>Cell</span>::<span class='ident'>new</span>((<span class='number'>1</span>, <span class='number'>0</span>)),
-            <span class='ident'>var_functions</span>: <span class='ident'>VarFunctions</span>::<span class='ident'>DontCare</span>,
+            <span class='ident'>last_known_source_location</span>: <span class='ident'>Cell</span>::<span class='ident'>new</span>((<span class='ident'>SourcePosition</span>(<span class='number'>0</span>),
+                                                   <span class='ident'>SourceLocation</span> { <span class='ident'>line</span>: <span class='number'>1</span>, <span class='ident'>column</span>: <span class='number'>1</span> })),
+            <span class='ident'>var_functions</span>: <span class='ident'>SeenStatus</span>::<span class='ident'>DontCare</span>,
+            <span class='ident'>viewport_percentages</span>: <span class='ident'>SeenStatus</span>::<span class='ident'>DontCare</span>,
         }
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>look_for_var_functions</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='self'>self</span>.<span class='ident'>var_functions</span> <span class='op'>=</span> <span class='ident'>VarFunctions</span>::<span class='ident'>LookingForThem</span>;
+        <span class='self'>self</span>.<span class='ident'>var_functions</span> <span class='op'>=</span> <span class='ident'>SeenStatus</span>::<span class='ident'>LookingForThem</span>;
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>seen_var_functions</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>let</span> <span class='ident'>seen</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>var_functions</span> <span class='op'>==</span> <span class='ident'>VarFunctions</span>::<span class='ident'>SeenAtLeastOne</span>;
-        <span class='self'>self</span>.<span class='ident'>var_functions</span> <span class='op'>=</span> <span class='ident'>VarFunctions</span>::<span class='ident'>DontCare</span>;
+        <span class='kw'>let</span> <span class='ident'>seen</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>var_functions</span> <span class='op'>==</span> <span class='ident'>SeenStatus</span>::<span class='ident'>SeenAtLeastOne</span>;
+        <span class='self'>self</span>.<span class='ident'>var_functions</span> <span class='op'>=</span> <span class='ident'>SeenStatus</span>::<span class='ident'>DontCare</span>;
+        <span class='ident'>seen</span>
+    }
+
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>look_for_viewport_percentages</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
+        <span class='self'>self</span>.<span class='ident'>viewport_percentages</span> <span class='op'>=</span> <span class='ident'>SeenStatus</span>::<span class='ident'>LookingForThem</span>;
+    }
+
+    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>seen_viewport_percentages</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+        <span class='kw'>let</span> <span class='ident'>seen</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>viewport_percentages</span> <span class='op'>==</span> <span class='ident'>SeenStatus</span>::<span class='ident'>SeenAtLeastOne</span>;
+        <span class='self'>self</span>.<span class='ident'>viewport_percentages</span> <span class='op'>=</span> <span class='ident'>SeenStatus</span>::<span class='ident'>DontCare</span>;
         <span class='ident'>seen</span>
     }
 
@@ -1298,37 +1333,33 @@
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>source_location</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>position</span>: <span class='ident'>SourcePosition</span>) <span class='op'>-&gt;</span> <span class='ident'>SourceLocation</span> {
         <span class='kw'>let</span> <span class='ident'>target</span> <span class='op'>=</span> <span class='ident'>position</span>.<span class='number'>0</span>;
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>line_number</span>;
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>location</span>;
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>position</span>;
-        <span class='kw'>let</span> (<span class='ident'>last_known_line_number</span>, <span class='ident'>position_after_last_known_newline</span>) <span class='op'>=</span>
-            <span class='self'>self</span>.<span class='ident'>last_known_line_break</span>.<span class='ident'>get</span>();
-        <span class='kw'>if</span> <span class='ident'>target</span> <span class='op'>&gt;=</span> <span class='ident'>position_after_last_known_newline</span> {
-            <span class='ident'>position</span> <span class='op'>=</span> <span class='ident'>position_after_last_known_newline</span>;
-            <span class='ident'>line_number</span> <span class='op'>=</span> <span class='ident'>last_known_line_number</span>;
+        <span class='kw'>let</span> (<span class='ident'>SourcePosition</span>(<span class='ident'>last_known_position</span>), <span class='ident'>last_known_location</span>) <span class='op'>=</span>
+            <span class='self'>self</span>.<span class='ident'>last_known_source_location</span>.<span class='ident'>get</span>();
+        <span class='kw'>if</span> <span class='ident'>target</span> <span class='op'>&gt;=</span> <span class='ident'>last_known_position</span> {
+            <span class='ident'>position</span> <span class='op'>=</span> <span class='ident'>last_known_position</span>;
+            <span class='ident'>location</span> <span class='op'>=</span> <span class='ident'>last_known_location</span>;
         } <span class='kw'>else</span> {
+            <span class='comment'>// For now we’re only traversing the source *forwards* to count newlines.</span>
+            <span class='comment'>// So if the requested position is before the last known one,</span>
+            <span class='comment'>// start over from the beginning.</span>
             <span class='ident'>position</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='ident'>line_number</span> <span class='op'>=</span> <span class='number'>1</span>;
+            <span class='ident'>location</span> <span class='op'>=</span> <span class='ident'>SourceLocation</span> { <span class='ident'>line</span>: <span class='number'>1</span>, <span class='ident'>column</span>: <span class='number'>1</span> };
         }
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>source</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>input</span>[<span class='ident'>position</span>..<span class='ident'>target</span>];
-        <span class='kw'>while</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>newline_position</span>) <span class='op'>=</span> <span class='ident'>source</span>.<span class='ident'>find</span>(<span class='kw-2'>&amp;</span>[<span class='string'>&#39;\n&#39;</span>, <span class='string'>&#39;\r&#39;</span>, <span class='string'>&#39;\x0C&#39;</span>][..]) {
+        <span class='kw'>while</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>newline_position</span>) <span class='op'>=</span> <span class='ident'>source</span>.<span class='ident'>find</span>(<span class='op'>|</span><span class='ident'>c</span><span class='op'>|</span> <span class='macro'>matches</span><span class='macro'>!</span>(<span class='ident'>c</span>, <span class='string'>&#39;\n&#39;</span> <span class='op'>|</span> <span class='string'>&#39;\r&#39;</span> <span class='op'>|</span> <span class='string'>&#39;\x0C&#39;</span>)) {
             <span class='kw'>let</span> <span class='ident'>offset</span> <span class='op'>=</span> <span class='ident'>newline_position</span> <span class='op'>+</span>
-            <span class='kw'>if</span> <span class='ident'>source</span>[<span class='ident'>newline_position</span>..].<span class='ident'>starts_with</span>(<span class='string'>&quot;\r\n&quot;</span>) {
-                <span class='number'>2</span>
-            } <span class='kw'>else</span> {
-                <span class='number'>1</span>
-            };
+                <span class='kw'>if</span> <span class='ident'>source</span>[<span class='ident'>newline_position</span>..].<span class='ident'>starts_with</span>(<span class='string'>&quot;\r\n&quot;</span>) { <span class='number'>2</span> } <span class='kw'>else</span> { <span class='number'>1</span> };
             <span class='ident'>source</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>source</span>[<span class='ident'>offset</span>..];
             <span class='ident'>position</span> <span class='op'>+=</span> <span class='ident'>offset</span>;
-            <span class='ident'>line_number</span> <span class='op'>+=</span> <span class='number'>1</span>;
+            <span class='ident'>location</span>.<span class='ident'>line</span> <span class='op'>+=</span> <span class='number'>1</span>;
+            <span class='ident'>location</span>.<span class='ident'>column</span> <span class='op'>=</span> <span class='number'>1</span>;
         }
         <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>position</span> <span class='op'>&lt;=</span> <span class='ident'>target</span>);
-        <span class='self'>self</span>.<span class='ident'>last_known_line_break</span>.<span class='ident'>set</span>((<span class='ident'>line_number</span>, <span class='ident'>position</span>));
-        <span class='ident'>SourceLocation</span> {
-            <span class='ident'>line</span>: <span class='ident'>line_number</span>,
-            <span class='comment'>// `target == position` when `target` is at the beginning of the line,</span>
-            <span class='comment'>// so add 1 so that the column numbers start at 1.</span>
-            <span class='ident'>column</span>: <span class='ident'>target</span> <span class='op'>-</span> <span class='ident'>position</span> <span class='op'>+</span> <span class='number'>1</span>,
-        }
+        <span class='ident'>location</span>.<span class='ident'>column</span> <span class='op'>+=</span> <span class='ident'>target</span> <span class='op'>-</span> <span class='ident'>position</span>;
+        <span class='self'>self</span>.<span class='ident'>last_known_source_location</span>.<span class='ident'>set</span>((<span class='ident'>SourcePosition</span>(<span class='ident'>target</span>), <span class='ident'>location</span>));
+        <span class='ident'>location</span>
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -1391,7 +1422,7 @@
     <span class='doccomment'>/// The line number, starting at 1 for the first line.</span>
     <span class='kw'>pub</span> <span class='ident'>line</span>: <span class='ident'>usize</span>,
 
-    <span class='doccomment'>/// The column number within a line, starting at 1 for the character of the line.</span>
+    <span class='doccomment'>/// The column number within a line, starting at 1 for first the character of the line.</span>
     <span class='kw'>pub</span> <span class='ident'>column</span>: <span class='ident'>usize</span>,
 }
 
@@ -1650,9 +1681,9 @@
         <span class='kw'>if</span> <span class='ident'>value</span>.<span class='ident'>eq_ignore_ascii_case</span>(<span class='string'>&quot;url&quot;</span>) {
             <span class='ident'>consume_unquoted_url</span>(<span class='ident'>tokenizer</span>).<span class='ident'>unwrap_or</span>(<span class='ident'>Function</span>(<span class='ident'>value</span>))
         } <span class='kw'>else</span> {
-            <span class='kw'>if</span> <span class='ident'>tokenizer</span>.<span class='ident'>var_functions</span> <span class='op'>==</span> <span class='ident'>VarFunctions</span>::<span class='ident'>LookingForThem</span> <span class='op'>&amp;&amp;</span>
+            <span class='kw'>if</span> <span class='ident'>tokenizer</span>.<span class='ident'>var_functions</span> <span class='op'>==</span> <span class='ident'>SeenStatus</span>::<span class='ident'>LookingForThem</span> <span class='op'>&amp;&amp;</span>
                 <span class='ident'>value</span>.<span class='ident'>eq_ignore_ascii_case</span>(<span class='string'>&quot;var&quot;</span>) {
-                <span class='ident'>tokenizer</span>.<span class='ident'>var_functions</span> <span class='op'>=</span> <span class='ident'>VarFunctions</span>::<span class='ident'>SeenAtLeastOne</span>;
+                <span class='ident'>tokenizer</span>.<span class='ident'>var_functions</span> <span class='op'>=</span> <span class='ident'>SeenStatus</span>::<span class='ident'>SeenAtLeastOne</span>;
             }
             <span class='ident'>Function</span>(<span class='ident'>value</span>)
         }
@@ -1804,7 +1835,16 @@
         <span class='ident'>has_sign</span>: <span class='ident'>has_sign</span>,
     };
     <span class='kw'>if</span> <span class='ident'>is_ident_start</span>(<span class='ident'>tokenizer</span>) {
-        <span class='ident'>Dimension</span>(<span class='ident'>value</span>, <span class='ident'>consume_name</span>(<span class='ident'>tokenizer</span>))
+        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>consume_name</span>(<span class='ident'>tokenizer</span>);
+        <span class='kw'>if</span> <span class='ident'>tokenizer</span>.<span class='ident'>viewport_percentages</span> <span class='op'>==</span> <span class='ident'>SeenStatus</span>::<span class='ident'>LookingForThem</span> {
+            <span class='kw'>if</span> <span class='ident'>name</span>.<span class='ident'>eq_ignore_ascii_case</span>(<span class='string'>&quot;vh&quot;</span>) <span class='op'>||</span>
+               <span class='ident'>name</span>.<span class='ident'>eq_ignore_ascii_case</span>(<span class='string'>&quot;vw&quot;</span>) <span class='op'>||</span>
+               <span class='ident'>name</span>.<span class='ident'>eq_ignore_ascii_case</span>(<span class='string'>&quot;vmin&quot;</span>) <span class='op'>||</span>
+               <span class='ident'>name</span>.<span class='ident'>eq_ignore_ascii_case</span>(<span class='string'>&quot;vmax&quot;</span>) {
+                   <span class='ident'>tokenizer</span>.<span class='ident'>viewport_percentages</span> <span class='op'>=</span> <span class='ident'>SeenStatus</span>::<span class='ident'>SeenAtLeastOne</span>;
+           }
+        }
+        <span class='ident'>Dimension</span>(<span class='ident'>value</span>, <span class='ident'>name</span>)
     } <span class='kw'>else</span> {
         <span class='ident'>Number</span>(<span class='ident'>value</span>)
     }

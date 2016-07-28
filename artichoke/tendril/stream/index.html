@@ -47,22 +47,26 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-254' class='srclink' href='../../src/tendril/stream.rs.html#7-404' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-258' class='srclink' href='../../src/tendril/stream.rs.html#7-465' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Streams of tendrils.</p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Decoder.html'
-                                  title='tendril::stream::Decoder'>Decoder</a></td>
+                           <td><a class='struct' href='struct.LossyDecoder.html'
+                                  title='tendril::stream::LossyDecoder'>LossyDecoder</a></td>
                            <td class='docblock short'>
-                                <p>Incrementally decode a byte stream to UTF-8.</p>
+                                <p>A <code>TendrilSink</code> adaptor that takes bytes, decodes them as the given character encoding,
+lossily replace ill-formed byte sequences with U+FFFD replacement characters,
+and emits Unicode (<code>StrTendril</code>).</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.UTF8Validator.html'
-                                  title='tendril::stream::UTF8Validator'>UTF8Validator</a></td>
+                           <td><a class='struct' href='struct.Utf8LossyDecoder.html'
+                                  title='tendril::stream::Utf8LossyDecoder'>Utf8LossyDecoder</a></td>
                            <td class='docblock short'>
-                                <p>Incrementally validate a byte stream as UTF-8.</p>
+                                <p>A <code>TendrilSink</code> adaptor that takes bytes, decodes them as UTF-8,
+lossily replace ill-formed byte sequences with U+FFFD replacement characters,
+and emits Unicode (<code>StrTendril</code>).</p>
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>

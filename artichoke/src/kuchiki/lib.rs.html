@@ -73,6 +73,20 @@
 <span id="29">29</span>
 <span id="30">30</span>
 <span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
 </pre><pre class='rust '>
 <span class='doccomment'>/*!
 
@@ -80,7 +94,7 @@ Kuchiki (朽木), a HTML/XML tree manipulation library for Rust.
 
 */</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;unstable&quot;</span>, <span class='ident'>feature</span>(<span class='ident'>rc_weak</span>, <span class='ident'>rc_counts</span>))]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;unstable&quot;</span>, <span class='ident'>feature</span>(<span class='ident'>rc_counts</span>))]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>deny</span>(<span class='ident'>missing_docs</span>)]</span>
 
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>html5ever</span>;
@@ -89,8 +103,9 @@ Kuchiki (朽木), a HTML/XML tree manipulation library for Rust.
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rc</span>;
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>string_cache</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>tempdir</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>tendril</span>;
 
+<span class='kw'>mod</span> <span class='ident'>attributes</span>;
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;hyper&quot;</span>)]</span> <span class='kw'>mod</span> <span class='ident'>hyper</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>iter</span>;
 <span class='kw'>mod</span> <span class='ident'>move_cell</span>;
 <span class='kw'>mod</span> <span class='ident'>node_data_ref</span>;
@@ -100,11 +115,24 @@ Kuchiki (朽木), a HTML/XML tree manipulation library for Rust.
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span> <span class='kw'>mod</span> <span class='ident'>tests</span>;
 <span class='kw'>mod</span> <span class='ident'>tree</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>iter</span>::{<span class='ident'>NodeIterator</span>, <span class='ident'>ElementIterator</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>attributes</span>::<span class='ident'>Attributes</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>node_data_ref</span>::<span class='ident'>NodeDataRef</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>parser</span>::{<span class='ident'>Html</span>, <span class='ident'>ParseOpts</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>parser</span>::{<span class='ident'>parse_html</span>, <span class='ident'>ParseOpts</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>select</span>::<span class='ident'>Selectors</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>tree</span>::{<span class='ident'>NodeRef</span>, <span class='ident'>Node</span>, <span class='ident'>NodeData</span>, <span class='ident'>ElementData</span>, <span class='ident'>Doctype</span>, <span class='ident'>DocumentData</span>};
+
+<span class='doccomment'>/// This module re-exports a number of traits that are useful when using Kuchiki.</span>
+<span class='doccomment'>/// It can be used with:</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// ```rust</span>
+<span class='doccomment'>/// use kuchiki::traits::*;</span>
+<span class='doccomment'>/// ```</span>
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>traits</span> {
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>html5ever</span>::<span class='ident'>tendril</span>::<span class='ident'>TendrilSink</span>;
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>iter</span>::{<span class='ident'>NodeIterator</span>, <span class='ident'>ElementIterator</span>};
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;hyper&quot;</span>)]</span> <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>hyper</span>::{<span class='ident'>ParserExt</span>, <span class='ident'>IntoResponse</span>};
+}
+
 </pre>
 </section>
     <section id='search' class="content hidden"></section>

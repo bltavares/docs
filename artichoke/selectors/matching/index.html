@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-275' class='srclink' href='../../src/selectors/matching.rs.html#5-893' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-89' class='srclink' href='../../src/selectors/matching.rs.html#4-943' title='goto source code'>[src]</a></span></h1>
 <h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
@@ -70,6 +70,13 @@
                            <td class='docblock short'>
                                 <p>A property declaration together with its precedence among rules of equal specificity so that
 we can sort them.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.ElementFlags.html'
+                                  title='selectors::matching::ElementFlags'>ElementFlags</a></td>
+                           <td class='docblock short'>
+                                <p>Flags set on elements during the matching process.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -114,6 +121,32 @@ we can sort them.</p>
                                   title='selectors::matching::ALIGN_RIGHT_ATTRIBUTE'>ALIGN_RIGHT_ATTRIBUTE</a></td>
                            <td class='docblock short'>
                                 
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.HAS_EDGE_CHILD_SELECTOR.html'
+                                  title='selectors::matching::HAS_EDGE_CHILD_SELECTOR'>HAS_EDGE_CHILD_SELECTOR</a></td>
+                           <td class='docblock short'>
+                                <p>When a child is added or removed from this element, the first and last children
+must be restyled, because they may match :first-child, :last-child, or
+:only-child.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.HAS_SLOW_SELECTOR.html'
+                                  title='selectors::matching::HAS_SLOW_SELECTOR'>HAS_SLOW_SELECTOR</a></td>
+                           <td class='docblock short'>
+                                <p>When a child is added or removed from this element, all the children must be
+restyled, because they may match :nth-last-child, :last-of-type,
+:nth-last-of-type, or :only-of-type.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.HAS_SLOW_SELECTOR_LATER_SIBLINGS.html'
+                                  title='selectors::matching::HAS_SLOW_SELECTOR_LATER_SIBLINGS'>HAS_SLOW_SELECTOR_LATER_SIBLINGS</a></td>
+                           <td class='docblock short'>
+                                <p>When a child is added or removed from this element, any later children must be
+restyled, because they may match :nth-child, :first-of-type, or :nth-of-type.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>

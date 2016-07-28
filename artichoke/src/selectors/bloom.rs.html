@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/selectors-0.2.2/src/bloom.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/selectors-0.5.9/src/bloom.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>bloom.rs.html -- source</title>
@@ -570,7 +570,7 @@
 <span class='kw'>impl</span> <span class='ident'>BloomHash</span> <span class='kw'>for</span> <span class='ident'>Atom</span> {
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>bloom_hash</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        ((<span class='self'>self</span>.<span class='ident'>data</span> <span class='op'>&gt;&gt;</span> <span class='number'>32</span>) <span class='op'>^</span> <span class='self'>self</span>.<span class='ident'>data</span>) <span class='kw'>as</span> <span class='ident'>u32</span>
+        <span class='self'>self</span>.<span class='ident'>get_hash</span>()
     }
 }
 

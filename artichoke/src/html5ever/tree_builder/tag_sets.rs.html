@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/html5ever-0.2.11/src/tree_builder/tag_sets.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/html5ever-0.5.4/src/tree_builder/tag_sets.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>tag_sets.rs.html -- source</title>
@@ -136,6 +136,7 @@
 <span id="92">92</span>
 <span id="93">93</span>
 <span id="94">94</span>
+<span id="95">95</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 The html5ever Project Developers. See the</span>
 <span class='comment'>// COPYRIGHT file at the top-level directory of this distribution.</span>
@@ -191,7 +192,7 @@
 <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span> <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>default_scope</span>(<span class='ident'>name</span>: <span class='ident'>QualName</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
     <span class='ident'>html_default_scope</span>(<span class='ident'>name</span>.<span class='ident'>clone</span>()) <span class='op'>||</span>
     <span class='ident'>mathml_text_integration_point</span>(<span class='ident'>name</span>.<span class='ident'>clone</span>()) <span class='op'>||</span>
-    <span class='ident'>html_integration_point</span>(<span class='ident'>name</span>)
+    <span class='ident'>svg_html_integration_point</span>(<span class='ident'>name</span>)
 }
 
 <span class='macro'>declare_tag_set</span><span class='macro'>!</span>(<span class='kw'>pub</span> <span class='ident'>list_item_scope</span> <span class='op'>=</span> [<span class='ident'>default_scope</span>] <span class='op'>+</span> <span class='string'>&quot;ol&quot;</span> <span class='string'>&quot;ul&quot;</span>);
@@ -226,8 +227,9 @@
         <span class='op'>|</span> <span class='macro'>qualname</span><span class='macro'>!</span>(<span class='ident'>mathml</span>, <span class='string'>&quot;ms&quot;</span>) <span class='op'>|</span> <span class='macro'>qualname</span><span class='macro'>!</span>(<span class='ident'>mathml</span>, <span class='string'>&quot;mtext&quot;</span>))
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>html_integration_point</span>(<span class='ident'>p</span>: <span class='ident'>QualName</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-    <span class='comment'>// FIXME(#119): HTML integration points in MathML</span>
+<span class='doccomment'>/// https://html.spec.whatwg.org/multipage/#html-integration-point</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>svg_html_integration_point</span>(<span class='ident'>p</span>: <span class='ident'>QualName</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
+    <span class='comment'>// annotation-xml are handle in another place</span>
     <span class='macro'>matches</span><span class='macro'>!</span>(<span class='ident'>p</span>, <span class='macro'>qualname</span><span class='macro'>!</span>(<span class='ident'>svg</span>, <span class='string'>&quot;foreignObject&quot;</span>) <span class='op'>|</span> <span class='macro'>qualname</span><span class='macro'>!</span>(<span class='ident'>svg</span>, <span class='string'>&quot;desc&quot;</span>)
         <span class='op'>|</span> <span class='macro'>qualname</span><span class='macro'>!</span>(<span class='ident'>svg</span>, <span class='string'>&quot;title&quot;</span>))
 }

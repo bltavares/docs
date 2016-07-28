@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/quickersort-1.0.0/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/quickersort-2.0.1/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -54,11 +54,15 @@
 <span id="10">10</span>
 <span id="11">11</span>
 <span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
 </pre><pre class='rust '>
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span>  <span class='op'>=</span> <span class='string'>&quot;float&quot;</span>)]</span>
+<span class='comment'>// (C) 2015 Viktor Dahl &lt;pazaconyoman@gmail.com&gt;</span>
+<span class='comment'>// This file is licensed under the same terms as Rust itself.</span>
+
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>unreachable</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span>  <span class='op'>=</span> <span class='string'>&quot;float&quot;</span>)]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>num</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>num_traits</span>;
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>sort</span>::{<span class='ident'>sort</span>, <span class='ident'>sort_by</span>, <span class='ident'>insertion_sort</span>, <span class='ident'>heapsort</span>};
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;float&quot;</span>)]</span>

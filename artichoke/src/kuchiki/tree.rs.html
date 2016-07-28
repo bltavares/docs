@@ -490,16 +490,18 @@
 <span id="446">446</span>
 <span id="447">447</span>
 <span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>move_cell</span>::<span class='ident'>MoveCell</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::{<span class='ident'>Cell</span>, <span class='ident'>RefCell</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashMap</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Deref</span>;
 <span class='kw'>use</span> <span class='ident'>html5ever</span>::<span class='ident'>tree_builder</span>::<span class='ident'>QuirksMode</span>;
 <span class='kw'>use</span> <span class='ident'>rc</span>::{<span class='ident'>Rc</span>, <span class='ident'>Weak</span>};
 <span class='kw'>use</span> <span class='ident'>string_cache</span>::<span class='ident'>QualName</span>;
 
+<span class='kw'>use</span> <span class='ident'>attributes</span>::<span class='ident'>Attributes</span>;
 <span class='kw'>use</span> <span class='ident'>iter</span>::<span class='ident'>NodeIterator</span>;
 
 
@@ -545,7 +547,7 @@
     <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='ident'>QualName</span>,
 
     <span class='doccomment'>/// The attributes of the elements.</span>
-    <span class='kw'>pub</span> <span class='ident'>attributes</span>: <span class='ident'>RefCell</span><span class='op'>&lt;</span><span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>QualName</span>, <span class='ident'>String</span><span class='op'>&gt;&gt;</span>,
+    <span class='kw'>pub</span> <span class='ident'>attributes</span>: <span class='ident'>RefCell</span><span class='op'>&lt;</span><span class='ident'>Attributes</span><span class='op'>&gt;</span>,
 
     <span class='doccomment'>/// If the element is an HTML `&lt;template&gt;` element,</span>
     <span class='doccomment'>/// the document fragment node that is the root of template contents.</span>
@@ -708,7 +710,9 @@
                 <span class='prelude-val'>None</span>
             },
             <span class='ident'>name</span>: <span class='ident'>name</span>,
-            <span class='ident'>attributes</span>: <span class='ident'>RefCell</span>::<span class='ident'>new</span>(<span class='ident'>attributes</span>.<span class='ident'>into_iter</span>().<span class='ident'>collect</span>()),
+            <span class='ident'>attributes</span>: <span class='ident'>RefCell</span>::<span class='ident'>new</span>(<span class='ident'>Attributes</span> {
+                <span class='ident'>map</span>: <span class='ident'>attributes</span>.<span class='ident'>into_iter</span>().<span class='ident'>collect</span>()
+            }),
         }))
     }
 
@@ -846,18 +850,18 @@
         <span class='kw'>let</span> <span class='ident'>previous_sibling_opt</span> <span class='op'>=</span> <span class='ident'>previous_sibling_weak</span>.<span class='ident'>as_ref</span>().<span class='ident'>and_then</span>(<span class='op'>|</span><span class='ident'>weak</span><span class='op'>|</span> <span class='ident'>weak</span>.<span class='ident'>upgrade</span>());
 
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>next_sibling_ref</span>) <span class='op'>=</span> <span class='ident'>next_sibling_strong</span>.<span class='ident'>as_ref</span>() {
-            <span class='ident'>next_sibling_ref</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>set</span>(<span class='ident'>previous_sibling_weak</span>);
+            <span class='ident'>next_sibling_ref</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>replace</span>(<span class='ident'>previous_sibling_weak</span>);
         } <span class='kw'>else</span> <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent_ref</span>) <span class='op'>=</span> <span class='ident'>parent_weak</span>.<span class='ident'>as_ref</span>() {
             <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent_strong</span>) <span class='op'>=</span> <span class='ident'>parent_ref</span>.<span class='ident'>upgrade</span>() {
-                <span class='ident'>parent_strong</span>.<span class='ident'>last_child</span>.<span class='ident'>set</span>(<span class='ident'>previous_sibling_weak</span>);
+                <span class='ident'>parent_strong</span>.<span class='ident'>last_child</span>.<span class='ident'>replace</span>(<span class='ident'>previous_sibling_weak</span>);
             }
         }
 
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>previous_sibling_strong</span>) <span class='op'>=</span> <span class='ident'>previous_sibling_opt</span> {
-            <span class='ident'>previous_sibling_strong</span>.<span class='ident'>next_sibling</span>.<span class='ident'>set</span>(<span class='ident'>next_sibling_strong</span>);
+            <span class='ident'>previous_sibling_strong</span>.<span class='ident'>next_sibling</span>.<span class='ident'>replace</span>(<span class='ident'>next_sibling_strong</span>);
         } <span class='kw'>else</span> <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent_ref</span>) <span class='op'>=</span> <span class='ident'>parent_weak</span>.<span class='ident'>as_ref</span>() {
             <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent_strong</span>) <span class='op'>=</span> <span class='ident'>parent_ref</span>.<span class='ident'>upgrade</span>() {
-                <span class='ident'>parent_strong</span>.<span class='ident'>first_child</span>.<span class='ident'>set</span>(<span class='ident'>next_sibling_strong</span>);
+                <span class='ident'>parent_strong</span>.<span class='ident'>first_child</span>.<span class='ident'>replace</span>(<span class='ident'>next_sibling_strong</span>);
             }
         }
     }
@@ -869,17 +873,17 @@
     <span class='doccomment'>/// The new child is detached from its previous position.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>append</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>new_child</span>: <span class='ident'>NodeRef</span>) {
         <span class='ident'>new_child</span>.<span class='ident'>detach</span>();
-        <span class='ident'>new_child</span>.<span class='ident'>parent</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>)));
+        <span class='ident'>new_child</span>.<span class='ident'>parent</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>)));
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>last_child_weak</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>last_child</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_child</span>.<span class='number'>0</span>))) {
             <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>last_child</span>) <span class='op'>=</span> <span class='ident'>last_child_weak</span>.<span class='ident'>upgrade</span>() {
-                <span class='ident'>new_child</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>last_child_weak</span>));
+                <span class='ident'>new_child</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>last_child_weak</span>));
                 <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>last_child</span>.<span class='ident'>next_sibling</span>.<span class='ident'>is_none</span>());
-                <span class='ident'>last_child</span>.<span class='ident'>next_sibling</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_child</span>.<span class='number'>0</span>));
+                <span class='ident'>last_child</span>.<span class='ident'>next_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_child</span>.<span class='number'>0</span>));
                 <span class='kw'>return</span>
             }
         }
         <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>first_child</span>.<span class='ident'>is_none</span>());
-        <span class='self'>self</span>.<span class='ident'>first_child</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_child</span>.<span class='number'>0</span>));
+        <span class='self'>self</span>.<span class='ident'>first_child</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_child</span>.<span class='number'>0</span>));
     }
 
     <span class='doccomment'>/// Prepend a new child to this node, before existing children.</span>
@@ -887,16 +891,16 @@
     <span class='doccomment'>/// The new child is detached from its previous position.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>prepend</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>new_child</span>: <span class='ident'>NodeRef</span>) {
         <span class='ident'>new_child</span>.<span class='ident'>detach</span>();
-        <span class='ident'>new_child</span>.<span class='ident'>parent</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>)));
+        <span class='ident'>new_child</span>.<span class='ident'>parent</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>)));
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>first_child</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>first_child</span>.<span class='ident'>take</span>() {
             <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>first_child</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>is_none</span>());
-            <span class='ident'>first_child</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_child</span>.<span class='number'>0</span>)));
-            <span class='ident'>new_child</span>.<span class='ident'>next_sibling</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>first_child</span>));
+            <span class='ident'>first_child</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_child</span>.<span class='number'>0</span>)));
+            <span class='ident'>new_child</span>.<span class='ident'>next_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>first_child</span>));
         } <span class='kw'>else</span> {
             <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>first_child</span>.<span class='ident'>is_none</span>());
-            <span class='self'>self</span>.<span class='ident'>last_child</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_child</span>.<span class='number'>0</span>)));
+            <span class='self'>self</span>.<span class='ident'>last_child</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_child</span>.<span class='number'>0</span>)));
         }
-        <span class='self'>self</span>.<span class='ident'>first_child</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_child</span>.<span class='number'>0</span>));
+        <span class='self'>self</span>.<span class='ident'>first_child</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_child</span>.<span class='number'>0</span>));
     }
 
     <span class='doccomment'>/// Insert a new sibling after this node.</span>
@@ -904,17 +908,17 @@
     <span class='doccomment'>/// The new sibling is detached from its previous position.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert_after</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>new_sibling</span>: <span class='ident'>NodeRef</span>) {
         <span class='ident'>new_sibling</span>.<span class='ident'>detach</span>();
-        <span class='ident'>new_sibling</span>.<span class='ident'>parent</span>.<span class='ident'>set</span>(<span class='self'>self</span>.<span class='ident'>parent</span>.<span class='ident'>clone_inner</span>());
-        <span class='ident'>new_sibling</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>)));
+        <span class='ident'>new_sibling</span>.<span class='ident'>parent</span>.<span class='ident'>replace</span>(<span class='self'>self</span>.<span class='ident'>parent</span>.<span class='ident'>clone_inner</span>());
+        <span class='ident'>new_sibling</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>)));
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>next_sibling</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>next_sibling</span>.<span class='ident'>take</span>() {
             <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>next_sibling</span>.<span class='ident'>previous_sibling</span>().<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='op'>*</span><span class='self'>self</span>);
-            <span class='ident'>next_sibling</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_sibling</span>.<span class='number'>0</span>)));
-            <span class='ident'>new_sibling</span>.<span class='ident'>next_sibling</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>next_sibling</span>));
+            <span class='ident'>next_sibling</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_sibling</span>.<span class='number'>0</span>)));
+            <span class='ident'>new_sibling</span>.<span class='ident'>next_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>next_sibling</span>));
         } <span class='kw'>else</span> <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>parent</span>() {
             <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>parent</span>.<span class='ident'>last_child</span>().<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='op'>*</span><span class='self'>self</span>);
-            <span class='ident'>parent</span>.<span class='ident'>last_child</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_sibling</span>.<span class='number'>0</span>)));
+            <span class='ident'>parent</span>.<span class='ident'>last_child</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_sibling</span>.<span class='number'>0</span>)));
         }
-        <span class='self'>self</span>.<span class='ident'>next_sibling</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_sibling</span>.<span class='number'>0</span>));
+        <span class='self'>self</span>.<span class='ident'>next_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_sibling</span>.<span class='number'>0</span>));
     }
 
     <span class='doccomment'>/// Insert a new sibling before this node.</span>
@@ -922,20 +926,20 @@
     <span class='doccomment'>/// The new sibling is detached from its previous position.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert_before</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>new_sibling</span>: <span class='ident'>NodeRef</span>) {
         <span class='ident'>new_sibling</span>.<span class='ident'>detach</span>();
-        <span class='ident'>new_sibling</span>.<span class='ident'>parent</span>.<span class='ident'>set</span>(<span class='self'>self</span>.<span class='ident'>parent</span>.<span class='ident'>clone_inner</span>());
-        <span class='ident'>new_sibling</span>.<span class='ident'>next_sibling</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>clone</span>()));
+        <span class='ident'>new_sibling</span>.<span class='ident'>parent</span>.<span class='ident'>replace</span>(<span class='self'>self</span>.<span class='ident'>parent</span>.<span class='ident'>clone_inner</span>());
+        <span class='ident'>new_sibling</span>.<span class='ident'>next_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>clone</span>()));
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>previous_sibling_weak</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>replace</span>(
                 <span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_sibling</span>.<span class='number'>0</span>))) {
             <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>previous_sibling</span>) <span class='op'>=</span> <span class='ident'>previous_sibling_weak</span>.<span class='ident'>upgrade</span>() {
-                <span class='ident'>new_sibling</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>previous_sibling_weak</span>));
+                <span class='ident'>new_sibling</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>previous_sibling_weak</span>));
                 <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>previous_sibling</span>.<span class='ident'>next_sibling</span>().<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='op'>*</span><span class='self'>self</span>);
-                <span class='ident'>previous_sibling</span>.<span class='ident'>next_sibling</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_sibling</span>.<span class='number'>0</span>));
+                <span class='ident'>previous_sibling</span>.<span class='ident'>next_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_sibling</span>.<span class='number'>0</span>));
                 <span class='kw'>return</span>
             }
         }
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>parent</span>() {
             <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>parent</span>.<span class='ident'>first_child</span>().<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='op'>*</span><span class='self'>self</span>);
-            <span class='ident'>parent</span>.<span class='ident'>first_child</span>.<span class='ident'>set</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_sibling</span>.<span class='number'>0</span>));
+            <span class='ident'>parent</span>.<span class='ident'>first_child</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_sibling</span>.<span class='number'>0</span>));
         }
     }
 }

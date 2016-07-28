@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/cssparser-0.4.0/src/color.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/cssparser-0.5.6/src/color.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>color.rs.html -- source</title>
@@ -692,7 +692,7 @@
         <span class='string'>&quot;yellowgreen&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>rgb</span>(<span class='number'>154.</span>, <span class='number'>205.</span>, <span class='number'>50.</span>),
 
         <span class='string'>&quot;transparent&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>Color</span>::<span class='ident'>RGBA</span>(<span class='ident'>RGBA</span> { <span class='ident'>red</span>: <span class='number'>0.</span>, <span class='ident'>green</span>: <span class='number'>0.</span>, <span class='ident'>blue</span>: <span class='number'>0.</span>, <span class='ident'>alpha</span>: <span class='number'>0.</span> })),
-        <span class='string'>&quot;currentcolor&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>Color</span>::<span class='ident'>CurrentColor</span>)
+        <span class='string'>&quot;currentcolor&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>Color</span>::<span class='ident'>CurrentColor</span>),
         _ <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(())
     }
 }
@@ -746,7 +746,7 @@
         <span class='string'>&quot;rgba&quot;</span> <span class='op'>=&gt;</span> (<span class='boolvalue'>true</span>, <span class='boolvalue'>true</span>),
         <span class='string'>&quot;rgb&quot;</span> <span class='op'>=&gt;</span> (<span class='boolvalue'>true</span>, <span class='boolvalue'>false</span>),
         <span class='string'>&quot;hsl&quot;</span> <span class='op'>=&gt;</span> (<span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>),
-        <span class='string'>&quot;hsla&quot;</span> <span class='op'>=&gt;</span> (<span class='boolvalue'>false</span>, <span class='boolvalue'>true</span>)
+        <span class='string'>&quot;hsla&quot;</span> <span class='op'>=&gt;</span> (<span class='boolvalue'>false</span>, <span class='boolvalue'>true</span>),
         _ <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(())
     };
 

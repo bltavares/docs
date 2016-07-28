@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/selectors-0.2.2/src/parser.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/selectors-0.5.9/src/parser.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>parser.rs.html -- source</title>
@@ -877,32 +877,120 @@
 <span id="833">833</span>
 <span id="834">834</span>
 <span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
+<span id="872">872</span>
+<span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
+<span id="882">882</span>
+<span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
+<span id="890">890</span>
+<span id="891">891</span>
+<span id="892">892</span>
+<span id="893">893</span>
+<span id="894">894</span>
+<span id="895">895</span>
 </pre><pre class='rust '>
 <span class='comment'>/* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */</span>
 
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>module</span> {
-    ($(
-        $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Flag_attr</span>: <span class='ident'>meta</span>]</span>)<span class='op'>*</span>
-        <span class='ident'>state</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>css</span>: <span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>variant</span>: <span class='ident'>ident</span> <span class='op'>/</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>method</span>: <span class='ident'>ident</span> <span class='op'>/</span>
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>flag</span>: <span class='ident'>ident</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>value</span>: <span class='ident'>expr</span>,
-    )<span class='op'>+</span>) <span class='op'>=&gt;</span> {
-
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ascii</span>::<span class='ident'>AsciiExt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Cow</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Debug</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>hash</span>::<span class='ident'>Hash</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;heap_size&quot;</span>)]</span>
+<span class='kw'>use</span> <span class='ident'>heapsize</span>::<span class='ident'>HeapSizeOf</span>;
 
 <span class='kw'>use</span> <span class='ident'>cssparser</span>::{<span class='ident'>Token</span>, <span class='ident'>Parser</span>, <span class='ident'>parse_nth</span>};
 <span class='kw'>use</span> <span class='ident'>string_cache</span>::{<span class='ident'>Atom</span>, <span class='ident'>Namespace</span>};
 
-<span class='kw'>use</span> <span class='ident'>hash_map</span>;
+<span class='kw'>use</span> <span class='ident'>HashMap</span>;
+
+<span class='doccomment'>/// This trait allows to define the parser implementation in regards</span>
+<span class='doccomment'>/// of pseudo-classes/elements</span>
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>SelectorImpl</span> {
+    <span class='doccomment'>/// non tree-structural pseudo-classes</span>
+    <span class='doccomment'>/// (see: https://drafts.csswg.org/selectors/#structural-pseudos)</span>
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;heap_size&quot;</span>)]</span>
+    <span class='kw'>type</span> <span class='ident'>NonTSPseudoClass</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>PartialEq</span> <span class='op'>+</span> <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>HeapSizeOf</span>;
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;heap_size&quot;</span>))]</span>
+    <span class='kw'>type</span> <span class='ident'>NonTSPseudoClass</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>PartialEq</span> <span class='op'>+</span> <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Debug</span>;
+
+    <span class='doccomment'>/// This function can return an &quot;Err&quot; pseudo-element in order to support CSS2.1</span>
+    <span class='doccomment'>/// pseudo-elements.</span>
+    <span class='kw'>fn</span> <span class='ident'>parse_non_ts_pseudo_class</span>(<span class='ident'>_context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>,
+                                 <span class='ident'>_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>)
+        <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>NonTSPseudoClass</span>, ()<span class='op'>&gt;</span> { <span class='prelude-val'>Err</span>(()) }
+
+    <span class='kw'>fn</span> <span class='ident'>parse_non_ts_functional_pseudo_class</span>(<span class='ident'>_context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>,
+                                            <span class='ident'>_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
+                                            <span class='ident'>_arguments</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>)
+        <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>NonTSPseudoClass</span>, ()<span class='op'>&gt;</span> { <span class='prelude-val'>Err</span>(()) }
+
+    <span class='doccomment'>/// pseudo-elements</span>
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;heap_size&quot;</span>)]</span>
+    <span class='kw'>type</span> <span class='ident'>PseudoElement</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>PartialEq</span> <span class='op'>+</span> <span class='ident'>Eq</span> <span class='op'>+</span> <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Hash</span> <span class='op'>+</span> <span class='ident'>HeapSizeOf</span>;
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;heap_size&quot;</span>))]</span>
+    <span class='kw'>type</span> <span class='ident'>PseudoElement</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>PartialEq</span> <span class='op'>+</span> <span class='ident'>Eq</span> <span class='op'>+</span> <span class='ident'>Clone</span> <span class='op'>+</span> <span class='ident'>Debug</span> <span class='op'>+</span> <span class='ident'>Hash</span>;
+    <span class='kw'>fn</span> <span class='ident'>parse_pseudo_element</span>(<span class='ident'>_context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>,
+                            <span class='ident'>_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>)
+        <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>PseudoElement</span>, ()<span class='op'>&gt;</span> { <span class='prelude-val'>Err</span>(()) }
+}
 
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ParserContext</span> {
     <span class='kw'>pub</span> <span class='ident'>in_user_agent_stylesheet</span>: <span class='ident'>bool</span>,
     <span class='kw'>pub</span> <span class='ident'>default_namespace</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Namespace</span><span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>namespace_prefixes</span>: <span class='ident'>hash_map</span>::<span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>Namespace</span><span class='op'>&gt;</span>,
+    <span class='kw'>pub</span> <span class='ident'>namespace_prefixes</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>String</span>, <span class='ident'>Namespace</span><span class='op'>&gt;</span>,
 }
 
 <span class='kw'>impl</span> <span class='ident'>ParserContext</span> {
@@ -910,32 +998,24 @@
         <span class='ident'>ParserContext</span> {
             <span class='ident'>in_user_agent_stylesheet</span>: <span class='boolvalue'>false</span>,
             <span class='ident'>default_namespace</span>: <span class='prelude-val'>None</span>,
-            <span class='ident'>namespace_prefixes</span>: <span class='ident'>hash_map</span>::<span class='ident'>new</span>(),
+            <span class='ident'>namespace_prefixes</span>: <span class='ident'>HashMap</span>::<span class='ident'>default</span>(),
         }
     }
 }
 
 <span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;heap_size&quot;</span>, <span class='ident'>derive</span>(<span class='ident'>HeapSizeOf</span>))]</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Selector</span> {
-    <span class='kw'>pub</span> <span class='ident'>compound_selectors</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>CompoundSelector</span><span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>pseudo_element</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>PseudoElement</span><span class='op'>&gt;</span>,
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Selector</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='ident'>compound_selectors</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>CompoundSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;&gt;</span>,
+    <span class='kw'>pub</span> <span class='ident'>pseudo_element</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Impl</span>::<span class='ident'>PseudoElement</span><span class='op'>&gt;</span>,
     <span class='kw'>pub</span> <span class='ident'>specificity</span>: <span class='ident'>u32</span>,
 }
 
 <span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;heap_size&quot;</span>, <span class='ident'>derive</span>(<span class='ident'>HeapSizeOf</span>))]</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Eq</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Clone</span>, <span class='ident'>Hash</span>, <span class='ident'>Copy</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>PseudoElement</span> {
-    <span class='ident'>Before</span>,
-    <span class='ident'>After</span>,
-    <span class='comment'>// ...</span>
-}
-
-<span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;heap_size&quot;</span>, <span class='ident'>derive</span>(<span class='ident'>HeapSizeOf</span>))]</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>CompoundSelector</span> {
-    <span class='kw'>pub</span> <span class='ident'>simple_selectors</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span><span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>next</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>CompoundSelector</span><span class='op'>&gt;</span>, <span class='ident'>Combinator</span>)<span class='op'>&gt;</span>,  <span class='comment'>// c.next is left of c</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>CompoundSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='ident'>simple_selectors</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;&gt;</span>,
+    <span class='kw'>pub</span> <span class='ident'>next</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>CompoundSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;&gt;</span>, <span class='ident'>Combinator</span>)<span class='op'>&gt;</span>,  <span class='comment'>// c.next is left of c</span>
 }
 
 <span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;heap_size&quot;</span>, <span class='ident'>derive</span>(<span class='ident'>HeapSizeOf</span>))]</span>
@@ -949,7 +1029,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;heap_size&quot;</span>, <span class='ident'>derive</span>(<span class='ident'>HeapSizeOf</span>))]</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Eq</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Clone</span>, <span class='ident'>Hash</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>SimpleSelector</span> {
+<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>SimpleSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span> {
     <span class='ident'>ID</span>(<span class='ident'>Atom</span>),
     <span class='ident'>Class</span>(<span class='ident'>Atom</span>),
     <span class='ident'>LocalName</span>(<span class='ident'>LocalName</span>),
@@ -965,13 +1045,7 @@
     <span class='ident'>AttrSuffixMatch</span>(<span class='ident'>AttrSelector</span>, <span class='ident'>String</span>),  <span class='comment'>// [foo$=bar]</span>
 
     <span class='comment'>// Pseudo-classes</span>
-    <span class='ident'>Negation</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span><span class='op'>&gt;</span>),
-    <span class='ident'>AnyLink</span>,
-    <span class='ident'>Link</span>,
-    <span class='ident'>Visited</span>,
-
-    $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>variant</span>, )<span class='op'>+</span>
-
+    <span class='ident'>Negation</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;&gt;</span>),
     <span class='ident'>FirstChild</span>, <span class='ident'>LastChild</span>, <span class='ident'>OnlyChild</span>,
     <span class='ident'>Root</span>,
     <span class='ident'>Empty</span>,
@@ -982,7 +1056,7 @@
     <span class='ident'>FirstOfType</span>,
     <span class='ident'>LastOfType</span>,
     <span class='ident'>OnlyOfType</span>,
-    <span class='ident'>ServoNonzeroBorder</span>,
+    <span class='ident'>NonTSPseudoClass</span>(<span class='ident'>Impl</span>::<span class='ident'>NonTSPseudoClass</span>),
     <span class='comment'>// ...</span>
 }
 
@@ -1018,8 +1092,8 @@
 }
 
 
-<span class='kw'>fn</span> <span class='ident'>compute_specificity</span>(<span class='kw-2'>mut</span> <span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='ident'>CompoundSelector</span>,
-                       <span class='ident'>pseudo_element</span>: <span class='kw-2'>&amp;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>PseudoElement</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
+<span class='kw'>fn</span> <span class='ident'>compute_specificity</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='ident'>CompoundSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;</span>,
+                                           <span class='ident'>pseudo_element</span>: <span class='kw-2'>&amp;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Impl</span>::<span class='ident'>PseudoElement</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
     <span class='kw'>struct</span> <span class='ident'>Specificity</span> {
         <span class='ident'>id_selectors</span>: <span class='ident'>u32</span>,
         <span class='ident'>class_like_selectors</span>: <span class='ident'>u32</span>,
@@ -1043,40 +1117,37 @@
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>simple_selectors_specificity</span>(<span class='ident'>simple_selectors</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>SimpleSelector</span>],
-                                    <span class='ident'>specificity</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Specificity</span>) {
+    <span class='kw'>fn</span> <span class='ident'>simple_selectors_specificity</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span>(<span class='ident'>simple_selectors</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>SimpleSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;</span>],
+                                                        <span class='ident'>specificity</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Specificity</span>) {
         <span class='kw'>for</span> <span class='ident'>simple_selector</span> <span class='kw'>in</span> <span class='ident'>simple_selectors</span>.<span class='ident'>iter</span>() {
-            <span class='kw'>match</span> <span class='ident'>simple_selector</span> {
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>LocalName</span>(..) <span class='op'>=&gt;</span>
+            <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>simple_selector</span> {
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>LocalName</span>(..) <span class='op'>=&gt;</span>
                     <span class='ident'>specificity</span>.<span class='ident'>element_selectors</span> <span class='op'>+=</span> <span class='number'>1</span>,
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>ID</span>(..) <span class='op'>=&gt;</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>ID</span>(..) <span class='op'>=&gt;</span>
                     <span class='ident'>specificity</span>.<span class='ident'>id_selectors</span> <span class='op'>+=</span> <span class='number'>1</span>,
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>Class</span>(..) <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>AttrExists</span>(..) <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>AttrEqual</span>(..) <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>AttrIncludes</span>(..) <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>AttrDashMatch</span>(..) <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>AttrPrefixMatch</span>(..) <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>AttrSubstringMatch</span>(..) <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>AttrSuffixMatch</span>(..) <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>AnyLink</span> <span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>Link</span> <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>Visited</span> <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>Class</span>(..) <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>AttrExists</span>(..) <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>AttrEqual</span>(..) <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>AttrIncludes</span>(..) <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>AttrDashMatch</span>(..) <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>AttrPrefixMatch</span>(..) <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>AttrSubstringMatch</span>(..) <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>AttrSuffixMatch</span>(..) <span class='op'>|</span>
 
-                $( <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>variant</span> <span class='op'>|</span> )<span class='op'>+</span>
-
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>FirstChild</span> <span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>LastChild</span> <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>OnlyChild</span> <span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>Root</span> <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>Empty</span> <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>NthChild</span>(..) <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>NthLastChild</span>(..) <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>NthOfType</span>(..) <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>NthLastOfType</span>(..) <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>FirstOfType</span> <span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>LastOfType</span> <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>OnlyOfType</span> <span class='op'>|</span>
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>ServoNonzeroBorder</span> <span class='op'>=&gt;</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>FirstChild</span> <span class='op'>|</span> <span class='ident'>SimpleSelector</span>::<span class='ident'>LastChild</span> <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>OnlyChild</span> <span class='op'>|</span> <span class='ident'>SimpleSelector</span>::<span class='ident'>Root</span> <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>Empty</span> <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>NthChild</span>(..) <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>NthLastChild</span>(..) <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>NthOfType</span>(..) <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>NthLastOfType</span>(..) <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>FirstOfType</span> <span class='op'>|</span> <span class='ident'>SimpleSelector</span>::<span class='ident'>LastOfType</span> <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>OnlyOfType</span> <span class='op'>|</span>
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>NonTSPseudoClass</span>(..) <span class='op'>=&gt;</span>
                     <span class='ident'>specificity</span>.<span class='ident'>class_like_selectors</span> <span class='op'>+=</span> <span class='number'>1</span>,
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>Namespace</span>(..) <span class='op'>=&gt;</span> (),
-                <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>::<span class='ident'>Negation</span>(<span class='kw-2'>ref</span> <span class='ident'>negated</span>) <span class='op'>=&gt;</span>
+
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>Namespace</span>(..) <span class='op'>=&gt;</span> (),
+                <span class='ident'>SimpleSelector</span>::<span class='ident'>Negation</span>(<span class='kw-2'>ref</span> <span class='ident'>negated</span>) <span class='op'>=&gt;</span>
                     <span class='ident'>simple_selectors_specificity</span>(<span class='ident'>negated</span>, <span class='ident'>specificity</span>),
             }
         }
@@ -1090,7 +1161,7 @@
 
 
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_author_origin_selector_list_from_str</span>(<span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Selector</span><span class='op'>&gt;</span>, ()<span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_author_origin_selector_list_from_str</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span>(<span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Selector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;&gt;</span>, ()<span class='op'>&gt;</span> {
     <span class='kw'>let</span> <span class='ident'>context</span> <span class='op'>=</span> <span class='ident'>ParserContext</span>::<span class='ident'>new</span>();
     <span class='ident'>parse_selector_list</span>(<span class='kw-2'>&amp;</span><span class='ident'>context</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>::<span class='ident'>new</span>(<span class='ident'>input</span>))
 }
@@ -1099,8 +1170,8 @@
 <span class='doccomment'>/// aka Selector Group in http://www.w3.org/TR/css3-selectors/#grouping</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Return the Selectors or None if there is an invalid selector.</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_selector_list</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>)
-                           <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Selector</span><span class='op'>&gt;</span>,()<span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_selector_list</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>)
+                           <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Selector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;&gt;</span>,()<span class='op'>&gt;</span> {
     <span class='ident'>input</span>.<span class='ident'>parse_comma_separated</span>(<span class='op'>|</span><span class='ident'>input</span><span class='op'>|</span> <span class='ident'>parse_selector</span>(<span class='ident'>context</span>, <span class='ident'>input</span>))
 }
 
@@ -1109,7 +1180,7 @@
 <span class='doccomment'>/// selector : simple_selector_sequence [ combinator simple_selector_sequence ]* ;</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// `Err` means invalid selector.</span>
-<span class='kw'>fn</span> <span class='ident'>parse_selector</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Selector</span>,()<span class='op'>&gt;</span> {
+<span class='kw'>fn</span> <span class='ident'>parse_selector</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Selector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;</span>, ()<span class='op'>&gt;</span> {
     <span class='kw'>let</span> (<span class='ident'>first</span>, <span class='kw-2'>mut</span> <span class='ident'>pseudo_element</span>) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parse_simple_selectors</span>(<span class='ident'>context</span>, <span class='ident'>input</span>));
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>compound</span> <span class='op'>=</span> <span class='ident'>CompoundSelector</span>{ <span class='ident'>simple_selectors</span>: <span class='ident'>first</span>, <span class='ident'>next</span>: <span class='prelude-val'>None</span> };
 
@@ -1162,8 +1233,8 @@
 <span class='doccomment'>/// * `Err(())`: Invalid selector, abort</span>
 <span class='doccomment'>/// * `Ok(None)`: Not a type selector, could be something else. `input` was not consumed.</span>
 <span class='doccomment'>/// * `Ok(Some(vec))`: Length 0 (`*|*`), 1 (`*|E` or `ns|*`) or 2 (`|E` or `ns|E`)</span>
-<span class='kw'>fn</span> <span class='ident'>parse_type_selector</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>)
-                       <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span><span class='op'>&gt;&gt;</span>, ()<span class='op'>&gt;</span> {
+<span class='kw'>fn</span> <span class='ident'>parse_type_selector</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>)
+                       <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>, ()<span class='op'>&gt;</span> {
     <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parse_qualified_name</span>(<span class='ident'>context</span>, <span class='ident'>input</span>, <span class='comment'>/* in_attr_selector = */</span> <span class='boolvalue'>false</span>)) {
         <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>),
         <span class='prelude-val'>Some</span>((<span class='ident'>namespace</span>, <span class='ident'>local_name</span>)) <span class='op'>=&gt;</span> {
@@ -1190,9 +1261,9 @@
 
 
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>enum</span> <span class='ident'>SimpleSelectorParseResult</span> {
-    <span class='ident'>SimpleSelector</span>(<span class='ident'>SimpleSelector</span>),
-    <span class='ident'>PseudoElement</span>(<span class='ident'>PseudoElement</span>),
+<span class='kw'>enum</span> <span class='ident'>SimpleSelectorParseResult</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span> {
+    <span class='ident'>SimpleSelector</span>(<span class='ident'>SimpleSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;</span>),
+    <span class='ident'>PseudoElement</span>(<span class='ident'>Impl</span>::<span class='ident'>PseudoElement</span>),
 }
 
 
@@ -1266,8 +1337,8 @@
 }
 
 
-<span class='kw'>fn</span> <span class='ident'>parse_attribute_selector</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>)
-                            <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span>, ()<span class='op'>&gt;</span> {
+<span class='kw'>fn</span> <span class='ident'>parse_attribute_selector</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>)
+                            <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;</span>, ()<span class='op'>&gt;</span> {
     <span class='kw'>let</span> <span class='ident'>attr</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parse_qualified_name</span>(<span class='ident'>context</span>, <span class='ident'>input</span>, <span class='comment'>/* in_attr_selector = */</span> <span class='boolvalue'>true</span>)) {
         <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(()),
         <span class='prelude-val'>Some</span>((_, <span class='prelude-val'>None</span>)) <span class='op'>=&gt;</span> <span class='macro'>unreachable</span><span class='macro'>!</span>(),
@@ -1329,8 +1400,11 @@
 }
 
 
-<span class='doccomment'>/// Level 3: Parse **one** simple_selector</span>
-<span class='kw'>fn</span> <span class='ident'>parse_negation</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span>,()<span class='op'>&gt;</span> {
+<span class='doccomment'>/// Level 3: Parse **one** simple_selector.  (Though we might insert a second</span>
+<span class='doccomment'>/// implied &quot;&lt;defaultns&gt;|*&quot; type selector.)</span>
+<span class='kw'>fn</span> <span class='ident'>parse_negation</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>,
+                                      <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>)
+                                      <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;</span>, ()<span class='op'>&gt;</span> {
     <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parse_type_selector</span>(<span class='ident'>context</span>, <span class='ident'>input</span>)) {
         <span class='prelude-val'>Some</span>(<span class='ident'>type_selector</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>Negation</span>(<span class='ident'>type_selector</span>)),
         <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
@@ -1338,7 +1412,14 @@
                                                  <span class='ident'>input</span>,
                                                  <span class='comment'>/* inside_negation = */</span> <span class='boolvalue'>true</span>)) {
                 <span class='prelude-val'>Some</span>(<span class='ident'>SimpleSelectorParseResult</span>::<span class='ident'>SimpleSelector</span>(<span class='ident'>simple_selector</span>)) <span class='op'>=&gt;</span> {
-                    <span class='prelude-val'>Ok</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>Negation</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>simple_selector</span>]))
+                    <span class='kw'>let</span> <span class='ident'>simple_selectors</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>context</span>.<span class='ident'>default_namespace</span> {
+                        <span class='comment'>// If there was no explicit type selector, but there is</span>
+                        <span class='comment'>// a default namespace, there is an implicit</span>
+                        <span class='comment'>// &quot;&lt;defaultns&gt;|*&quot; type selector before simple_selector.</span>
+                        <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>ns</span>) <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>SimpleSelector</span>::<span class='ident'>Namespace</span>(<span class='ident'>ns</span>.<span class='ident'>clone</span>()), <span class='ident'>simple_selector</span>],
+                        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>simple_selector</span>],
+                    };
+                    <span class='prelude-val'>Ok</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>Negation</span>(<span class='ident'>simple_selectors</span>))
                 }
                 _ <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(())
             }
@@ -1351,8 +1432,9 @@
 <span class='doccomment'>/// | [ HASH | class | attrib | pseudo | negation ]+</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// `Err(())` means invalid selector</span>
-<span class='kw'>fn</span> <span class='ident'>parse_simple_selectors</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>)
-                          <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span><span class='op'>&gt;</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>PseudoElement</span><span class='op'>&gt;</span>),()<span class='op'>&gt;</span> {
+<span class='kw'>fn</span> <span class='ident'>parse_simple_selectors</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>,
+                                              <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>)
+                                              <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;&gt;</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Impl</span>::<span class='ident'>PseudoElement</span><span class='op'>&gt;</span>), ()<span class='op'>&gt;</span> {
     <span class='comment'>// Consume any leading whitespace.</span>
     <span class='kw'>loop</span> {
         <span class='kw'>let</span> <span class='ident'>position</span> <span class='op'>=</span> <span class='ident'>input</span>.<span class='ident'>position</span>();
@@ -1363,7 +1445,15 @@
     }
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>empty</span> <span class='op'>=</span> <span class='boolvalue'>true</span>;
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>simple_selectors</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parse_type_selector</span>(<span class='ident'>context</span>, <span class='ident'>input</span>)) {
-        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[],
+        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
+            <span class='kw'>match</span> <span class='ident'>context</span>.<span class='ident'>default_namespace</span> {
+                <span class='comment'>// If there was no explicit type selector, but there is a</span>
+                <span class='comment'>// default namespace, there is an implicit &quot;&lt;defaultns&gt;|*&quot; type</span>
+                <span class='comment'>// selector.</span>
+                <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>ns</span>) <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>SimpleSelector</span>::<span class='ident'>Namespace</span>(<span class='ident'>ns</span>.<span class='ident'>clone</span>())],
+                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[],
+            }
+        }
         <span class='prelude-val'>Some</span>(<span class='ident'>s</span>) <span class='op'>=&gt;</span> { <span class='ident'>empty</span> <span class='op'>=</span> <span class='boolvalue'>false</span>; <span class='ident'>s</span> }
     };
 
@@ -1392,11 +1482,11 @@
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>parse_functional_pseudo_class</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>,
-                                 <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>,
-                                 <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
-                                 <span class='ident'>inside_negation</span>: <span class='ident'>bool</span>)
-                                 <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span>,()<span class='op'>&gt;</span> {
+<span class='kw'>fn</span> <span class='ident'>parse_functional_pseudo_class</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>,
+                                                     <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>,
+                                                     <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
+                                                     <span class='ident'>inside_negation</span>: <span class='ident'>bool</span>)
+                                                     <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;</span>, ()<span class='op'>&gt;</span> {
     <span class='macro'>match_ignore_ascii_case</span><span class='macro'>!</span> { <span class='ident'>name</span>,
         <span class='string'>&quot;nth-child&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>parse_nth_pseudo_class</span>(<span class='ident'>input</span>, <span class='ident'>SimpleSelector</span>::<span class='ident'>NthChild</span>),
         <span class='string'>&quot;nth-of-type&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>parse_nth_pseudo_class</span>(<span class='ident'>input</span>, <span class='ident'>SimpleSelector</span>::<span class='ident'>NthOfType</span>),
@@ -1408,14 +1498,15 @@
             } <span class='kw'>else</span> {
                 <span class='ident'>parse_negation</span>(<span class='ident'>context</span>, <span class='ident'>input</span>)
             }
-        }
-        _ <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(())
+        },
+        _ <span class='op'>=&gt;</span> <span class='ident'>Impl</span>::<span class='ident'>parse_non_ts_functional_pseudo_class</span>(<span class='ident'>context</span>, <span class='ident'>name</span>, <span class='ident'>input</span>)
+            .<span class='ident'>map</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>NonTSPseudoClass</span>)
     }
 }
 
 
-<span class='kw'>fn</span> <span class='ident'>parse_nth_pseudo_class</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>, <span class='ident'>selector</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span>, ()<span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='ident'>i32</span>, <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>SimpleSelector</span> {
+<span class='kw'>fn</span> <span class='ident'>parse_nth_pseudo_class</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>, <span class='ident'>selector</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;</span>, ()<span class='op'>&gt;</span>
+<span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='ident'>i32</span>, <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='ident'>SimpleSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;</span> {
     <span class='kw'>let</span> (<span class='ident'>a</span>, <span class='ident'>b</span>) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parse_nth</span>(<span class='ident'>input</span>));
     <span class='prelude-val'>Ok</span>(<span class='ident'>selector</span>(<span class='ident'>a</span>, <span class='ident'>b</span>))
 }
@@ -1426,10 +1517,10 @@
 <span class='doccomment'>/// * `Err(())`: Invalid selector, abort</span>
 <span class='doccomment'>/// * `Ok(None)`: Not a simple selector, could be something else. `input` was not consumed.</span>
 <span class='doccomment'>/// * `Ok(Some(_))`: Parsed a simple selector or pseudo-element</span>
-<span class='kw'>fn</span> <span class='ident'>parse_one_simple_selector</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>,
+<span class='kw'>fn</span> <span class='ident'>parse_one_simple_selector</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>,
                              <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>,
                              <span class='ident'>inside_negation</span>: <span class='ident'>bool</span>)
-                             <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>SimpleSelectorParseResult</span><span class='op'>&gt;</span>,()<span class='op'>&gt;</span> {
+                             <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>SimpleSelectorParseResult</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;&gt;</span>,()<span class='op'>&gt;</span> {
     <span class='kw'>let</span> <span class='ident'>start_position</span> <span class='op'>=</span> <span class='ident'>input</span>.<span class='ident'>position</span>();
     <span class='kw'>match</span> <span class='ident'>input</span>.<span class='ident'>next_including_whitespace</span>() {
         <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>IDHash</span>(<span class='ident'>id</span>)) <span class='op'>=&gt;</span> {
@@ -1454,20 +1545,17 @@
         <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>Colon</span>) <span class='op'>=&gt;</span> {
             <span class='kw'>match</span> <span class='ident'>input</span>.<span class='ident'>next_including_whitespace</span>() {
                 <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>Ident</span>(<span class='ident'>name</span>)) <span class='op'>=&gt;</span> {
-                    <span class='kw'>match</span> <span class='ident'>parse_simple_pseudo_class</span>(<span class='ident'>context</span>, <span class='kw-2'>&amp;</span><span class='ident'>name</span>) {
-                        <span class='prelude-val'>Err</span>(()) <span class='op'>=&gt;</span> {
-                            <span class='kw'>let</span> <span class='ident'>pseudo_element</span> <span class='op'>=</span> <span class='macro'>match_ignore_ascii_case</span><span class='macro'>!</span> { <span class='ident'>name</span>,
-                                <span class='comment'>// Supported CSS 2.1 pseudo-elements only.</span>
-                                <span class='comment'>// ** Do not add to this list! **</span>
-                                <span class='string'>&quot;before&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>PseudoElement</span>::<span class='ident'>Before</span>,
-                                <span class='string'>&quot;after&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>PseudoElement</span>::<span class='ident'>After</span>,
-                                <span class='string'>&quot;first-line&quot;</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(()),
-                                <span class='string'>&quot;first-letter&quot;</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(())
-                                _ <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(())
-                            };
-                            <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>SimpleSelectorParseResult</span>::<span class='ident'>PseudoElement</span>(<span class='ident'>pseudo_element</span>)))
-                        },
-                        <span class='prelude-val'>Ok</span>(<span class='ident'>result</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>SimpleSelectorParseResult</span>::<span class='ident'>SimpleSelector</span>(<span class='ident'>result</span>))),
+                    <span class='comment'>// Supported CSS 2.1 pseudo-elements only.</span>
+                    <span class='comment'>// ** Do not add to this list! **</span>
+                    <span class='kw'>if</span> <span class='ident'>name</span>.<span class='ident'>eq_ignore_ascii_case</span>(<span class='string'>&quot;before&quot;</span>) <span class='op'>||</span>
+                       <span class='ident'>name</span>.<span class='ident'>eq_ignore_ascii_case</span>(<span class='string'>&quot;after&quot;</span>) <span class='op'>||</span>
+                       <span class='ident'>name</span>.<span class='ident'>eq_ignore_ascii_case</span>(<span class='string'>&quot;first-line&quot;</span>) <span class='op'>||</span>
+                       <span class='ident'>name</span>.<span class='ident'>eq_ignore_ascii_case</span>(<span class='string'>&quot;first-letter&quot;</span>) {
+                        <span class='kw'>let</span> <span class='ident'>pseudo_element</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Impl</span>::<span class='ident'>parse_pseudo_element</span>(<span class='ident'>context</span>, <span class='kw-2'>&amp;</span><span class='ident'>name</span>));
+                        <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>SimpleSelectorParseResult</span>::<span class='ident'>PseudoElement</span>(<span class='ident'>pseudo_element</span>)))
+                    } <span class='kw'>else</span> {
+                        <span class='kw'>let</span> <span class='ident'>pseudo_class</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parse_simple_pseudo_class</span>(<span class='ident'>context</span>, <span class='kw-2'>&amp;</span><span class='ident'>name</span>));
+                        <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>SimpleSelectorParseResult</span>::<span class='ident'>SimpleSelector</span>(<span class='ident'>pseudo_class</span>)))
                     }
                 }
                 <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>Function</span>(<span class='ident'>name</span>)) <span class='op'>=&gt;</span> {
@@ -1479,7 +1567,7 @@
                 <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>Colon</span>) <span class='op'>=&gt;</span> {
                     <span class='kw'>match</span> <span class='ident'>input</span>.<span class='ident'>next</span>() {
                         <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>Ident</span>(<span class='ident'>name</span>)) <span class='op'>=&gt;</span> {
-                            <span class='kw'>let</span> <span class='ident'>pseudo</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parse_pseudo_element</span>(<span class='kw-2'>&amp;</span><span class='ident'>name</span>));
+                            <span class='kw'>let</span> <span class='ident'>pseudo</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Impl</span>::<span class='ident'>parse_pseudo_element</span>(<span class='ident'>context</span>, <span class='kw-2'>&amp;</span><span class='ident'>name</span>));
                             <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>SimpleSelectorParseResult</span>::<span class='ident'>PseudoElement</span>(<span class='ident'>pseudo</span>)))
                         }
                         _ <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(())
@@ -1495,14 +1583,8 @@
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>parse_simple_pseudo_class</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span>,()<span class='op'>&gt;</span> {
+<span class='kw'>fn</span> <span class='ident'>parse_simple_pseudo_class</span><span class='op'>&lt;</span><span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SimpleSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;</span>, ()<span class='op'>&gt;</span> {
     <span class='macro'>match_ignore_ascii_case</span><span class='macro'>!</span> { <span class='ident'>name</span>,
-        <span class='string'>&quot;any-link&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>AnyLink</span>),
-        <span class='string'>&quot;link&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>Link</span>),
-        <span class='string'>&quot;visited&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>Visited</span>),
-
-        $( <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>css</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>SimpleSelector</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>variant</span>), )<span class='op'>+</span>
-
         <span class='string'>&quot;first-child&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>FirstChild</span>),
         <span class='string'>&quot;last-child&quot;</span>  <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>LastChild</span>),
         <span class='string'>&quot;only-child&quot;</span>  <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>OnlyChild</span>),
@@ -1511,38 +1593,71 @@
         <span class='string'>&quot;first-of-type&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>FirstOfType</span>),
         <span class='string'>&quot;last-of-type&quot;</span>  <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>LastOfType</span>),
         <span class='string'>&quot;only-of-type&quot;</span>  <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>OnlyOfType</span>),
-        <span class='string'>&quot;-servo-nonzero-border&quot;</span> <span class='op'>=&gt;</span> {
-            <span class='kw'>if</span> <span class='ident'>context</span>.<span class='ident'>in_user_agent_stylesheet</span> {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>ServoNonzeroBorder</span>)
-            } <span class='kw'>else</span> {
-                <span class='prelude-val'>Err</span>(())
-            }
-        }
-        _ <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(())
+        _ <span class='op'>=&gt;</span> <span class='ident'>Impl</span>::<span class='ident'>parse_non_ts_pseudo_class</span>(<span class='ident'>context</span>, <span class='ident'>name</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>pc</span><span class='op'>|</span> <span class='ident'>SimpleSelector</span>::<span class='ident'>NonTSPseudoClass</span>(<span class='ident'>pc</span>))
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>parse_pseudo_element</span>(<span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>PseudoElement</span>, ()<span class='op'>&gt;</span> {
-    <span class='macro'>match_ignore_ascii_case</span><span class='macro'>!</span> { <span class='ident'>name</span>,
-        <span class='string'>&quot;before&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>PseudoElement</span>::<span class='ident'>Before</span>),
-        <span class='string'>&quot;after&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>PseudoElement</span>::<span class='ident'>After</span>)
-        _ <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(())
-    }
-}
-
-
+<span class='comment'>// NB: pub module in order to access the DummySelectorImpl</span>
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>tests</span> {
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>tests</span> {
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
     <span class='kw'>use</span> <span class='ident'>cssparser</span>::<span class='ident'>Parser</span>;
     <span class='kw'>use</span> <span class='ident'>string_cache</span>::<span class='ident'>Atom</span>;
     <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Selector</span><span class='op'>&gt;</span>, ()<span class='op'>&gt;</span> {
+    <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
+    <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>PseudoClass</span> {
+        <span class='ident'>ServoNonZeroBorder</span>,
+        <span class='ident'>Lang</span>(<span class='ident'>String</span>),
+    }
+
+    <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Eq</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Clone</span>, <span class='ident'>Debug</span>, <span class='ident'>Hash</span>)]</span>
+    <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>PseudoElement</span> {
+        <span class='ident'>Before</span>,
+        <span class='ident'>After</span>,
+    }
+
+    <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Debug</span>)]</span>
+    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>DummySelectorImpl</span>;
+
+    <span class='kw'>impl</span> <span class='ident'>SelectorImpl</span> <span class='kw'>for</span> <span class='ident'>DummySelectorImpl</span> {
+        <span class='kw'>type</span> <span class='ident'>NonTSPseudoClass</span> <span class='op'>=</span> <span class='ident'>PseudoClass</span>;
+        <span class='kw'>fn</span> <span class='ident'>parse_non_ts_pseudo_class</span>(<span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>PseudoClass</span>, ()<span class='op'>&gt;</span> {
+            <span class='macro'>match_ignore_ascii_case</span><span class='macro'>!</span> { <span class='ident'>name</span>,
+                <span class='string'>&quot;-servo-nonzero-border&quot;</span> <span class='op'>=&gt;</span> {
+                    <span class='kw'>if</span> <span class='ident'>context</span>.<span class='ident'>in_user_agent_stylesheet</span> {
+                        <span class='prelude-val'>Ok</span>(<span class='ident'>PseudoClass</span>::<span class='ident'>ServoNonZeroBorder</span>)
+                    } <span class='kw'>else</span> {
+                        <span class='prelude-val'>Err</span>(())
+                    }
+                },
+                _ <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(())
+            }
+        }
+
+        <span class='kw'>fn</span> <span class='ident'>parse_non_ts_functional_pseudo_class</span>(<span class='ident'>_context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>,
+                                                <span class='ident'>parser</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>PseudoClass</span>, ()<span class='op'>&gt;</span> {
+            <span class='macro'>match_ignore_ascii_case</span><span class='macro'>!</span> { <span class='ident'>name</span>,
+                <span class='string'>&quot;lang&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>PseudoClass</span>::<span class='ident'>Lang</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parser</span>.<span class='ident'>expect_ident_or_string</span>()).<span class='ident'>into_owned</span>())),
+                _ <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(())
+            }
+        }
+
+        <span class='kw'>type</span> <span class='ident'>PseudoElement</span> <span class='op'>=</span> <span class='ident'>PseudoElement</span>;
+        <span class='kw'>fn</span> <span class='ident'>parse_pseudo_element</span>(<span class='ident'>_context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>PseudoElement</span>, ()<span class='op'>&gt;</span> {
+            <span class='macro'>match_ignore_ascii_case</span><span class='macro'>!</span> { <span class='ident'>name</span>,
+                <span class='string'>&quot;before&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>PseudoElement</span>::<span class='ident'>Before</span>),
+                <span class='string'>&quot;after&quot;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>PseudoElement</span>::<span class='ident'>After</span>),
+                _ <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(())
+            }
+        }
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Selector</span><span class='op'>&lt;</span><span class='ident'>DummySelectorImpl</span><span class='op'>&gt;&gt;</span>, ()<span class='op'>&gt;</span> {
         <span class='ident'>parse_ns</span>(<span class='ident'>input</span>, <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>::<span class='ident'>new</span>())
     }
 
-    <span class='kw'>fn</span> <span class='ident'>parse_ns</span>(<span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Selector</span><span class='op'>&gt;</span>, ()<span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>parse_ns</span>(<span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>ParserContext</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Selector</span><span class='op'>&lt;</span><span class='ident'>DummySelectorImpl</span><span class='op'>&gt;&gt;</span>, ()<span class='op'>&gt;</span> {
         <span class='ident'>parse_selector_list</span>(<span class='ident'>context</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>::<span class='ident'>new</span>(<span class='ident'>input</span>))
     }
 
@@ -1552,13 +1667,15 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_empty</span>() {
-        <span class='kw'>let</span> <span class='ident'>list</span> <span class='op'>=</span> <span class='ident'>parse_author_origin_selector_list_from_str</span>(<span class='string'>&quot;:empty&quot;</span>);
+        <span class='kw'>let</span> <span class='ident'>list</span> <span class='op'>=</span> <span class='ident'>parse_author_origin_selector_list_from_str</span>::<span class='op'>&lt;</span><span class='ident'>DummySelectorImpl</span><span class='op'>&gt;</span>(<span class='string'>&quot;:empty&quot;</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>list</span>.<span class='ident'>is_ok</span>());
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_parsing</span>() {
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parse</span>(<span class='string'>&quot;&quot;</span>), <span class='prelude-val'>Err</span>(())) ;
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parse</span>(<span class='string'>&quot;:lang(4)&quot;</span>), <span class='prelude-val'>Err</span>(())) ;
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parse</span>(<span class='string'>&quot;:lang(en US)&quot;</span>), <span class='prelude-val'>Err</span>(())) ;
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parse</span>(<span class='string'>&quot;EeÉ&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='macro'>vec</span><span class='macro'>!</span>(<span class='ident'>Selector</span> {
             <span class='ident'>compound_selectors</span>: <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>CompoundSelector</span> {
                 <span class='ident'>simple_selectors</span>: <span class='macro'>vec</span><span class='macro'>!</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>LocalName</span>(<span class='ident'>LocalName</span> {
@@ -1569,13 +1686,16 @@
             <span class='ident'>pseudo_element</span>: <span class='prelude-val'>None</span>,
             <span class='ident'>specificity</span>: <span class='ident'>specificity</span>(<span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>),
         })));
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parse</span>(<span class='string'>&quot;.foo&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='macro'>vec</span><span class='macro'>!</span>(<span class='ident'>Selector</span> {
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parse</span>(<span class='string'>&quot;.foo:lang(en-US)&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='macro'>vec</span><span class='macro'>!</span>(<span class='ident'>Selector</span> {
             <span class='ident'>compound_selectors</span>: <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>CompoundSelector</span> {
-                <span class='ident'>simple_selectors</span>: <span class='macro'>vec</span><span class='macro'>!</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>Class</span>(<span class='ident'>Atom</span>::<span class='ident'>from</span>(<span class='string'>&quot;foo&quot;</span>))),
+                <span class='ident'>simple_selectors</span>: <span class='macro'>vec</span><span class='macro'>!</span>[
+                    <span class='ident'>SimpleSelector</span>::<span class='ident'>Class</span>(<span class='ident'>Atom</span>::<span class='ident'>from</span>(<span class='string'>&quot;foo&quot;</span>)),
+                    <span class='ident'>SimpleSelector</span>::<span class='ident'>NonTSPseudoClass</span>(<span class='ident'>PseudoClass</span>::<span class='ident'>Lang</span>(<span class='string'>&quot;en-US&quot;</span>.<span class='ident'>to_owned</span>()))
+                ],
                 <span class='ident'>next</span>: <span class='prelude-val'>None</span>,
             }),
             <span class='ident'>pseudo_element</span>: <span class='prelude-val'>None</span>,
-            <span class='ident'>specificity</span>: <span class='ident'>specificity</span>(<span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>0</span>),
+            <span class='ident'>specificity</span>: <span class='ident'>specificity</span>(<span class='number'>0</span>, <span class='number'>2</span>, <span class='number'>0</span>),
         })));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parse</span>(<span class='string'>&quot;#bar&quot;</span>), <span class='prelude-val'>Ok</span>(<span class='macro'>vec</span><span class='macro'>!</span>(<span class='ident'>Selector</span> {
             <span class='ident'>compound_selectors</span>: <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>CompoundSelector</span> {
@@ -1628,14 +1748,19 @@
         })));
         <span class='comment'>// Default namespace does not apply to attribute selectors</span>
         <span class='comment'>// https://github.com/mozilla/servo/pull/1652</span>
+        <span class='comment'>// but it does apply to implicit type selectors</span>
+        <span class='comment'>// https://github.com/servo/rust-selectors/pull/82</span>
         <span class='ident'>context</span>.<span class='ident'>default_namespace</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='macro'>ns</span><span class='macro'>!</span>(<span class='ident'>mathml</span>));
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parse_ns</span>(<span class='string'>&quot;[Foo]&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>context</span>), <span class='prelude-val'>Ok</span>(<span class='macro'>vec</span><span class='macro'>!</span>(<span class='ident'>Selector</span> {
             <span class='ident'>compound_selectors</span>: <span class='ident'>Arc</span>::<span class='ident'>new</span>(<span class='ident'>CompoundSelector</span> {
-                <span class='ident'>simple_selectors</span>: <span class='macro'>vec</span><span class='macro'>!</span>(<span class='ident'>SimpleSelector</span>::<span class='ident'>AttrExists</span>(<span class='ident'>AttrSelector</span> {
-                    <span class='ident'>name</span>: <span class='ident'>Atom</span>::<span class='ident'>from</span>(<span class='string'>&quot;Foo&quot;</span>),
-                    <span class='ident'>lower_name</span>: <span class='ident'>Atom</span>::<span class='ident'>from</span>(<span class='string'>&quot;foo&quot;</span>),
-                    <span class='ident'>namespace</span>: <span class='ident'>NamespaceConstraint</span>::<span class='ident'>Specific</span>(<span class='macro'>ns</span><span class='macro'>!</span>()),
-                })),
+                <span class='ident'>simple_selectors</span>: <span class='macro'>vec</span><span class='macro'>!</span>[
+                    <span class='ident'>SimpleSelector</span>::<span class='ident'>Namespace</span>(<span class='macro'>ns</span><span class='macro'>!</span>(<span class='ident'>mathml</span>)),
+                    <span class='ident'>SimpleSelector</span>::<span class='ident'>AttrExists</span>(<span class='ident'>AttrSelector</span> {
+                        <span class='ident'>name</span>: <span class='ident'>Atom</span>::<span class='ident'>from</span>(<span class='string'>&quot;Foo&quot;</span>),
+                        <span class='ident'>lower_name</span>: <span class='ident'>Atom</span>::<span class='ident'>from</span>(<span class='string'>&quot;foo&quot;</span>),
+                        <span class='ident'>namespace</span>: <span class='ident'>NamespaceConstraint</span>::<span class='ident'>Specific</span>(<span class='macro'>ns</span><span class='macro'>!</span>()),
+                    }),
+                ],
                 <span class='ident'>next</span>: <span class='prelude-val'>None</span>,
             }),
             <span class='ident'>pseudo_element</span>: <span class='prelude-val'>None</span>,
@@ -1708,11 +1833,6 @@
         }]))
     }
 }
-
-<span class='comment'>// End of `macro_rules! module`</span>
-    }
-}
-<span class='macro'>state_pseudo_classes</span><span class='macro'>!</span>(<span class='ident'>module</span>);
 </pre>
 </section>
     <section id='search' class="content hidden"></section>

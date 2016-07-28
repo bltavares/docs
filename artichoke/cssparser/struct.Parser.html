@@ -47,13 +47,13 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-861' class='srclink' href='../src/cssparser/parser.rs.html#65-71' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-871' class='srclink' href='../src/cssparser/parser.rs.html#65-71' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Parser&lt;'i: 't, 't&gt; {
     // some fields omitted
 }</pre><div class='docblock'><p>A CSS parser that borrows its <code>&amp;str</code> input,
 yields <code>Token</code>s,
 and keeps track of nested blocks and functions.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'i, 't&gt; <a class='struct' href='../cssparser/struct.Parser.html' title='cssparser::Parser'>Parser</a>&lt;'i, 't&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-957' class='srclink' href='../src/cssparser/parser.rs.html#169-674' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'i, 't&gt; <a class='struct' href='../cssparser/struct.Parser.html' title='cssparser::Parser'>Parser</a>&lt;'i, 't&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-967' class='srclink' href='../src/cssparser/parser.rs.html#169-688' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(input: &amp;'i <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../cssparser/struct.Parser.html' title='cssparser::Parser'>Parser</a>&lt;'i, 'i&gt;</code></h4>
 <div class='docblock'><p>Create a new parser</p>
 </div><h4 id='method.is_exhausted' class='method'><code>fn <a href='#method.is_exhausted' class='fnname'>is_exhausted</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
@@ -79,6 +79,12 @@ to what was previously saved by the <code>Parser::position</code> method.</p>
 </div><h4 id='method.seen_var_functions' class='method'><code>fn <a href='#method.seen_var_functions' class='fnname'>seen_var_functions</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
 <div class='docblock'><p>Return whether a <code>var()</code> function has been seen by the tokenizer since
 either <code>look_for_var_functions</code> was called, and stop looking.</p>
+</div><h4 id='method.look_for_viewport_percentages' class='method'><code>fn <a href='#method.look_for_viewport_percentages' class='fnname'>look_for_viewport_percentages</a>(&amp;mut self)</code></h4>
+<div class='docblock'><p>Start looking for viewport percentage lengths. (See the <code>seen_viewport_percentages</code>
+method.)</p>
+</div><h4 id='method.seen_viewport_percentages' class='method'><code>fn <a href='#method.seen_viewport_percentages' class='fnname'>seen_viewport_percentages</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Return whether a <code>vh</code>, <code>vw</code>, <code>vmin</code>, or <code>vmax</code> dimension has been seen by the tokenizer
+since <code>look_for_viewport_percentages</code> was called, and stop looking.</p>
 </div><h4 id='method.try' class='method'><code>fn <a href='#method.try' class='fnname'>try</a>&lt;F, T, E&gt;(&amp;mut self, thing: F) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;T, E&gt; <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>(&amp;mut <a class='struct' href='../cssparser/struct.Parser.html' title='cssparser::Parser'>Parser</a>&lt;'i, 't&gt;) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;T, E&gt;</span></code></h4>
 <div class='docblock'><p>Execute the given closure, passing it the parser.
 If the result (returned unchanged) is <code>Err</code>,
@@ -208,7 +214,7 @@ or if it was there at all (as opposed to reaching the end of the input).</p>
 <div class='docblock'><p>Parse the input until exhaustion and check that it contains no “error” token.</p>
 
 <p>See <code>Token::is_parse_error</code>. This also checks nested blocks and functions recursively.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl&lt;'i: 't, 't&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../cssparser/struct.Parser.html' title='cssparser::Parser'>Parser</a>&lt;'i, 't&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-867' class='srclink' href='../src/cssparser/parser.rs.html#64' title='goto source code'>[src]</a></span></h3>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><span class='in-band'><code>impl&lt;'i: 't, 't&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../cssparser/struct.Parser.html' title='cssparser::Parser'>Parser</a>&lt;'i, 't&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-877' class='srclink' href='../src/cssparser/parser.rs.html#64' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../cssparser/struct.Parser.html' title='cssparser::Parser'>Parser</a>&lt;'i, 't&gt;</code></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>

@@ -47,10 +47,9 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/kuchiki/lib.rs.html#1-31' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/kuchiki/lib.rs.html#1-44' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Kuchiki (朽木), a HTML/XML tree manipulation library for Rust.</p>
-</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
-<table><tr><td><code>pub use iter::{<a class='trait' href='../kuchiki/iter/trait.NodeIterator.html' title='kuchiki::iter::NodeIterator'>NodeIterator</a>, <a class='trait' href='../kuchiki/iter/trait.ElementIterator.html' title='kuchiki::iter::ElementIterator'>ElementIterator</a>};</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class='mod' href='iter/index.html'
@@ -58,8 +57,23 @@
                            <td class='docblock short'>
                                 <p>Node iterators</p>
                            </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='traits/index.html'
+                                  title='kuchiki::traits'>traits</a></td>
+                           <td class='docblock short'>
+                                <p>This module re-exports a number of traits that are useful when using Kuchiki.
+It can be used with:</p>
+                           </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Attributes.html'
+                                  title='kuchiki::Attributes'>Attributes</a></td>
+                           <td class='docblock short'>
+                                <p>Convenience wrapper around a hashmap that adds method for attributes in the null namespace.</p>
+                           </td>
+                       </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Doctype.html'
                                   title='kuchiki::Doctype'>Doctype</a></td>
@@ -79,13 +93,6 @@
                                   title='kuchiki::ElementData'>ElementData</a></td>
                            <td class='docblock short'>
                                 <p>Data specific to element nodes.</p>
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Html.html'
-                                  title='kuchiki::Html'>Html</a></td>
-                           <td class='docblock short'>
-                                <p>The HTML parser.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -129,6 +136,14 @@
                                   title='kuchiki::NodeData'>NodeData</a></td>
                            <td class='docblock short'>
                                 <p>Node data specific to the node type.</p>
+                           </td>
+                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='fn' href='fn.parse_html.html'
+                                  title='kuchiki::parse_html'>parse_html</a></td>
+                           <td class='docblock short'>
+                                <p>Parse an HTML document with html5ever and the default configuration.</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>

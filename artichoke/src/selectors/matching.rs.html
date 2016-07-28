@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/selectors-0.2.2/src/matching.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/selectors-0.5.9/src/matching.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>matching.rs.html -- source</title>
@@ -935,18 +935,60 @@
 <span id="891">891</span>
 <span id="892">892</span>
 <span id="893">893</span>
+<span id="894">894</span>
+<span id="895">895</span>
+<span id="896">896</span>
+<span id="897">897</span>
+<span id="898">898</span>
+<span id="899">899</span>
+<span id="900">900</span>
+<span id="901">901</span>
+<span id="902">902</span>
+<span id="903">903</span>
+<span id="904">904</span>
+<span id="905">905</span>
+<span id="906">906</span>
+<span id="907">907</span>
+<span id="908">908</span>
+<span id="909">909</span>
+<span id="910">910</span>
+<span id="911">911</span>
+<span id="912">912</span>
+<span id="913">913</span>
+<span id="914">914</span>
+<span id="915">915</span>
+<span id="916">916</span>
+<span id="917">917</span>
+<span id="918">918</span>
+<span id="919">919</span>
+<span id="920">920</span>
+<span id="921">921</span>
+<span id="922">922</span>
+<span id="923">923</span>
+<span id="924">924</span>
+<span id="925">925</span>
+<span id="926">926</span>
+<span id="927">927</span>
+<span id="928">928</span>
+<span id="929">929</span>
+<span id="930">930</span>
+<span id="931">931</span>
+<span id="932">932</span>
+<span id="933">933</span>
+<span id="934">934</span>
+<span id="935">935</span>
+<span id="936">936</span>
+<span id="937">937</span>
+<span id="938">938</span>
+<span id="939">939</span>
+<span id="940">940</span>
+<span id="941">941</span>
+<span id="942">942</span>
+<span id="943">943</span>
 </pre><pre class='rust '>
 <span class='comment'>/* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */</span>
-
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>module</span> {
-    ($(
-        $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Flag_attr</span>: <span class='ident'>meta</span>]</span>)<span class='op'>*</span>
-        <span class='ident'>state</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>css</span>: <span class='ident'>expr</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>variant</span>: <span class='ident'>ident</span> <span class='op'>/</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>method</span>: <span class='ident'>ident</span> <span class='op'>/</span>
-        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>flag</span>: <span class='ident'>ident</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>value</span>: <span class='ident'>expr</span>,
-    )<span class='op'>+</span>) <span class='op'>=&gt;</span> {
-
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ascii</span>::<span class='ident'>AsciiExt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
@@ -957,9 +999,9 @@
 <span class='kw'>use</span> <span class='ident'>string_cache</span>::<span class='ident'>Atom</span>;
 
 <span class='kw'>use</span> <span class='ident'>parser</span>::{<span class='ident'>CaseSensitivity</span>, <span class='ident'>Combinator</span>, <span class='ident'>CompoundSelector</span>, <span class='ident'>LocalName</span>};
-<span class='kw'>use</span> <span class='ident'>parser</span>::{<span class='ident'>SimpleSelector</span>, <span class='ident'>Selector</span>};
+<span class='kw'>use</span> <span class='ident'>parser</span>::{<span class='ident'>SimpleSelector</span>, <span class='ident'>Selector</span>, <span class='ident'>SelectorImpl</span>};
 <span class='kw'>use</span> <span class='ident'>tree</span>::<span class='ident'>Element</span>;
-<span class='kw'>use</span> <span class='ident'>hash_map</span>::{<span class='self'>self</span>, <span class='ident'>HashMap</span>};
+<span class='kw'>use</span> <span class='ident'>HashMap</span>;
 
 <span class='doccomment'>/// The definition of whitespace per CSS Selectors Level 3 § 4.</span>
 <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>SELECTOR_WHITESPACE</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> [<span class='ident'>char</span>] <span class='op'>=</span> <span class='kw-2'>&amp;</span>[<span class='string'>&#39; &#39;</span>, <span class='string'>&#39;\t&#39;</span>, <span class='string'>&#39;\n&#39;</span>, <span class='string'>&#39;\r&#39;</span>, <span class='string'>&#39;\x0C&#39;</span>];
@@ -984,28 +1026,33 @@
 <span class='doccomment'>/// element name, etc. will contain the Rules that actually match that</span>
 <span class='doccomment'>/// element.</span>
 <span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;heap_size&quot;</span>, <span class='ident'>derive</span>(<span class='ident'>HeapSizeOf</span>))]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SelectorMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SelectorMap</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span> {
     <span class='comment'>// TODO: Tune the initial capacity of the HashMap</span>
-    <span class='ident'>id_hash</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>Atom</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
-    <span class='ident'>class_hash</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>Atom</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
-    <span class='ident'>local_name_hash</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>Atom</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
+    <span class='ident'>id_hash</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>Atom</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
+    <span class='ident'>class_hash</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>Atom</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
+    <span class='ident'>local_name_hash</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>Atom</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
     <span class='doccomment'>/// Same as local_name_hash, but keys are lower-cased.</span>
     <span class='doccomment'>/// For HTML elements in HTML documents.</span>
-    <span class='ident'>lower_local_name_hash</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>Atom</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
-    <span class='comment'>// For Rules that don&#39;t have ID, class, or element selectors.</span>
-    <span class='ident'>universal_rules</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>,
+    <span class='ident'>lower_local_name_hash</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>Atom</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
+    <span class='doccomment'>/// Rules that don&#39;t have ID, class, or element selectors.</span>
+    <span class='ident'>other_rules</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;&gt;</span>,
     <span class='doccomment'>/// Whether this hash is empty.</span>
     <span class='ident'>empty</span>: <span class='ident'>bool</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>SelectorMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>SelectorMap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+<span class='attribute'>#[<span class='ident'>inline</span>]</span>
+<span class='kw'>fn</span> <span class='ident'>compare</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>a</span>: <span class='kw-2'>&amp;</span><span class='ident'>DeclarationBlock</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='ident'>DeclarationBlock</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span> {
+    (<span class='ident'>a</span>.<span class='ident'>specificity</span>, <span class='ident'>a</span>.<span class='ident'>source_order</span>).<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span>(<span class='ident'>b</span>.<span class='ident'>specificity</span>, <span class='ident'>b</span>.<span class='ident'>source_order</span>))
+}
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span> <span class='ident'>SelectorMap</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>SelectorMap</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;</span> {
         <span class='ident'>SelectorMap</span> {
-            <span class='ident'>id_hash</span>: <span class='ident'>hash_map</span>::<span class='ident'>new</span>(),
-            <span class='ident'>class_hash</span>: <span class='ident'>hash_map</span>::<span class='ident'>new</span>(),
-            <span class='ident'>local_name_hash</span>: <span class='ident'>hash_map</span>::<span class='ident'>new</span>(),
-            <span class='ident'>lower_local_name_hash</span>: <span class='ident'>hash_map</span>::<span class='ident'>new</span>(),
-            <span class='ident'>universal_rules</span>: <span class='macro'>vec</span><span class='macro'>!</span>(),
+            <span class='ident'>id_hash</span>: <span class='ident'>HashMap</span>::<span class='ident'>default</span>(),
+            <span class='ident'>class_hash</span>: <span class='ident'>HashMap</span>::<span class='ident'>default</span>(),
+            <span class='ident'>local_name_hash</span>: <span class='ident'>HashMap</span>::<span class='ident'>default</span>(),
+            <span class='ident'>lower_local_name_hash</span>: <span class='ident'>HashMap</span>::<span class='ident'>default</span>(),
+            <span class='ident'>other_rules</span>: <span class='macro'>vec</span><span class='macro'>!</span>(),
             <span class='ident'>empty</span>: <span class='boolvalue'>true</span>,
         }
     }
@@ -1014,13 +1061,13 @@
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// Extract matching rules as per element&#39;s ID, classes, tag name, etc..</span>
     <span class='doccomment'>/// Sort the Rules at the end to maintain cascading order.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_all_matching_rules</span><span class='op'>&lt;</span><span class='ident'>E</span>,<span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-                                       <span class='ident'>element</span>: <span class='kw-2'>&amp;</span><span class='ident'>E</span>,
-                                       <span class='ident'>parent_bf</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>BloomFilter</span><span class='op'>&gt;</span>,
-                                       <span class='ident'>matching_rules_list</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>V</span>,
-                                       <span class='ident'>shareable</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>bool</span>)
-                                       <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Element</span>,
-                                             <span class='ident'>V</span>: <span class='ident'>VecLike</span><span class='op'>&lt;</span><span class='ident'>DeclarationBlock</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_all_matching_rules</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
+                                        <span class='ident'>element</span>: <span class='kw-2'>&amp;</span><span class='ident'>E</span>,
+                                        <span class='ident'>parent_bf</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>BloomFilter</span><span class='op'>&gt;</span>,
+                                        <span class='ident'>matching_rules_list</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>V</span>,
+                                        <span class='ident'>shareable</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>bool</span>)
+                                        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Element</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>=</span><span class='ident'>Impl</span><span class='op'>&gt;</span>,
+                                              <span class='ident'>V</span>: <span class='ident'>VecLike</span><span class='op'>&lt;</span><span class='ident'>DeclarationBlock</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>empty</span> {
             <span class='kw'>return</span>
         }
@@ -1059,26 +1106,43 @@
 
         <span class='ident'>SelectorMap</span>::<span class='ident'>get_matching_rules</span>(<span class='ident'>element</span>,
                                         <span class='ident'>parent_bf</span>,
-                                        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>universal_rules</span>,
+                                        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>other_rules</span>,
                                         <span class='ident'>matching_rules_list</span>,
                                         <span class='ident'>shareable</span>);
 
         <span class='comment'>// Sort only the rules we just added.</span>
         <span class='ident'>sort_by</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>matching_rules_list</span>[<span class='ident'>init_len</span>..], <span class='kw-2'>&amp;</span><span class='ident'>compare</span>);
-
-        <span class='kw'>fn</span> <span class='ident'>compare</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>a</span>: <span class='kw-2'>&amp;</span><span class='ident'>DeclarationBlock</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='ident'>DeclarationBlock</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span> {
-            (<span class='ident'>a</span>.<span class='ident'>specificity</span>, <span class='ident'>a</span>.<span class='ident'>source_order</span>).<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span>(<span class='ident'>b</span>.<span class='ident'>specificity</span>, <span class='ident'>b</span>.<span class='ident'>source_order</span>))
-        }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>get_matching_rules_from_hash</span><span class='op'>&lt;</span><span class='ident'>E</span>,<span class='ident'>V</span><span class='op'>&gt;</span>(<span class='ident'>element</span>: <span class='kw-2'>&amp;</span><span class='ident'>E</span>,
-                                         <span class='ident'>parent_bf</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>BloomFilter</span><span class='op'>&gt;</span>,
-                                         <span class='ident'>hash</span>: <span class='kw-2'>&amp;</span><span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>Atom</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
-                                         <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>Atom</span>,
-                                         <span class='ident'>matching_rules</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>V</span>,
-                                         <span class='ident'>shareable</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>bool</span>)
-                                         <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Element</span>,
-                                               <span class='ident'>V</span>: <span class='ident'>VecLike</span><span class='op'>&lt;</span><span class='ident'>DeclarationBlock</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> {
+    <span class='doccomment'>/// Append to `rule_list` all universal Rules (rules with selector `*|*`) in</span>
+    <span class='doccomment'>/// `self` sorted by specifity and source order.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_universal_rules</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
+                                  <span class='ident'>matching_rules_list</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>V</span>)
+                                  <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>VecLike</span><span class='op'>&lt;</span><span class='ident'>DeclarationBlock</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> {
+        <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>empty</span> {
+            <span class='kw'>return</span>
+        }
+
+        <span class='kw'>let</span> <span class='ident'>init_len</span> <span class='op'>=</span> <span class='ident'>matching_rules_list</span>.<span class='ident'>len</span>();
+
+        <span class='kw'>for</span> <span class='ident'>rule</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>other_rules</span>.<span class='ident'>iter</span>() {
+            <span class='kw'>if</span> <span class='ident'>rule</span>.<span class='ident'>selector</span>.<span class='ident'>simple_selectors</span>.<span class='ident'>is_empty</span>() <span class='op'>&amp;&amp;</span>
+               <span class='ident'>rule</span>.<span class='ident'>selector</span>.<span class='ident'>next</span>.<span class='ident'>is_none</span>() {
+                <span class='ident'>matching_rules_list</span>.<span class='ident'>push</span>(<span class='ident'>rule</span>.<span class='ident'>declarations</span>.<span class='ident'>clone</span>());
+            }
+        }
+
+        <span class='ident'>sort_by</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>matching_rules_list</span>[<span class='ident'>init_len</span>..], <span class='kw-2'>&amp;</span><span class='ident'>compare</span>);
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>get_matching_rules_from_hash</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>V</span><span class='op'>&gt;</span>(<span class='ident'>element</span>: <span class='kw-2'>&amp;</span><span class='ident'>E</span>,
+                                          <span class='ident'>parent_bf</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>BloomFilter</span><span class='op'>&gt;</span>,
+                                          <span class='ident'>hash</span>: <span class='kw-2'>&amp;</span><span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>Atom</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
+                                          <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>Atom</span>,
+                                          <span class='ident'>matching_rules</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>V</span>,
+                                          <span class='ident'>shareable</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>bool</span>)
+                                          <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Element</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>=</span><span class='ident'>Impl</span><span class='op'>&gt;</span>,
+                                                <span class='ident'>V</span>: <span class='ident'>VecLike</span><span class='op'>&lt;</span><span class='ident'>DeclarationBlock</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>match</span> <span class='ident'>hash</span>.<span class='ident'>get</span>(<span class='ident'>key</span>) {
             <span class='prelude-val'>Some</span>(<span class='ident'>rules</span>) <span class='op'>=&gt;</span> {
                 <span class='ident'>SelectorMap</span>::<span class='ident'>get_matching_rules</span>(<span class='ident'>element</span>,
@@ -1092,13 +1156,13 @@
     }
 
     <span class='doccomment'>/// Adds rules in `rules` that match `element` to the `matching_rules` list.</span>
-    <span class='kw'>fn</span> <span class='ident'>get_matching_rules</span><span class='op'>&lt;</span><span class='ident'>E</span>,<span class='ident'>V</span><span class='op'>&gt;</span>(<span class='ident'>element</span>: <span class='kw-2'>&amp;</span><span class='ident'>E</span>,
-                               <span class='ident'>parent_bf</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>BloomFilter</span><span class='op'>&gt;</span>,
-                               <span class='ident'>rules</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>],
-                               <span class='ident'>matching_rules</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>V</span>,
-                               <span class='ident'>shareable</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>bool</span>)
-                               <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Element</span>,
-                                     <span class='ident'>V</span>: <span class='ident'>VecLike</span><span class='op'>&lt;</span><span class='ident'>DeclarationBlock</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>get_matching_rules</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>V</span><span class='op'>&gt;</span>(<span class='ident'>element</span>: <span class='kw-2'>&amp;</span><span class='ident'>E</span>,
+                                <span class='ident'>parent_bf</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>BloomFilter</span><span class='op'>&gt;</span>,
+                                <span class='ident'>rules</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;</span>],
+                                <span class='ident'>matching_rules</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>V</span>,
+                                <span class='ident'>shareable</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>bool</span>)
+                                <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Element</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>=</span><span class='ident'>Impl</span><span class='op'>&gt;</span>,
+                                      <span class='ident'>V</span>: <span class='ident'>VecLike</span><span class='op'>&lt;</span><span class='ident'>DeclarationBlock</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span> {
         <span class='kw'>for</span> <span class='ident'>rule</span> <span class='kw'>in</span> <span class='ident'>rules</span>.<span class='ident'>iter</span>() {
             <span class='kw'>if</span> <span class='ident'>matches_compound_selector</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>rule</span>.<span class='ident'>selector</span>, <span class='ident'>element</span>, <span class='ident'>parent_bf</span>, <span class='ident'>shareable</span>) {
                 <span class='ident'>matching_rules</span>.<span class='ident'>push</span>(<span class='ident'>rule</span>.<span class='ident'>declarations</span>.<span class='ident'>clone</span>());
@@ -1107,8 +1171,8 @@
     }
 
     <span class='doccomment'>/// Insert rule into the correct hash.</span>
-    <span class='doccomment'>/// Order in which to try: id_hash, class_hash, local_name_hash, universal_rules.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>rule</span>: <span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>) {
+    <span class='doccomment'>/// Order in which to try: id_hash, class_hash, local_name_hash, other_rules.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>rule</span>: <span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;</span>) {
         <span class='self'>self</span>.<span class='ident'>empty</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
 
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>id_name</span>) <span class='op'>=</span> <span class='ident'>SelectorMap</span>::<span class='ident'>get_id_name</span>(<span class='kw-2'>&amp;</span><span class='ident'>rule</span>) {
@@ -1127,16 +1191,16 @@
             <span class='kw'>return</span>;
         }
 
-        <span class='self'>self</span>.<span class='ident'>universal_rules</span>.<span class='ident'>push</span>(<span class='ident'>rule</span>);
+        <span class='self'>self</span>.<span class='ident'>other_rules</span>.<span class='ident'>push</span>(<span class='ident'>rule</span>);
     }
 
     <span class='doccomment'>/// Retrieve the first ID name in Rule, or None otherwise.</span>
-    <span class='kw'>fn</span> <span class='ident'>get_id_name</span>(<span class='ident'>rule</span>: <span class='kw-2'>&amp;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Atom</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>get_id_name</span>(<span class='ident'>rule</span>: <span class='kw-2'>&amp;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Atom</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>simple_selector_sequence</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>rule</span>.<span class='ident'>selector</span>.<span class='ident'>simple_selectors</span>;
         <span class='kw'>for</span> <span class='ident'>ss</span> <span class='kw'>in</span> <span class='ident'>simple_selector_sequence</span>.<span class='ident'>iter</span>() {
             <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>ss</span> {
-                <span class='comment'>// TODO(pradeep): Implement case-sensitivity based on the document type and quirks</span>
-                <span class='comment'>// mode.</span>
+                <span class='comment'>// TODO(pradeep): Implement case-sensitivity based on the</span>
+                <span class='comment'>// document type and quirks mode.</span>
                 <span class='ident'>SimpleSelector</span>::<span class='ident'>ID</span>(<span class='kw-2'>ref</span> <span class='ident'>id</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>id</span>.<span class='ident'>clone</span>()),
                 _ <span class='op'>=&gt;</span> {}
             }
@@ -1145,12 +1209,12 @@
     }
 
     <span class='doccomment'>/// Retrieve the FIRST class name in Rule, or None otherwise.</span>
-    <span class='kw'>fn</span> <span class='ident'>get_class_name</span>(<span class='ident'>rule</span>: <span class='kw-2'>&amp;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Atom</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>get_class_name</span>(<span class='ident'>rule</span>: <span class='kw-2'>&amp;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Atom</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>simple_selector_sequence</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>rule</span>.<span class='ident'>selector</span>.<span class='ident'>simple_selectors</span>;
         <span class='kw'>for</span> <span class='ident'>ss</span> <span class='kw'>in</span> <span class='ident'>simple_selector_sequence</span>.<span class='ident'>iter</span>() {
             <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>ss</span> {
-                <span class='comment'>// TODO(pradeep): Implement case-sensitivity based on the document type and quirks</span>
-                <span class='comment'>// mode.</span>
+                <span class='comment'>// TODO(pradeep): Implement case-sensitivity based on the</span>
+                <span class='comment'>// document type and quirks mode.</span>
                 <span class='ident'>SimpleSelector</span>::<span class='ident'>Class</span>(<span class='kw-2'>ref</span> <span class='ident'>class</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>class</span>.<span class='ident'>clone</span>()),
                 _ <span class='op'>=&gt;</span> {}
             }
@@ -1159,7 +1223,7 @@
     }
 
     <span class='doccomment'>/// Retrieve the name if it is a type selector, or None otherwise.</span>
-    <span class='kw'>fn</span> <span class='ident'>get_local_name</span>(<span class='ident'>rule</span>: <span class='kw-2'>&amp;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>LocalName</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>get_local_name</span>(<span class='ident'>rule</span>: <span class='kw-2'>&amp;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>LocalName</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>simple_selector_sequence</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>rule</span>.<span class='ident'>selector</span>.<span class='ident'>simple_selectors</span>;
         <span class='kw'>for</span> <span class='ident'>ss</span> <span class='kw'>in</span> <span class='ident'>simple_selector_sequence</span>.<span class='ident'>iter</span>() {
             <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>ss</span> {
@@ -1179,11 +1243,11 @@
 <span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>RECOMMENDED_SELECTOR_BLOOM_FILTER_SIZE</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>4096</span>;
 
 <span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;heap_size&quot;</span>, <span class='ident'>derive</span>(<span class='ident'>HeapSizeOf</span>))]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span> {
     <span class='comment'>// This is an Arc because Rule will essentially be cloned for every element</span>
     <span class='comment'>// that it matches. Selector contains an owned vector (through</span>
     <span class='comment'>// CompoundSelector) and we want to avoid the allocation.</span>
-    <span class='kw'>pub</span> <span class='ident'>selector</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>CompoundSelector</span><span class='op'>&gt;</span>,
+    <span class='kw'>pub</span> <span class='ident'>selector</span>: <span class='ident'>Arc</span><span class='op'>&lt;</span><span class='ident'>CompoundSelector</span><span class='op'>&lt;</span><span class='ident'>Impl</span><span class='op'>&gt;&gt;</span>,
     <span class='kw'>pub</span> <span class='ident'>declarations</span>: <span class='ident'>DeclarationBlock</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
 }
 
@@ -1210,8 +1274,8 @@
 }
 
 <span class='comment'>// FIXME(https://github.com/rust-lang/rust/issues/7671)</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span> <span class='ident'>Clone</span> <span class='kw'>for</span> <span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;</span> {
         <span class='ident'>Rule</span> {
             <span class='ident'>selector</span>: <span class='self'>self</span>.<span class='ident'>selector</span>.<span class='ident'>clone</span>(),
             <span class='ident'>declarations</span>: <span class='self'>self</span>.<span class='ident'>declarations</span>.<span class='ident'>clone</span>(),
@@ -1230,7 +1294,24 @@
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>matches</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='ident'>selector_list</span>: <span class='kw-2'>&amp;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Selector</span><span class='op'>&gt;</span>,
+<span class='macro'>bitflags</span><span class='macro'>!</span> {
+    <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;Flags set on elements during the matching process.&quot;</span>]</span>
+    <span class='kw'>pub</span> <span class='ident'>flags</span> <span class='ident'>ElementFlags</span>: <span class='ident'>u8</span> {
+        <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;When a child is added or removed from this element, all the children must be&quot;</span>]</span>
+        <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;restyled, because they may match :nth-last-child, :last-of-type,&quot;</span>]</span>
+        <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;:nth-last-of-type, or :only-of-type.&quot;</span>]</span>
+        <span class='kw'>const</span> <span class='ident'>HAS_SLOW_SELECTOR</span> <span class='op'>=</span> <span class='number'>0x01</span>,
+        <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;When a child is added or removed from this element, any later children must be&quot;</span>]</span>
+        <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;restyled, because they may match :nth-child, :first-of-type, or :nth-of-type.&quot;</span>]</span>
+        <span class='kw'>const</span> <span class='ident'>HAS_SLOW_SELECTOR_LATER_SIBLINGS</span> <span class='op'>=</span> <span class='number'>0x02</span>,
+        <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;When a child is added or removed from this element, the first and last children&quot;</span>]</span>
+        <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;must be restyled, because they may match :first-child, :last-child, or&quot;</span>]</span>
+        <span class='attribute'>#[<span class='ident'>doc</span> <span class='op'>=</span> <span class='string'>&quot;:only-child.&quot;</span>]</span>
+        <span class='kw'>const</span> <span class='ident'>HAS_EDGE_CHILD_SELECTOR</span> <span class='op'>=</span> <span class='number'>0x03</span>,
+    }
+}
+
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>matches</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='ident'>selector_list</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>Selector</span><span class='op'>&lt;</span><span class='ident'>E</span>::<span class='ident'>Impl</span><span class='op'>&gt;</span>],
                   <span class='ident'>element</span>: <span class='kw-2'>&amp;</span><span class='ident'>E</span>,
                   <span class='ident'>parent_bf</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>BloomFilter</span><span class='op'>&gt;</span>)
                   <span class='op'>-&gt;</span> <span class='ident'>bool</span>
@@ -1245,9 +1326,9 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// NB: If you add support for any new kinds of selectors to this routine, be sure to set</span>
 <span class='doccomment'>/// `shareable` to false unless you are willing to update the style sharing logic. Otherwise things</span>
-<span class='doccomment'>/// will almost certainly break as elements will start mistakenly sharing styles. (See the code in</span>
-<span class='doccomment'>/// `main/css/matching.rs`.)</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>matches_compound_selector</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='ident'>CompoundSelector</span>,
+<span class='doccomment'>/// will almost certainly break as elements will start mistakenly sharing styles. (See</span>
+<span class='doccomment'>/// `can_share_style_with` in `servo/components/style/matching.rs`.)</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>matches_compound_selector</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='ident'>CompoundSelector</span><span class='op'>&lt;</span><span class='ident'>E</span>::<span class='ident'>Impl</span><span class='op'>&gt;</span>,
                                     <span class='ident'>element</span>: <span class='kw-2'>&amp;</span><span class='ident'>E</span>,
                                     <span class='ident'>parent_bf</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>BloomFilter</span><span class='op'>&gt;</span>,
                                     <span class='ident'>shareable</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>bool</span>)
@@ -1312,7 +1393,7 @@
 <span class='doccomment'>/// Quickly figures out whether or not the compound selector is worth doing more</span>
 <span class='doccomment'>/// work on. If the simple selectors don&#39;t match, or there&#39;s a child selector</span>
 <span class='doccomment'>/// that does not appear in the bloom parent bloom filter, we can exit early.</span>
-<span class='kw'>fn</span> <span class='ident'>can_fast_reject</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='ident'>CompoundSelector</span>,
+<span class='kw'>fn</span> <span class='ident'>can_fast_reject</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='ident'>CompoundSelector</span><span class='op'>&lt;</span><span class='ident'>E</span>::<span class='ident'>Impl</span><span class='op'>&gt;</span>,
                       <span class='ident'>element</span>: <span class='kw-2'>&amp;</span><span class='ident'>E</span>,
                       <span class='ident'>parent_bf</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>BloomFilter</span><span class='op'>&gt;</span>,
                       <span class='ident'>shareable</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>bool</span>)
@@ -1373,7 +1454,7 @@
     <span class='kw'>return</span> <span class='prelude-val'>None</span>;
 }
 
-<span class='kw'>fn</span> <span class='ident'>matches_compound_selector_internal</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='ident'>CompoundSelector</span>,
+<span class='kw'>fn</span> <span class='ident'>matches_compound_selector_internal</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='ident'>CompoundSelector</span><span class='op'>&lt;</span><span class='ident'>E</span>::<span class='ident'>Impl</span><span class='op'>&gt;</span>,
                                          <span class='ident'>element</span>: <span class='kw-2'>&amp;</span><span class='ident'>E</span>,
                                          <span class='ident'>parent_bf</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>BloomFilter</span><span class='op'>&gt;</span>,
                                          <span class='ident'>shareable</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>bool</span>)
@@ -1442,7 +1523,7 @@
 }
 
 <span class='macro'>bitflags</span><span class='macro'>!</span> {
-    <span class='ident'>flags</span> <span class='ident'>CommonStyleAffectingAttributes</span>: <span class='ident'>u8</span> {
+    <span class='kw'>pub</span> <span class='ident'>flags</span> <span class='ident'>CommonStyleAffectingAttributes</span>: <span class='ident'>u8</span> {
         <span class='kw'>const</span> <span class='ident'>HIDDEN_ATTRIBUTE</span> <span class='op'>=</span> <span class='number'>0x01</span>,
         <span class='kw'>const</span> <span class='ident'>NO_WRAP_ATTRIBUTE</span> <span class='op'>=</span> <span class='number'>0x02</span>,
         <span class='kw'>const</span> <span class='ident'>ALIGN_LEFT_ATTRIBUTE</span> <span class='op'>=</span> <span class='number'>0x04</span>,
@@ -1462,7 +1543,7 @@
     <span class='ident'>IsEqual</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>, <span class='ident'>CommonStyleAffectingAttributes</span>),
 }
 
-<span class='comment'>// NB: This must match the order in `layout::css::matching::CommonStyleAffectingAttributes`.</span>
+<span class='comment'>// NB: This must match the order in `selectors::matching::CommonStyleAffectingAttributes`.</span>
 <span class='attribute'>#[<span class='ident'>inline</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>common_style_affecting_attributes</span>() <span class='op'>-&gt;</span> [<span class='ident'>CommonStyleAffectingAttributeInfo</span>; <span class='number'>5</span>] {
     [
@@ -1500,10 +1581,10 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// NB: If you add support for any new kinds of selectors to this routine, be sure to set</span>
 <span class='doccomment'>/// `shareable` to false unless you are willing to update the style sharing logic. Otherwise things</span>
-<span class='doccomment'>/// will almost certainly break as elements will start mistakenly sharing styles. (See the code in</span>
-<span class='doccomment'>/// `main/css/matching.rs`.)</span>
+<span class='doccomment'>/// will almost certainly break as elements will start mistakenly sharing styles. (See</span>
+<span class='doccomment'>/// `can_share_style_with` in `servo/components/style/matching.rs`.)</span>
 <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>matches_simple_selector</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span>,
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>matches_simple_selector</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='ident'>selector</span>: <span class='kw-2'>&amp;</span><span class='ident'>SimpleSelector</span><span class='op'>&lt;</span><span class='ident'>E</span>::<span class='ident'>Impl</span><span class='op'>&gt;</span>,
                                   <span class='ident'>element</span>: <span class='kw-2'>&amp;</span><span class='ident'>E</span>,
                                   <span class='ident'>shareable</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>bool</span>)
                                   <span class='op'>-&gt;</span> <span class='ident'>bool</span>
@@ -1513,7 +1594,6 @@
             <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>element</span>.<span class='ident'>is_html_element_in_html_document</span>() { <span class='ident'>lower_name</span> } <span class='kw'>else</span> { <span class='ident'>name</span> };
             <span class='ident'>element</span>.<span class='ident'>get_local_name</span>() <span class='op'>==</span> <span class='ident'>name</span>
         }
-
         <span class='ident'>SimpleSelector</span>::<span class='ident'>Namespace</span>(<span class='kw-2'>ref</span> <span class='ident'>namespace</span>) <span class='op'>=&gt;</span> {
             <span class='ident'>element</span>.<span class='ident'>get_namespace</span>() <span class='op'>==</span> <span class='ident'>namespace</span>
         }
@@ -1527,7 +1607,6 @@
         <span class='ident'>SimpleSelector</span>::<span class='ident'>Class</span>(<span class='kw-2'>ref</span> <span class='ident'>class</span>) <span class='op'>=&gt;</span> {
             <span class='ident'>element</span>.<span class='ident'>has_class</span>(<span class='ident'>class</span>)
         }
-
         <span class='ident'>SimpleSelector</span>::<span class='ident'>AttrExists</span>(<span class='kw-2'>ref</span> <span class='ident'>attr</span>) <span class='op'>=&gt;</span> {
             <span class='comment'>// NB(pcwalton): If you update this, remember to update the corresponding list in</span>
             <span class='comment'>// `can_share_style_with()` as well.</span>
@@ -1591,23 +1670,10 @@
                 <span class='ident'>attr_value</span>.<span class='ident'>ends_with</span>(<span class='ident'>value</span>)
             })
         }
-
-        <span class='ident'>SimpleSelector</span>::<span class='ident'>AnyLink</span> <span class='op'>=&gt;</span> {
+        <span class='ident'>SimpleSelector</span>::<span class='ident'>NonTSPseudoClass</span>(<span class='kw-2'>ref</span> <span class='ident'>pc</span>) <span class='op'>=&gt;</span> {
             <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
-            <span class='ident'>element</span>.<span class='ident'>is_link</span>()
+            <span class='ident'>element</span>.<span class='ident'>match_non_ts_pseudo_class</span>(<span class='ident'>pc</span>.<span class='ident'>clone</span>())
         }
-        <span class='ident'>SimpleSelector</span>::<span class='ident'>Link</span> <span class='op'>=&gt;</span> {
-            <span class='ident'>element</span>.<span class='ident'>is_unvisited_link</span>()
-        }
-        <span class='ident'>SimpleSelector</span>::<span class='ident'>Visited</span> <span class='op'>=&gt;</span> {
-            <span class='ident'>element</span>.<span class='ident'>is_visited_link</span>()
-        }
-        $(
-            <span class='ident'>SimpleSelector</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>variant</span> <span class='op'>=&gt;</span> {
-                <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
-                <span class='ident'>element</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>method</span>()
-            },
-        )<span class='op'>+</span>
         <span class='ident'>SimpleSelector</span>::<span class='ident'>FirstChild</span> <span class='op'>=&gt;</span> {
             <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>matches_first_child</span>(<span class='ident'>element</span>)
@@ -1620,17 +1686,14 @@
             <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>matches_first_child</span>(<span class='ident'>element</span>) <span class='op'>&amp;&amp;</span> <span class='ident'>matches_last_child</span>(<span class='ident'>element</span>)
         }
-
         <span class='ident'>SimpleSelector</span>::<span class='ident'>Root</span> <span class='op'>=&gt;</span> {
             <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>element</span>.<span class='ident'>is_root</span>()
         }
-
         <span class='ident'>SimpleSelector</span>::<span class='ident'>Empty</span> <span class='op'>=&gt;</span> {
             <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>element</span>.<span class='ident'>is_empty</span>()
         }
-
         <span class='ident'>SimpleSelector</span>::<span class='ident'>NthChild</span>(<span class='ident'>a</span>, <span class='ident'>b</span>) <span class='op'>=&gt;</span> {
             <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='ident'>a</span>, <span class='ident'>b</span>, <span class='boolvalue'>false</span>, <span class='boolvalue'>false</span>)
@@ -1661,16 +1724,10 @@
             <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='boolvalue'>true</span>, <span class='boolvalue'>false</span>) <span class='op'>&amp;&amp;</span>
                 <span class='ident'>matches_generic_nth_child</span>(<span class='ident'>element</span>, <span class='number'>0</span>, <span class='number'>1</span>, <span class='boolvalue'>true</span>, <span class='boolvalue'>true</span>)
         }
-
-        <span class='ident'>SimpleSelector</span>::<span class='ident'>ServoNonzeroBorder</span> <span class='op'>=&gt;</span> {
-            <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
-            <span class='ident'>element</span>.<span class='ident'>has_servo_nonzero_border</span>()
-        }
-
         <span class='ident'>SimpleSelector</span>::<span class='ident'>Negation</span>(<span class='kw-2'>ref</span> <span class='ident'>negated</span>) <span class='op'>=&gt;</span> {
             <span class='op'>*</span><span class='ident'>shareable</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
             <span class='op'>!</span><span class='ident'>negated</span>.<span class='ident'>iter</span>().<span class='ident'>all</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>matches_simple_selector</span>(<span class='ident'>s</span>, <span class='ident'>element</span>, <span class='ident'>shareable</span>))
-        },
+        }
     }
 }
 
@@ -1711,12 +1768,23 @@
         };
     }
 
-    <span class='kw'>if</span> <span class='ident'>a</span> <span class='op'>==</span> <span class='number'>0</span> {
+    <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>a</span> <span class='op'>==</span> <span class='number'>0</span> {
         <span class='ident'>b</span> <span class='op'>==</span> <span class='ident'>index</span>
     } <span class='kw'>else</span> {
         (<span class='ident'>index</span> <span class='op'>-</span> <span class='ident'>b</span>) <span class='op'>/</span> <span class='ident'>a</span> <span class='op'>&gt;=</span> <span class='number'>0</span> <span class='op'>&amp;&amp;</span>
         (<span class='ident'>index</span> <span class='op'>-</span> <span class='ident'>b</span>) <span class='op'>%</span> <span class='ident'>a</span> <span class='op'>==</span> <span class='number'>0</span>
+    };
+
+    <span class='kw'>if</span> <span class='ident'>result</span> {
+        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent</span>) <span class='op'>=</span> <span class='ident'>element</span>.<span class='ident'>parent_element</span>() {
+            <span class='ident'>parent</span>.<span class='ident'>insert_flags</span>(<span class='kw'>if</span> <span class='ident'>is_from_end</span> {
+                <span class='ident'>HAS_SLOW_SELECTOR</span>
+            } <span class='kw'>else</span> {
+                <span class='ident'>HAS_SLOW_SELECTOR_LATER_SIBLINGS</span>
+            });
+        }
     }
+    <span class='ident'>result</span>
 }
 
 <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -1724,7 +1792,13 @@
     <span class='comment'>// Selectors Level 4 changed from Level 3:</span>
     <span class='comment'>// This can match without a parent element:</span>
     <span class='comment'>// https://drafts.csswg.org/selectors-4/#child-index</span>
-    <span class='ident'>element</span>.<span class='ident'>prev_sibling_element</span>().<span class='ident'>is_none</span>()
+    <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>element</span>.<span class='ident'>prev_sibling_element</span>().<span class='ident'>is_none</span>();
+    <span class='kw'>if</span> <span class='ident'>result</span> {
+        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent</span>) <span class='op'>=</span> <span class='ident'>element</span>.<span class='ident'>parent_element</span>() {
+            <span class='ident'>parent</span>.<span class='ident'>insert_flags</span>(<span class='ident'>HAS_EDGE_CHILD_SELECTOR</span>);
+        }
+    }
+    <span class='ident'>result</span>
 }
 
 <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -1732,12 +1806,18 @@
     <span class='comment'>// Selectors Level 4 changed from Level 3:</span>
     <span class='comment'>// This can match without a parent element:</span>
     <span class='comment'>// https://drafts.csswg.org/selectors-4/#child-index</span>
-    <span class='ident'>element</span>.<span class='ident'>next_sibling_element</span>().<span class='ident'>is_none</span>()
+    <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>element</span>.<span class='ident'>next_sibling_element</span>().<span class='ident'>is_none</span>();
+    <span class='kw'>if</span> <span class='ident'>result</span> {
+        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent</span>) <span class='op'>=</span> <span class='ident'>element</span>.<span class='ident'>parent_element</span>() {
+            <span class='ident'>parent</span>.<span class='ident'>insert_flags</span>(<span class='ident'>HAS_EDGE_CHILD_SELECTOR</span>);
+        }
+    }
+    <span class='ident'>result</span>
 }
 
-<span class='kw'>fn</span> <span class='ident'>find_push</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>map</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>Atom</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
-                <span class='ident'>key</span>: <span class='ident'>Atom</span>,
-                <span class='ident'>value</span>: <span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>) {
+<span class='kw'>fn</span> <span class='ident'>find_push</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span>: <span class='ident'>SelectorImpl</span><span class='op'>&gt;</span>(<span class='ident'>map</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>Atom</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
+                                    <span class='ident'>key</span>: <span class='ident'>Atom</span>,
+                                    <span class='ident'>value</span>: <span class='ident'>Rule</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Impl</span><span class='op'>&gt;</span>) {
     <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>vec</span>) <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>get_mut</span>(<span class='kw-2'>&amp;</span><span class='ident'>key</span>) {
         <span class='ident'>vec</span>.<span class='ident'>push</span>(<span class='ident'>value</span>);
         <span class='kw'>return</span>
@@ -1750,13 +1830,14 @@
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>Arc</span>;
     <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>DeclarationBlock</span>, <span class='ident'>Rule</span>, <span class='ident'>SelectorMap</span>};
     <span class='kw'>use</span> <span class='ident'>parser</span>::<span class='ident'>LocalName</span>;
+    <span class='kw'>use</span> <span class='ident'>parser</span>::<span class='ident'>tests</span>::<span class='ident'>DummySelectorImpl</span>;
     <span class='kw'>use</span> <span class='ident'>string_cache</span>::<span class='ident'>Atom</span>;
     <span class='kw'>use</span> <span class='ident'>cssparser</span>::<span class='ident'>Parser</span>;
     <span class='kw'>use</span> <span class='ident'>parser</span>::<span class='ident'>ParserContext</span>;
 
     <span class='doccomment'>/// Helper method to get some Rules from selector strings.</span>
     <span class='doccomment'>/// Each sublist of the result contains the Rules for one StyleRule.</span>
-    <span class='kw'>fn</span> <span class='ident'>get_mock_rules</span>(<span class='ident'>css_selectors</span>: <span class='kw-2'>&amp;</span>[<span class='kw-2'>&amp;</span><span class='ident'>str</span>]) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span>()<span class='op'>&gt;&gt;</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>get_mock_rules</span>(<span class='ident'>css_selectors</span>: <span class='kw-2'>&amp;</span>[<span class='kw-2'>&amp;</span><span class='ident'>str</span>]) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rule</span><span class='op'>&lt;</span>(), <span class='ident'>DummySelectorImpl</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span> {
         <span class='kw'>use</span> <span class='ident'>parser</span>::<span class='ident'>parse_selector_list</span>;
 
         <span class='ident'>css_selectors</span>.<span class='ident'>iter</span>().<span class='ident'>enumerate</span>().<span class='ident'>map</span>(<span class='op'>|</span>(<span class='ident'>i</span>, <span class='ident'>selectors</span>)<span class='op'>|</span> {
@@ -1775,6 +1856,19 @@
         }).<span class='ident'>collect</span>()
     }
 
+    <span class='kw'>fn</span> <span class='ident'>get_mock_map</span>(<span class='ident'>selectors</span>: <span class='kw-2'>&amp;</span>[<span class='kw-2'>&amp;</span><span class='ident'>str</span>]) <span class='op'>-&gt;</span> <span class='ident'>SelectorMap</span><span class='op'>&lt;</span>(), <span class='ident'>DummySelectorImpl</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>SelectorMap</span>::<span class='ident'>new</span>();
+        <span class='kw'>let</span> <span class='ident'>selector_rules</span> <span class='op'>=</span> <span class='ident'>get_mock_rules</span>(<span class='ident'>selectors</span>);
+
+        <span class='kw'>for</span> <span class='ident'>rules</span> <span class='kw'>in</span> <span class='ident'>selector_rules</span>.<span class='ident'>into_iter</span>() {
+            <span class='kw'>for</span> <span class='ident'>rule</span> <span class='kw'>in</span> <span class='ident'>rules</span>.<span class='ident'>into_iter</span>() {
+                <span class='ident'>map</span>.<span class='ident'>insert</span>(<span class='ident'>rule</span>)
+            }
+        }
+
+        <span class='ident'>map</span>
+    }
+
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_rule_ordering_same_specificity</span>(){
         <span class='kw'>let</span> <span class='ident'>rules_list</span> <span class='op'>=</span> <span class='ident'>get_mock_rules</span>(<span class='kw-2'>&amp;</span>[<span class='string'>&quot;a.intro&quot;</span>, <span class='string'>&quot;img.sidebar&quot;</span>]);
@@ -1783,6 +1877,7 @@
         <span class='macro'>assert</span><span class='macro'>!</span>((<span class='ident'>a</span>.<span class='ident'>specificity</span>, <span class='ident'>a</span>.<span class='ident'>source_order</span>) <span class='op'>&lt;</span> ((<span class='ident'>b</span>.<span class='ident'>specificity</span>, <span class='ident'>b</span>.<span class='ident'>source_order</span>)),
                 <span class='string'>&quot;The rule that comes later should win.&quot;</span>);
     }
+
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_get_id_name</span>(){
@@ -1823,12 +1918,17 @@
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='number'>0</span>, <span class='ident'>selector_map</span>.<span class='ident'>class_hash</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='ident'>Atom</span>::<span class='ident'>from</span>(<span class='string'>&quot;intro&quot;</span>)).<span class='ident'>unwrap</span>()[<span class='number'>0</span>].<span class='ident'>declarations</span>.<span class='ident'>source_order</span>);
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>selector_map</span>.<span class='ident'>class_hash</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='ident'>Atom</span>::<span class='ident'>from</span>(<span class='string'>&quot;foo&quot;</span>)).<span class='ident'>is_none</span>());
     }
-}
 
-<span class='comment'>// End of `macro_rules! module`</span>
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>test_get_universal_rules</span>(){
+        <span class='kw'>let</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>get_mock_map</span>(<span class='kw-2'>&amp;</span>[<span class='string'>&quot;*|*&quot;</span>, <span class='string'>&quot;#foo &gt; *|*&quot;</span>, <span class='string'>&quot;.klass&quot;</span>, <span class='string'>&quot;#id&quot;</span>]);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>decls</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
+
+        <span class='ident'>map</span>.<span class='ident'>get_universal_rules</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>decls</span>);
+
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>decls</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
     }
 }
-<span class='macro'>state_pseudo_classes</span><span class='macro'>!</span>(<span class='ident'>module</span>);
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
