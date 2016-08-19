@@ -941,7 +941,7 @@
     <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='op'>-</span><span class='ident'>f32</span>::<span class='ident'>MAX</span> <span class='kw'>as</span> <span class='ident'>f64</span>).<span class='ident'>to_f32</span>(), <span class='prelude-val'>Some</span>(<span class='op'>-</span><span class='ident'>f32</span>::<span class='ident'>MAX</span>));
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>f64</span>::<span class='ident'>INFINITY</span>.<span class='ident'>to_f32</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>f32</span>::<span class='ident'>INFINITY</span>));
     <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='ident'>f64</span>::<span class='ident'>NEG_INFINITY</span>).<span class='ident'>to_f32</span>(), <span class='prelude-val'>Some</span>(<span class='ident'>f32</span>::<span class='ident'>NEG_INFINITY</span>));
-    <span class='macro'>assert</span><span class='macro'>!</span>((<span class='ident'>f64</span>::<span class='ident'>NAN</span>).<span class='ident'>to_f32</span>().<span class='ident'>map_or</span>(<span class='boolvalue'>false</span>, <span class='op'>|</span><span class='ident'>f</span><span class='op'>|</span> <span class='ident'>f</span>.<span class='ident'>is_nan</span>()));
+    <span class='macro'>assert</span><span class='macro'>!</span>((<span class='ident'>f64</span>::<span class='ident'>NAN</span>).<span class='ident'>to_f32</span>().<span class='ident'>map_or</span>(<span class='bool-val'>false</span>, <span class='op'>|</span><span class='ident'>f</span><span class='op'>|</span> <span class='ident'>f</span>.<span class='ident'>is_nan</span>()));
 }
 </pre>
 </section>

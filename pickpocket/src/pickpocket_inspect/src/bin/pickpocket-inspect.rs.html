@@ -65,6 +65,8 @@
 <span id="21">21</span>
 <span id="22">22</span>
 <span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
 </pre><pre class='rust '>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>pickpocket</span>;
 
@@ -84,9 +86,11 @@
     <span class='kw'>let</span> <span class='ident'>reading_list</span> <span class='op'>=</span> <span class='ident'>client</span>.<span class='ident'>list_all</span>();
 
     <span class='kw'>for</span> <span class='ident'>reading_item</span> <span class='kw'>in</span> <span class='ident'>reading_list</span>.<span class='ident'>values</span>() {
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{title} | {url}&quot;</span>,
-                 <span class='ident'>url</span> <span class='op'>=</span> <span class='ident'>pickpocket</span>::<span class='ident'>cleanup_url</span>(<span class='ident'>reading_item</span>.<span class='ident'>url</span>()),
-                 <span class='ident'>title</span> <span class='op'>=</span> <span class='ident'>reading_item</span>.<span class='ident'>title</span>());
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{title} | {url} | {clean} | {status}&quot;</span>,
+                 <span class='ident'>url</span> <span class='op'>=</span> <span class='ident'>reading_item</span>.<span class='ident'>url</span>(),
+                 <span class='ident'>clean</span> <span class='op'>=</span> <span class='ident'>pickpocket</span>::<span class='ident'>cleanup_url</span>(<span class='ident'>reading_item</span>.<span class='ident'>url</span>()),
+                 <span class='ident'>title</span> <span class='op'>=</span> <span class='ident'>reading_item</span>.<span class='ident'>title</span>(),
+                 <span class='ident'>status</span> <span class='op'>=</span> <span class='ident'>reading_item</span>.<span class='ident'>status</span>());
     }
 }
 </pre>
