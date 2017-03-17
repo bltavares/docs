@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.2.25/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.3.0/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -774,14 +775,47 @@
 <span id="730">730</span>
 <span id="731">731</span>
 <span id="732">732</span>
+<span id="733">733</span>
+<span id="734">734</span>
+<span id="735">735</span>
+<span id="736">736</span>
+<span id="737">737</span>
+<span id="738">738</span>
+<span id="739">739</span>
+<span id="740">740</span>
+<span id="741">741</span>
+<span id="742">742</span>
+<span id="743">743</span>
+<span id="744">744</span>
+<span id="745">745</span>
+<span id="746">746</span>
+<span id="747">747</span>
+<span id="748">748</span>
+<span id="749">749</span>
+<span id="750">750</span>
+<span id="751">751</span>
+<span id="752">752</span>
+<span id="753">753</span>
+<span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
 </pre><pre class='rust '>
-<span class='comment'>// This is a part of rust-chrono.</span>
-<span class='comment'>// Copyright (c) 2014-2015, Kang Seonghoon.</span>
+<span class='comment'>// This is a part of Chrono.</span>
 <span class='comment'>// See README.md and LICENSE.txt for details.</span>
 
-<span class='doccomment'>//! # Chrono 0.2.25</span>
+<span class='doccomment'>//! # Chrono 0.3.0</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! Date and time handling for Rust. (also known as `rust-chrono`)</span>
+<span class='doccomment'>//! Date and time handling for Rust.</span>
 <span class='doccomment'>//! It aims to be a feature-complete superset of</span>
 <span class='doccomment'>//! the [time](https://github.com/rust-lang-deprecated/time) library.</span>
 <span class='doccomment'>//! In particular,</span>
@@ -804,7 +838,7 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```toml</span>
 <span class='doccomment'>//! [dependencies]</span>
-<span class='doccomment'>//! chrono = &quot;0.2&quot;</span>
+<span class='doccomment'>//! chrono = &quot;0.3&quot;</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! Or, if you want [Serde](https://github.com/serde-rs/serde) or</span>
@@ -813,7 +847,7 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```toml</span>
 <span class='doccomment'>//! [dependencies]</span>
-<span class='doccomment'>//! chrono = { version = &quot;0.2&quot;, features = [&quot;serde&quot;, &quot;rustc-serialize&quot;] }</span>
+<span class='doccomment'>//! chrono = { version = &quot;0.3&quot;, features = [&quot;serde&quot;, &quot;rustc-serialize&quot;] }</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! Then put this in your crate root:</span>
@@ -822,15 +856,34 @@
 <span class='doccomment'>//! extern crate chrono;</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!</span>
+<span class='doccomment'>//! Avoid using `use chrono::*;` as Chrono exports several modules other than types.</span>
+<span class='doccomment'>//! If you prefer the glob imports, use the following instead:</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```rust</span>
+<span class='doccomment'>//! use chrono::prelude::*;</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
 <span class='doccomment'>//! ## Overview</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ### Duration</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! [**`Duration`**](./struct.Duration.html)</span>
-<span class='doccomment'>//! represents the magnitude of a time span. `Duration` used to be provided by Chrono.</span>
-<span class='doccomment'>//! It has been moved to the `time` crate as the</span>
-<span class='doccomment'>//! [`time::Duration`](https://doc.rust-lang.org/time/time/struct.Duration.html) type, but is</span>
-<span class='doccomment'>//! still re-exported from Chrono.</span>
+<span class='doccomment'>//! Chrono currently uses</span>
+<span class='doccomment'>//! the [`time::Duration`](https://doc.rust-lang.org/time/time/struct.Duration.html) type</span>
+<span class='doccomment'>//! from the `time` crate to represent the magnitude of a time span.</span>
+<span class='doccomment'>//! Since this has the same name to the newer, standard type for duration,</span>
+<span class='doccomment'>//! the reference will refer this type as `OldDuration`.</span>
+<span class='doccomment'>//! Note that this is an &quot;accurate&quot; duration represented as seconds and</span>
+<span class='doccomment'>//! nanoseconds and does not represent &quot;nominal&quot; components such as days or</span>
+<span class='doccomment'>//! months.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Chrono does not yet natively support</span>
+<span class='doccomment'>//! the standard [`Duration`](https://doc.rust-lang.org/std/time/struct.Duration.html) type,</span>
+<span class='doccomment'>//! but it will be supported in the future.</span>
+<span class='doccomment'>//! Meanwhile you can convert between two types with</span>
+<span class='doccomment'>//! [`Duration::from_std`](https://doc.rust-lang.org/time/time/struct.Duration.html#method.from_std)</span>
+<span class='doccomment'>//! and</span>
+<span class='doccomment'>//! [`Duration::to_std`](https://doc.rust-lang.org/time/time/struct.Duration.html#method.to_std)</span>
+<span class='doccomment'>//! methods.</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ### Date and Time</span>
 <span class='doccomment'>//!</span>
@@ -870,7 +923,7 @@
 <span class='doccomment'>//! ([`Local::now()`](./offset/local/struct.Local.html#method.now)).</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ~~~~ {.rust}</span>
-<span class='doccomment'>//! use chrono::*;</span>
+<span class='doccomment'>//! use chrono::prelude::*;</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! let utc: DateTime&lt;UTC&gt; = UTC::now();       // e.g. `2014-11-28T12:45:59.324310806Z`</span>
 <span class='doccomment'>//! let local: DateTime&lt;Local&gt; = Local::now(); // e.g. `2014-11-28T21:45:59.324310806+09:00`</span>
@@ -882,7 +935,8 @@
 <span class='doccomment'>//! but in turn we get a rich combination of initialization methods.</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ~~~~ {.rust}</span>
-<span class='doccomment'>//! use chrono::*;</span>
+<span class='doccomment'>//! use chrono::prelude::*;</span>
+<span class='doccomment'>//! use chrono::offset::LocalResult;</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! let dt = UTC.ymd(2014, 7, 8).and_hms(9, 10, 11); // `2014-07-08T09:10:11Z`</span>
 <span class='doccomment'>//! // July 8 is 188th day of the year 2014 (`o` for &quot;ordinal&quot;)</span>
@@ -915,7 +969,9 @@
 <span class='doccomment'>//! The following illustrates most supported operations to the date and time:</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ~~~~ {.rust}</span>
-<span class='doccomment'>//! use chrono::*;</span>
+<span class='doccomment'>//! # extern crate chrono; extern crate time; fn main() {</span>
+<span class='doccomment'>//! use chrono::prelude::*;</span>
+<span class='doccomment'>//! use time::Duration;</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! # /* we intentionally fake the datetime...</span>
 <span class='doccomment'>//! // assume this returned `2014-11-28T21:45:59.324310806+09:00`:</span>
@@ -933,7 +989,7 @@
 <span class='doccomment'>//! assert_eq!(dt.num_days_from_ce(), 735565); // the number of days from and including Jan 1, 1</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! // time zone accessor and manipulation</span>
-<span class='doccomment'>//! assert_eq!(dt.offset().local_minus_utc(), Duration::hours(9));</span>
+<span class='doccomment'>//! assert_eq!(dt.offset().fix().local_minus_utc(), 9 * 3600);</span>
 <span class='doccomment'>//! assert_eq!(dt.timezone(), FixedOffset::east(9 * 3600));</span>
 <span class='doccomment'>//! assert_eq!(dt.with_timezone(&amp;UTC), UTC.ymd(2014, 11, 28).and_hms_nano(12, 45, 59, 324310806));</span>
 <span class='doccomment'>//!</span>
@@ -943,12 +999,15 @@
 <span class='doccomment'>//! assert_eq!(dt.with_year(-300).unwrap().num_days_from_ce(), -109606); // November 29, 301 BCE</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! // arithmetic operations</span>
-<span class='doccomment'>//! assert_eq!(UTC.ymd(2014, 11, 14).and_hms(8, 9, 10) - UTC.ymd(2014, 11, 14).and_hms(10, 9, 8),</span>
-<span class='doccomment'>//!            Duration::seconds(-2 * 3600 + 2));</span>
+<span class='doccomment'>//! let dt1 = UTC.ymd(2014, 11, 14).and_hms(8, 9, 10);</span>
+<span class='doccomment'>//! let dt2 = UTC.ymd(2014, 11, 14).and_hms(10, 9, 8);</span>
+<span class='doccomment'>//! assert_eq!(dt1.signed_duration_since(dt2), Duration::seconds(-2 * 3600 + 2));</span>
+<span class='doccomment'>//! assert_eq!(dt2.signed_duration_since(dt1), Duration::seconds(2 * 3600 - 2));</span>
 <span class='doccomment'>//! assert_eq!(UTC.ymd(1970, 1, 1).and_hms(0, 0, 0) + Duration::seconds(1_000_000_000),</span>
 <span class='doccomment'>//!            UTC.ymd(2001, 9, 9).and_hms(1, 46, 40));</span>
 <span class='doccomment'>//! assert_eq!(UTC.ymd(1970, 1, 1).and_hms(0, 0, 0) - Duration::seconds(1_000_000_000),</span>
 <span class='doccomment'>//!            UTC.ymd(1938, 4, 24).and_hms(22, 13, 20));</span>
+<span class='doccomment'>//! # }</span>
 <span class='doccomment'>//! ~~~~</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! Formatting is done via the [`format`](./datetime/struct.DateTime.html#method.format) method,</span>
@@ -962,7 +1021,7 @@
 <span class='doccomment'>//! for well-known formats.</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ~~~~ {.rust}</span>
-<span class='doccomment'>//! use chrono::*;</span>
+<span class='doccomment'>//! use chrono::prelude::*;</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! let dt = UTC.ymd(2014, 11, 28).and_hms(12, 0, 9);</span>
 <span class='doccomment'>//! assert_eq!(dt.format(&quot;%Y-%m-%d %H:%M:%S&quot;).to_string(), &quot;2014-11-28 12:00:09&quot;);</span>
@@ -1003,7 +1062,7 @@
 <span class='doccomment'>//! [`format`](./format/index.html) module.</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ~~~~ {.rust}</span>
-<span class='doccomment'>//! use chrono::*;</span>
+<span class='doccomment'>//! use chrono::prelude::*;</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! let dt = UTC.ymd(2014, 11, 28).and_hms(12, 0, 9);</span>
 <span class='doccomment'>//! let fixed_dt = dt.with_timezone(&amp;FixedOffset::east(9*3600));</span>
@@ -1039,7 +1098,8 @@
 <span class='doccomment'>//! Most operations available to `DateTime` are also available to `Date` whenever appropriate.</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ~~~~ {.rust}</span>
-<span class='doccomment'>//! use chrono::*;</span>
+<span class='doccomment'>//! use chrono::prelude::*;</span>
+<span class='doccomment'>//! use chrono::offset::LocalResult;</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! # // these *may* fail, but only very rarely. just rerun the test if you were that unfortunate ;)</span>
 <span class='doccomment'>//! assert_eq!(UTC::today(), UTC::now().date());</span>
@@ -1095,21 +1155,23 @@
 <span class='doccomment'>//! For example, &quot;a month later&quot; of 2014-01-30 is not well-defined</span>
 <span class='doccomment'>//! and consequently `UTC.ymd(2014, 1, 30).with_month(2)` returns `None`.</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! Advanced time zone handling is not yet supported (but is planned in 0.3).</span>
+<span class='doccomment'>//! Advanced time zone handling is not yet supported (but is planned in 0.4).</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>doc</span>(<span class='ident'>html_root_url</span> <span class='op'>=</span> <span class='string'>&quot;https://lifthrasiir.github.io/rust-chrono/&quot;</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>doc</span>(<span class='ident'>html_root_url</span> <span class='op'>=</span> <span class='string'>&quot;https://docs.rs/chrono/0.3.0/&quot;</span>)]</span>
 
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>bench</span>, <span class='ident'>feature</span>(<span class='ident'>test</span>))]</span> <span class='comment'>// lib stability features as per RFC #507</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>deny</span>(<span class='ident'>missing_docs</span>)]</span>
 
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>time</span> <span class='kw'>as</span> <span class='ident'>stdtime</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>time</span> <span class='kw'>as</span> <span class='ident'>oldtime</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>num</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rustc-serialize&quot;</span>)]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rustc_serialize</span>;
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;serde&quot;</span>)]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>duration</span>::<span class='ident'>Duration</span>;
+<span class='comment'>// this reexport is to aid the transition and should not be in the prelude!</span>
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>oldtime</span>::<span class='ident'>Duration</span>;
+
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>offset</span>::{<span class='ident'>TimeZone</span>, <span class='ident'>Offset</span>, <span class='ident'>LocalResult</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>offset</span>::<span class='ident'>utc</span>::<span class='ident'>UTC</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>offset</span>::<span class='ident'>fixed</span>::<span class='ident'>FixedOffset</span>;
@@ -1121,19 +1183,26 @@
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>datetime</span>::<span class='ident'>DateTime</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>format</span>::{<span class='ident'>ParseError</span>, <span class='ident'>ParseResult</span>};
 
+<span class='doccomment'>/// A convenience module appropriate for glob imports (`use chrono::prelude::*;`).</span>
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>prelude</span> {
+    <span class='kw'>pub</span> <span class='kw'>use</span> {<span class='ident'>Datelike</span>, <span class='ident'>Timelike</span>, <span class='ident'>Weekday</span>};
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>offset</span>::{<span class='ident'>TimeZone</span>, <span class='ident'>Offset</span>};
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>offset</span>::<span class='ident'>utc</span>::<span class='ident'>UTC</span>;
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>offset</span>::<span class='ident'>fixed</span>::<span class='ident'>FixedOffset</span>;
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>offset</span>::<span class='ident'>local</span>::<span class='ident'>Local</span>;
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>naive</span>::<span class='ident'>date</span>::<span class='ident'>NaiveDate</span>;
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>naive</span>::<span class='ident'>time</span>::<span class='ident'>NaiveTime</span>;
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>naive</span>::<span class='ident'>datetime</span>::<span class='ident'>NaiveDateTime</span>;
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>date</span>::<span class='ident'>Date</span>;
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>datetime</span>::<span class='ident'>DateTime</span>;
+}
+
 <span class='comment'>// useful throughout the codebase</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>try_opt</span> {
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>e</span>:<span class='ident'>expr</span>) <span class='op'>=&gt;</span> (<span class='kw'>match</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>e</span> { <span class='prelude-val'>Some</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>, <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>None</span> })
 }
 
 <span class='kw'>mod</span> <span class='ident'>div</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>duration</span> {
-    <span class='doccomment'>//! ISO 8601 duration.</span>
-    <span class='doccomment'>//!</span>
-    <span class='doccomment'>//! This used to be a part of rust-chrono,</span>
-    <span class='doccomment'>//! but has been subsequently merged into Rust&#39;s standard library.</span>
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>stdtime</span>::<span class='ident'>Duration</span>;
-}
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>offset</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>naive</span> {
     <span class='doccomment'>//! Date and time types which do not concern about the timezones.</span>
@@ -1154,7 +1223,7 @@
 <span class='doccomment'>/// The order of the days of week depends on the context.</span>
 <span class='doccomment'>/// (This is why this type does *not* implement `PartialOrd` or `Ord` traits.)</span>
 <span class='doccomment'>/// One should prefer `*_from_monday` or `*_from_sunday` methods to get the correct result.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>Debug</span>, <span class='ident'>Hash</span>)]</span>
 <span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rustc-serialize&quot;</span>, <span class='ident'>derive</span>(<span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>))]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Weekday</span> {
     <span class='doccomment'>/// Monday.</span>
@@ -1181,7 +1250,7 @@
     <span class='doccomment'>/// `w.succ()`: | `Tue` | `Wed` | `Thu` | `Fri` | `Sat` | `Sun` | `Mon`</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>succ</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Weekday</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Weekday</span>::<span class='ident'>Mon</span> <span class='op'>=&gt;</span> <span class='ident'>Weekday</span>::<span class='ident'>Tue</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Tue</span> <span class='op'>=&gt;</span> <span class='ident'>Weekday</span>::<span class='ident'>Wed</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Wed</span> <span class='op'>=&gt;</span> <span class='ident'>Weekday</span>::<span class='ident'>Thu</span>,
@@ -1199,7 +1268,7 @@
     <span class='doccomment'>/// `w.pred()`: | `Sun` | `Mon` | `Tue` | `Wed` | `Thu` | `Fri` | `Sat`</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>pred</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Weekday</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Weekday</span>::<span class='ident'>Mon</span> <span class='op'>=&gt;</span> <span class='ident'>Weekday</span>::<span class='ident'>Sun</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Tue</span> <span class='op'>=&gt;</span> <span class='ident'>Weekday</span>::<span class='ident'>Mon</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Wed</span> <span class='op'>=&gt;</span> <span class='ident'>Weekday</span>::<span class='ident'>Tue</span>,
@@ -1217,7 +1286,7 @@
     <span class='doccomment'>/// `w.number_from_monday()`: | 1     | 2     | 3     | 4     | 5     | 6     | 7</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>number_from_monday</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Weekday</span>::<span class='ident'>Mon</span> <span class='op'>=&gt;</span> <span class='number'>1</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Tue</span> <span class='op'>=&gt;</span> <span class='number'>2</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Wed</span> <span class='op'>=&gt;</span> <span class='number'>3</span>,
@@ -1235,7 +1304,7 @@
     <span class='doccomment'>/// `w.number_from_sunday()`: | 2     | 3     | 4     | 5     | 6     | 7     | 1</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>number_from_sunday</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Weekday</span>::<span class='ident'>Mon</span> <span class='op'>=&gt;</span> <span class='number'>2</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Tue</span> <span class='op'>=&gt;</span> <span class='number'>3</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Wed</span> <span class='op'>=&gt;</span> <span class='number'>4</span>,
@@ -1253,7 +1322,7 @@
     <span class='doccomment'>/// `w.num_days_from_monday()`: | 0     | 1     | 2     | 3     | 4     | 5     | 6</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>num_days_from_monday</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Weekday</span>::<span class='ident'>Mon</span> <span class='op'>=&gt;</span> <span class='number'>0</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Tue</span> <span class='op'>=&gt;</span> <span class='number'>1</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Wed</span> <span class='op'>=&gt;</span> <span class='number'>2</span>,
@@ -1271,7 +1340,7 @@
     <span class='doccomment'>/// `w.num_days_from_sunday()`: | 1     | 2     | 3     | 4     | 5     | 6     | 0</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>num_days_from_sunday</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Weekday</span>::<span class='ident'>Mon</span> <span class='op'>=&gt;</span> <span class='number'>1</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Tue</span> <span class='op'>=&gt;</span> <span class='number'>2</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Wed</span> <span class='op'>=&gt;</span> <span class='number'>3</span>,
