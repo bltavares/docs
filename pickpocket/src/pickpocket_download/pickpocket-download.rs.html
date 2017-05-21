@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -63,26 +63,26 @@
 <span id="18">18</span>
 <span id="19">19</span>
 <span id="20">20</span>
-</pre><pre class='rust '>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>pickpocket</span>;
+</pre><pre class="rust ">
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pickpocket</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>env</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">env</span>;
 
-<span class='kw'>use</span> <span class='ident'>pickpocket</span>::<span class='ident'>cli</span>::<span class='kw-2'>*</span>;
+<span class="kw">use</span> <span class="ident">pickpocket</span>::<span class="ident">cli</span>::<span class="kw-2">*</span>;
 
-<span class='kw'>fn</span> <span class='ident'>main</span>() {
-    <span class='kw'>let</span> <span class='ident'>file_name</span> <span class='op'>=</span> <span class='ident'>env</span>::<span class='ident'>args</span>()
-        .<span class='ident'>skip</span>(<span class='number'>1</span>)
-        .<span class='ident'>next</span>()
-        .<span class='ident'>expect</span>(<span class='string'>&quot;Expected an file as argument&quot;</span>);
+<span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="kw">let</span> <span class="ident">file_name</span> <span class="op">=</span> <span class="ident">env</span>::<span class="ident">args</span>()
+        .<span class="ident">skip</span>(<span class="number">1</span>)
+        .<span class="ident">next</span>()
+        .<span class="ident">expect</span>(<span class="string">&quot;Expected an file as argument&quot;</span>);
 
-    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>client_from_env_vars</span>() {
-        <span class='prelude-val'>Ok</span>(<span class='ident'>client</span>) <span class='op'>=&gt;</span> <span class='ident'>client</span>,
-        <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;It wasn&#39;t possible to initialize a Pocket client\n{}&quot;</span>, <span class='ident'>e</span>),
+    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">client_from_env_vars</span>() {
+        <span class="prelude-val">Ok</span>(<span class="ident">client</span>) <span class="op">=&gt;</span> <span class="ident">client</span>,
+        <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;It wasn&#39;t possible to initialize a Pocket client\n{}&quot;</span>, <span class="ident">e</span>),
     };
 
-    <span class='kw'>let</span> <span class='ident'>cli_client</span> <span class='op'>=</span> <span class='ident'>FileClient</span>::<span class='ident'>from_online</span>(<span class='ident'>client</span>.<span class='ident'>list_all</span>());
-    <span class='ident'>cli_client</span>.<span class='ident'>write_cache</span>(<span class='kw-2'>&amp;</span><span class='ident'>file_name</span>).<span class='ident'>expect</span>(<span class='string'>&quot;Could not write to cache&quot;</span>);
+    <span class="kw">let</span> <span class="ident">cli_client</span> <span class="op">=</span> <span class="ident">FileClient</span>::<span class="ident">from_online</span>(<span class="ident">client</span>.<span class="ident">list_all</span>());
+    <span class="ident">cli_client</span>.<span class="ident">write_cache</span>(<span class="kw-2">&amp;</span><span class="ident">file_name</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not write to cache&quot;</span>);
 }
 </pre>
 </section>

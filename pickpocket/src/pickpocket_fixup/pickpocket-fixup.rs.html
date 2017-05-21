@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -71,34 +71,34 @@
 <span id="26">26</span>
 <span id="27">27</span>
 <span id="28">28</span>
-</pre><pre class='rust '>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>pickpocket</span>;
+</pre><pre class="rust ">
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pickpocket</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>BTreeSet</span>;
-<span class='kw'>use</span> <span class='ident'>pickpocket</span>::{<span class='ident'>Status</span>, <span class='ident'>FavoriteStatus</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeSet</span>;
+<span class="kw">use</span> <span class="ident">pickpocket</span>::{<span class="ident">Status</span>, <span class="ident">FavoriteStatus</span>};
 
-<span class='kw'>fn</span> <span class='ident'>main</span>() {
-    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>pickpocket</span>::<span class='ident'>cli</span>::<span class='ident'>client_from_env_vars</span>() {
-        <span class='prelude-val'>Ok</span>(<span class='ident'>client</span>) <span class='op'>=&gt;</span> <span class='ident'>client</span>,
-        <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;It wasn&#39;t possible to initialize a Pocket client\n{}&quot;</span>, <span class='ident'>e</span>),
+<span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">pickpocket</span>::<span class="ident">cli</span>::<span class="ident">client_from_env_vars</span>() {
+        <span class="prelude-val">Ok</span>(<span class="ident">client</span>) <span class="op">=&gt;</span> <span class="ident">client</span>,
+        <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;It wasn&#39;t possible to initialize a Pocket client\n{}&quot;</span>, <span class="ident">e</span>),
     };
 
-    <span class='kw'>let</span> <span class='ident'>reading_list</span> <span class='op'>=</span> <span class='ident'>client</span>.<span class='ident'>list_all</span>();
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>favorites</span>: <span class='ident'>BTreeSet</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>BTreeSet</span>::<span class='ident'>new</span>();
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>read</span>: <span class='ident'>BTreeSet</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>BTreeSet</span>::<span class='ident'>new</span>();
+    <span class="kw">let</span> <span class="ident">reading_list</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">list_all</span>();
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">favorites</span>: <span class="ident">BTreeSet</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">BTreeSet</span>::<span class="ident">new</span>();
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">read</span>: <span class="ident">BTreeSet</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">BTreeSet</span>::<span class="ident">new</span>();
 
-    <span class='kw'>for</span> (<span class='ident'>id</span>, <span class='ident'>reading_item</span>) <span class='kw'>in</span> <span class='kw-2'>&amp;</span><span class='ident'>reading_list</span> {
-        <span class='kw'>if</span> <span class='ident'>reading_item</span>.<span class='ident'>favorite</span>() <span class='op'>==</span> <span class='ident'>FavoriteStatus</span>::<span class='ident'>Favorited</span> {
-            <span class='ident'>favorites</span>.<span class='ident'>insert</span>(<span class='ident'>id</span>);
+    <span class="kw">for</span> (<span class="ident">id</span>, <span class="ident">reading_item</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">reading_list</span> {
+        <span class="kw">if</span> <span class="ident">reading_item</span>.<span class="ident">favorite</span>() <span class="op">==</span> <span class="ident">FavoriteStatus</span>::<span class="ident">Favorited</span> {
+            <span class="ident">favorites</span>.<span class="ident">insert</span>(<span class="ident">id</span>);
         }
 
-        <span class='kw'>if</span> <span class='ident'>reading_item</span>.<span class='ident'>status</span>() <span class='op'>==</span> <span class='ident'>Status</span>::<span class='ident'>Read</span> {
-            <span class='ident'>read</span>.<span class='ident'>insert</span>(<span class='ident'>id</span>);
+        <span class="kw">if</span> <span class="ident">reading_item</span>.<span class="ident">status</span>() <span class="op">==</span> <span class="ident">Status</span>::<span class="ident">Read</span> {
+            <span class="ident">read</span>.<span class="ident">insert</span>(<span class="ident">id</span>);
         }
     }
 
-    <span class='ident'>client</span>.<span class='ident'>mark_as_favorite</span>(<span class='ident'>favorites</span>);
-    <span class='ident'>client</span>.<span class='ident'>mark_as_read</span>(<span class='ident'>read</span>);
+    <span class="ident">client</span>.<span class="ident">mark_as_favorite</span>(<span class="ident">favorites</span>);
+    <span class="ident">client</span>.<span class="ident">mark_as_read</span>(<span class="ident">read</span>);
 }
 </pre>
 </section>
