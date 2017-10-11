@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>hyper</a>::<wbr><a href='index.html'>net</a></p><script>window.sidebarCurrent = {name: 'SslServer', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait SslServer</p><div class="block items"><ul><li><a href="#associated-types">Associated Types</a></li><li><a href="#required-methods">Required Methods</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='../index.html'>hyper</a>::<wbr><a href='index.html'>net</a></p><script>window.sidebarCurrent = {name: 'SslServer', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -51,7 +51,7 @@
                </span><a class='srclink' href='../../src/hyper/net.rs.html#451-456' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait SslServer&lt;T:&nbsp;<a class="trait" href="../../hyper/net/trait.NetworkStream.html" title="trait hyper::net::NetworkStream">NetworkStream</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>&nbsp;=&nbsp;<a class="struct" href="../../hyper/net/struct.HttpStream.html" title="struct hyper::net::HttpStream">HttpStream</a>&gt; {
     type <a href='#associatedtype.Stream' class="type">Stream</a>: <a class="trait" href="../../hyper/net/trait.NetworkStream.html" title="trait hyper::net::NetworkStream">NetworkStream</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>;
-    fn <a href='#tymethod.wrap_server' class='fnname'>wrap_server</a>(&amp;self, stream: T) -&gt; <a class="type" href="../../hyper/error/type.Result.html" title="type hyper::error::Result">Result</a>&lt;Self::<a class="trait" href="../../hyper/net/trait.SslServer.html" title="trait hyper::net::SslServer">Stream</a>&gt;;
+    fn <a href='#tymethod.wrap_server' class='fnname'>wrap_server</a>(&amp;self, stream: T) -&gt; <a class="type" href="../../hyper/error/type.Result.html" title="type hyper::error::Result">Result</a>&lt;Self::<a class="type" href="../../hyper/net/trait.SslServer.html#associatedtype.Stream" title="type hyper::net::SslServer::Stream">Stream</a>&gt;;
 }</pre><div class='docblock'><p>An abstraction to allow any SSL implementation to be used with server-side HttpsStreams.</p>
 </div>
             <h2 id='associated-types'>Associated Types</h2>
@@ -60,7 +60,7 @@
 </div></div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.wrap_server' class='method'><span id='wrap_server.v' class='invisible'><code>fn <a href='#tymethod.wrap_server' class='fnname'>wrap_server</a>(&amp;self, stream: T) -&gt; <a class="type" href="../../hyper/error/type.Result.html" title="type hyper::error::Result">Result</a>&lt;Self::<a class="trait" href="../../hyper/net/trait.SslServer.html" title="trait hyper::net::SslServer">Stream</a>&gt;</code></span></h3><div class='docblock'><p>Wrap a server stream with SSL.</p>
+        <h3 id='tymethod.wrap_server' class='method'><span id='wrap_server.v' class='invisible'><code>fn <a href='#tymethod.wrap_server' class='fnname'>wrap_server</a>(&amp;self, stream: T) -&gt; <a class="type" href="../../hyper/error/type.Result.html" title="type hyper::error::Result">Result</a>&lt;Self::<a class="type" href="../../hyper/net/trait.SslServer.html#associatedtype.Stream" title="type hyper::net::SslServer::Stream">Stream</a>&gt;</code></span></h3><div class='docblock'><p>Wrap a server stream with SSL.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
@@ -123,7 +123,6 @@
         window.rootPath = "../../";
         window.currentCrate = "hyper";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
