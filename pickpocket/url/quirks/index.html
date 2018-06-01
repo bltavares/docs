@@ -10,8 +10,12 @@
     <title>url::quirks - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Module quirks</p><div class="block items"><ul><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>url</a></p><script>window.sidebarCurrent = {name: 'quirks', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+        <p class='location'>Module quirks</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>url</a></p><script>window.sidebarCurrent = {name: 'quirks', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -43,14 +55,11 @@
         </form>
     </nav>
 
-    <section id='main' class="content">
-<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>url</a>::<wbr><a class="mod" href=''>quirks</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>url</a>::<wbr><a class="mod" href=''>quirks</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/url/quirks.rs.html#9-217' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'><p>Getters and setters for URL components implemented per <a href="https://url.spec.whatwg.org/#api">https://url.spec.whatwg.org/#api</a></p>
-
+               </span><a class='srclink' href='../../src/url/quirks.rs.html#9-217' title='goto source code'>[src]</a></span></h1><div class='docblock'><p>Getters and setters for URL components implemented per https://url.spec.whatwg.org/#api</p>
 <p>Unless you need to be interoperable with web browsers,
 you probably want to use <code>Url</code> method instead.</p>
 </div><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
@@ -59,161 +68,184 @@ you probably want to use <code>Url</code> method instead.</p>
                            <td><a class="fn" href="fn.domain_to_ascii.html"
                                   title='fn url::quirks::domain_to_ascii'>domain_to_ascii</a></td>
                            <td class='docblock-short'>
-                                <p><a href="https://url.spec.whatwg.org/#dom-url-domaintoascii">https://url.spec.whatwg.org/#dom-url-domaintoascii</a></p>
+                                <p>https://url.spec.whatwg.org/#dom-url-domaintoascii</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.domain_to_unicode.html"
                                   title='fn url::quirks::domain_to_unicode'>domain_to_unicode</a></td>
                            <td class='docblock-short'>
-                                <p><a href="https://url.spec.whatwg.org/#dom-url-domaintounicode">https://url.spec.whatwg.org/#dom-url-domaintounicode</a></p>
+                                <p>https://url.spec.whatwg.org/#dom-url-domaintounicode</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.hash.html"
                                   title='fn url::quirks::hash'>hash</a></td>
                            <td class='docblock-short'>
-                                <p>Getter for <a href="https://url.spec.whatwg.org/#dom-url-hash">https://url.spec.whatwg.org/#dom-url-hash</a></p>
+                                <p>Getter for https://url.spec.whatwg.org/#dom-url-hash</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.host.html"
                                   title='fn url::quirks::host'>host</a></td>
                            <td class='docblock-short'>
-                                <p>Getter for <a href="https://url.spec.whatwg.org/#dom-url-host">https://url.spec.whatwg.org/#dom-url-host</a></p>
+                                <p>Getter for https://url.spec.whatwg.org/#dom-url-host</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.hostname.html"
                                   title='fn url::quirks::hostname'>hostname</a></td>
                            <td class='docblock-short'>
-                                <p>Getter for <a href="https://url.spec.whatwg.org/#dom-url-hostname">https://url.spec.whatwg.org/#dom-url-hostname</a></p>
+                                <p>Getter for https://url.spec.whatwg.org/#dom-url-hostname</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.href.html"
                                   title='fn url::quirks::href'>href</a></td>
                            <td class='docblock-short'>
-                                <p>Getter for <a href="https://url.spec.whatwg.org/#dom-url-href">https://url.spec.whatwg.org/#dom-url-href</a></p>
+                                <p>Getter for https://url.spec.whatwg.org/#dom-url-href</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.origin.html"
                                   title='fn url::quirks::origin'>origin</a></td>
                            <td class='docblock-short'>
-                                <p>Getter for <a href="https://url.spec.whatwg.org/#dom-url-origin">https://url.spec.whatwg.org/#dom-url-origin</a></p>
+                                <p>Getter for https://url.spec.whatwg.org/#dom-url-origin</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.password.html"
                                   title='fn url::quirks::password'>password</a></td>
                            <td class='docblock-short'>
-                                <p>Getter for <a href="https://url.spec.whatwg.org/#dom-url-password">https://url.spec.whatwg.org/#dom-url-password</a></p>
+                                <p>Getter for https://url.spec.whatwg.org/#dom-url-password</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.pathname.html"
                                   title='fn url::quirks::pathname'>pathname</a></td>
                            <td class='docblock-short'>
-                                <p>Getter for <a href="https://url.spec.whatwg.org/#dom-url-pathname">https://url.spec.whatwg.org/#dom-url-pathname</a></p>
+                                <p>Getter for https://url.spec.whatwg.org/#dom-url-pathname</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.port.html"
                                   title='fn url::quirks::port'>port</a></td>
                            <td class='docblock-short'>
-                                <p>Getter for <a href="https://url.spec.whatwg.org/#dom-url-port">https://url.spec.whatwg.org/#dom-url-port</a></p>
+                                <p>Getter for https://url.spec.whatwg.org/#dom-url-port</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.protocol.html"
                                   title='fn url::quirks::protocol'>protocol</a></td>
                            <td class='docblock-short'>
-                                <p>Getter for <a href="https://url.spec.whatwg.org/#dom-url-protocol">https://url.spec.whatwg.org/#dom-url-protocol</a></p>
+                                <p>Getter for https://url.spec.whatwg.org/#dom-url-protocol</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.search.html"
                                   title='fn url::quirks::search'>search</a></td>
                            <td class='docblock-short'>
-                                <p>Getter for <a href="https://url.spec.whatwg.org/#dom-url-search">https://url.spec.whatwg.org/#dom-url-search</a></p>
+                                <p>Getter for https://url.spec.whatwg.org/#dom-url-search</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.set_hash.html"
                                   title='fn url::quirks::set_hash'>set_hash</a></td>
                            <td class='docblock-short'>
-                                <p>Setter for <a href="https://url.spec.whatwg.org/#dom-url-hash">https://url.spec.whatwg.org/#dom-url-hash</a></p>
+                                <p>Setter for https://url.spec.whatwg.org/#dom-url-hash</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.set_host.html"
                                   title='fn url::quirks::set_host'>set_host</a></td>
                            <td class='docblock-short'>
-                                <p>Setter for <a href="https://url.spec.whatwg.org/#dom-url-host">https://url.spec.whatwg.org/#dom-url-host</a></p>
+                                <p>Setter for https://url.spec.whatwg.org/#dom-url-host</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.set_hostname.html"
                                   title='fn url::quirks::set_hostname'>set_hostname</a></td>
                            <td class='docblock-short'>
-                                <p>Setter for <a href="https://url.spec.whatwg.org/#dom-url-hostname">https://url.spec.whatwg.org/#dom-url-hostname</a></p>
+                                <p>Setter for https://url.spec.whatwg.org/#dom-url-hostname</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.set_href.html"
                                   title='fn url::quirks::set_href'>set_href</a></td>
                            <td class='docblock-short'>
-                                <p>Setter for <a href="https://url.spec.whatwg.org/#dom-url-href">https://url.spec.whatwg.org/#dom-url-href</a></p>
+                                <p>Setter for https://url.spec.whatwg.org/#dom-url-href</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.set_password.html"
                                   title='fn url::quirks::set_password'>set_password</a></td>
                            <td class='docblock-short'>
-                                <p>Setter for <a href="https://url.spec.whatwg.org/#dom-url-password">https://url.spec.whatwg.org/#dom-url-password</a></p>
+                                <p>Setter for https://url.spec.whatwg.org/#dom-url-password</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.set_pathname.html"
                                   title='fn url::quirks::set_pathname'>set_pathname</a></td>
                            <td class='docblock-short'>
-                                <p>Setter for <a href="https://url.spec.whatwg.org/#dom-url-pathname">https://url.spec.whatwg.org/#dom-url-pathname</a></p>
+                                <p>Setter for https://url.spec.whatwg.org/#dom-url-pathname</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.set_port.html"
                                   title='fn url::quirks::set_port'>set_port</a></td>
                            <td class='docblock-short'>
-                                <p>Setter for <a href="https://url.spec.whatwg.org/#dom-url-port">https://url.spec.whatwg.org/#dom-url-port</a></p>
+                                <p>Setter for https://url.spec.whatwg.org/#dom-url-port</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.set_protocol.html"
                                   title='fn url::quirks::set_protocol'>set_protocol</a></td>
                            <td class='docblock-short'>
-                                <p>Setter for <a href="https://url.spec.whatwg.org/#dom-url-protocol">https://url.spec.whatwg.org/#dom-url-protocol</a></p>
+                                <p>Setter for https://url.spec.whatwg.org/#dom-url-protocol</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.set_search.html"
                                   title='fn url::quirks::set_search'>set_search</a></td>
                            <td class='docblock-short'>
-                                <p>Setter for <a href="https://url.spec.whatwg.org/#dom-url-search">https://url.spec.whatwg.org/#dom-url-search</a></p>
+                                <p>Setter for https://url.spec.whatwg.org/#dom-url-search</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.set_username.html"
                                   title='fn url::quirks::set_username'>set_username</a></td>
                            <td class='docblock-short'>
-                                <p>Setter for <a href="https://url.spec.whatwg.org/#dom-url-username">https://url.spec.whatwg.org/#dom-url-username</a></p>
+                                <p>Setter for https://url.spec.whatwg.org/#dom-url-username</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.username.html"
                                   title='fn url::quirks::username'>username</a></td>
                            <td class='docblock-short'>
-                                <p>Getter for <a href="https://url.spec.whatwg.org/#dom-url-username">https://url.spec.whatwg.org/#dom-url-username</a></p>
+                                <p>Getter for https://url.spec.whatwg.org/#dom-url-username</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -228,18 +260,22 @@ you probably want to use <code>Url</code> method instead.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

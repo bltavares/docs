@@ -10,8 +10,12 @@
     <title>de.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -2098,7 +2110,7 @@
         {
             <span class="kw">match</span> <span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="ident">v</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Cow</span>::<span class="ident">Owned</span>(<span class="ident">s</span>.<span class="ident">to_owned</span>())),
-                <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">invalid_value</span>(<span class="ident">Unexpected</span>::<span class="ident">Bytes</span>(<span class="ident">v</span>), <span class="kw-2">&amp;</span><span class="self">self</span>)),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">invalid_value</span>(<span class="ident">Unexpected</span>::<span class="ident">Bytes</span>(<span class="ident">v</span>), <span class="kw-2">&amp;</span><span class="self">self</span>)),
             }
         }
 
@@ -2108,7 +2120,7 @@
         {
             <span class="kw">match</span> <span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="ident">v</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Cow</span>::<span class="ident">Borrowed</span>(<span class="ident">s</span>)),
-                <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">invalid_value</span>(<span class="ident">Unexpected</span>::<span class="ident">Bytes</span>(<span class="ident">v</span>), <span class="kw-2">&amp;</span><span class="self">self</span>)),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">invalid_value</span>(<span class="ident">Unexpected</span>::<span class="ident">Bytes</span>(<span class="ident">v</span>), <span class="kw-2">&amp;</span><span class="self">self</span>)),
             }
         }
 
@@ -2203,7 +2215,7 @@
     <span class="kw">fn</span> <span class="ident">helper</span>(<span class="ident">bounds</span>: (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>)) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="ident">bounds</span> {
             (<span class="ident">lower</span>, <span class="prelude-val">Some</span>(<span class="ident">upper</span>)) <span class="kw">if</span> <span class="ident">lower</span> <span class="op">==</span> <span class="ident">upper</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">upper</span>),
-            _ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         }
     }
 }
@@ -2281,11 +2293,11 @@
                 <span class="ident">Content</span>::<span class="ident">Str</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">Unexpected</span>::<span class="ident">Str</span>(<span class="ident">s</span>),
                 <span class="ident">Content</span>::<span class="ident">ByteBuf</span>(<span class="kw-2">ref</span> <span class="ident">b</span>) <span class="op">=&gt;</span> <span class="ident">Unexpected</span>::<span class="ident">Bytes</span>(<span class="ident">b</span>),
                 <span class="ident">Content</span>::<span class="ident">Bytes</span>(<span class="ident">b</span>) <span class="op">=&gt;</span> <span class="ident">Unexpected</span>::<span class="ident">Bytes</span>(<span class="ident">b</span>),
-                <span class="ident">Content</span>::<span class="prelude-val">None</span> <span class="op">|</span> <span class="ident">Content</span>::<span class="prelude-val">Some</span>(_) <span class="op">=&gt;</span> <span class="ident">Unexpected</span>::<span class="prelude-ty">Option</span>,
+                <span class="ident">Content</span>::<span class="prelude-val">None</span> <span class="op">|</span> <span class="ident">Content</span>::<span class="prelude-val">Some</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">Unexpected</span>::<span class="prelude-ty">Option</span>,
                 <span class="ident">Content</span>::<span class="ident">Unit</span> <span class="op">=&gt;</span> <span class="ident">Unexpected</span>::<span class="ident">Unit</span>,
-                <span class="ident">Content</span>::<span class="ident">Newtype</span>(_) <span class="op">=&gt;</span> <span class="ident">Unexpected</span>::<span class="ident">NewtypeStruct</span>,
-                <span class="ident">Content</span>::<span class="ident">Seq</span>(_) <span class="op">=&gt;</span> <span class="ident">Unexpected</span>::<span class="ident">Seq</span>,
-                <span class="ident">Content</span>::<span class="ident">Map</span>(_) <span class="op">=&gt;</span> <span class="ident">Unexpected</span>::<span class="ident">Map</span>,
+                <span class="ident">Content</span>::<span class="ident">Newtype</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">Unexpected</span>::<span class="ident">NewtypeStruct</span>,
+                <span class="ident">Content</span>::<span class="ident">Seq</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">Unexpected</span>::<span class="ident">Seq</span>,
+                <span class="ident">Content</span>::<span class="ident">Map</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">Unexpected</span>::<span class="ident">Map</span>,
             }
         }
     }
@@ -3031,7 +3043,7 @@
                 <span class="ident">Content</span>::<span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">visitor</span>.<span class="ident">visit_none</span>(),
                 <span class="ident">Content</span>::<span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">visitor</span>.<span class="ident">visit_some</span>(<span class="ident">ContentDeserializer</span>::<span class="ident">new</span>(<span class="kw-2">*</span><span class="ident">v</span>)),
                 <span class="ident">Content</span>::<span class="ident">Unit</span> <span class="op">=&gt;</span> <span class="ident">visitor</span>.<span class="ident">visit_unit</span>(),
-                _ <span class="op">=&gt;</span> <span class="ident">visitor</span>.<span class="ident">visit_some</span>(<span class="self">self</span>),
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">visitor</span>.<span class="ident">visit_some</span>(<span class="self">self</span>),
             }
         }
 
@@ -3080,7 +3092,7 @@
                     }
                     (<span class="ident">variant</span>, <span class="prelude-val">Some</span>(<span class="ident">value</span>))
                 }
-                <span class="ident">s</span> @ <span class="ident">Content</span>::<span class="ident">String</span>(_) <span class="op">|</span> <span class="ident">s</span> @ <span class="ident">Content</span>::<span class="ident">Str</span>(_) <span class="op">=&gt;</span> (<span class="ident">s</span>, <span class="prelude-val">None</span>),
+                <span class="ident">s</span> @ <span class="ident">Content</span>::<span class="ident">String</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">s</span> @ <span class="ident">Content</span>::<span class="ident">Str</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> (<span class="ident">s</span>, <span class="prelude-val">None</span>),
                 <span class="ident">other</span> <span class="op">=&gt;</span> {
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">invalid_type</span>(<span class="ident">other</span>.<span class="ident">unexpected</span>(), <span class="kw-2">&amp;</span><span class="string">&quot;string or map&quot;</span>),);
                 }
@@ -3200,7 +3212,7 @@
                     <span class="ident">de</span>::<span class="ident">Deserializer</span>::<span class="ident">deserialize_any</span>(<span class="ident">MapDeserializer</span>::<span class="ident">new</span>(<span class="ident">v</span>), <span class="ident">visitor</span>)
                 }
                 <span class="prelude-val">Some</span>(<span class="ident">other</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">invalid_type</span>(<span class="ident">other</span>.<span class="ident">unexpected</span>(), <span class="kw-2">&amp;</span><span class="string">&quot;struct variant&quot;</span>),),
-                _ <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">invalid_type</span>(<span class="ident">de</span>::<span class="ident">Unexpected</span>::<span class="ident">UnitVariant</span>, <span class="kw-2">&amp;</span><span class="string">&quot;struct variant&quot;</span>),),
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">invalid_type</span>(<span class="ident">de</span>::<span class="ident">Unexpected</span>::<span class="ident">UnitVariant</span>, <span class="kw-2">&amp;</span><span class="string">&quot;struct variant&quot;</span>),),
             }
         }
     }
@@ -3429,7 +3441,7 @@
                 <span class="ident">Content</span>::<span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">visitor</span>.<span class="ident">visit_none</span>(),
                 <span class="ident">Content</span>::<span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">visitor</span>.<span class="ident">visit_some</span>(<span class="ident">ContentRefDeserializer</span>::<span class="ident">new</span>(<span class="ident">v</span>)),
                 <span class="ident">Content</span>::<span class="ident">Unit</span> <span class="op">=&gt;</span> <span class="ident">visitor</span>.<span class="ident">visit_unit</span>(),
-                _ <span class="op">=&gt;</span> <span class="ident">visitor</span>.<span class="ident">visit_some</span>(<span class="self">self</span>),
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">visitor</span>.<span class="ident">visit_some</span>(<span class="self">self</span>),
             }
         }
 
@@ -3474,7 +3486,7 @@
                     }
                     (<span class="ident">variant</span>, <span class="prelude-val">Some</span>(<span class="ident">value</span>))
                 }
-                <span class="kw-2">ref</span> <span class="ident">s</span> @ <span class="ident">Content</span>::<span class="ident">String</span>(_) <span class="op">|</span> <span class="kw-2">ref</span> <span class="ident">s</span> @ <span class="ident">Content</span>::<span class="ident">Str</span>(_) <span class="op">=&gt;</span> (<span class="ident">s</span>, <span class="prelude-val">None</span>),
+                <span class="kw-2">ref</span> <span class="ident">s</span> @ <span class="ident">Content</span>::<span class="ident">String</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="kw-2">ref</span> <span class="ident">s</span> @ <span class="ident">Content</span>::<span class="ident">Str</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> (<span class="ident">s</span>, <span class="prelude-val">None</span>),
                 <span class="kw-2">ref</span> <span class="ident">other</span> <span class="op">=&gt;</span> {
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">invalid_type</span>(<span class="ident">other</span>.<span class="ident">unexpected</span>(), <span class="kw-2">&amp;</span><span class="string">&quot;string or map&quot;</span>),);
                 }
@@ -3594,7 +3606,7 @@
                     <span class="ident">de</span>::<span class="ident">Deserializer</span>::<span class="ident">deserialize_any</span>(<span class="ident">MapRefDeserializer</span>::<span class="ident">new</span>(<span class="ident">v</span>), <span class="ident">visitor</span>)
                 }
                 <span class="prelude-val">Some</span>(<span class="ident">other</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">invalid_type</span>(<span class="ident">other</span>.<span class="ident">unexpected</span>(), <span class="kw-2">&amp;</span><span class="string">&quot;struct variant&quot;</span>),),
-                _ <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">invalid_type</span>(<span class="ident">de</span>::<span class="ident">Unexpected</span>::<span class="ident">UnitVariant</span>, <span class="kw-2">&amp;</span><span class="string">&quot;struct variant&quot;</span>),),
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">invalid_type</span>(<span class="ident">de</span>::<span class="ident">Unexpected</span>::<span class="ident">UnitVariant</span>, <span class="kw-2">&amp;</span><span class="string">&quot;struct variant&quot;</span>),),
             }
         }
     }
@@ -3800,7 +3812,7 @@
             <span class="macro">write</span><span class="macro">!</span>(<span class="ident">formatter</span>, <span class="string">&quot;unit variant {}::{}&quot;</span>, <span class="self">self</span>.<span class="ident">type_name</span>, <span class="self">self</span>.<span class="ident">variant_name</span>)
         }
 
-        <span class="kw">fn</span> <span class="ident">visit_map</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>(<span class="self">self</span>, _: <span class="ident">V</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">V</span>::<span class="ident">Error</span><span class="op">&gt;</span>
+        <span class="kw">fn</span> <span class="ident">visit_map</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="kw">_</span>: <span class="ident">V</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">V</span>::<span class="ident">Error</span><span class="op">&gt;</span>
         <span class="kw">where</span>
             <span class="ident">V</span>: <span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
         {
@@ -3962,18 +3974,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

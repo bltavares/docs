@@ -10,8 +10,12 @@
     <title>flate2::Status - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Enum Status</p><div class="block items"><ul><li><a href="#variants">Variants</a></li></ul></div><p class='location'><a href='index.html'>flate2</a></p><script>window.sidebarCurrent = {name: 'Status', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Enum Status</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#variants">Variants</a><div class="sidebar-links"><a href="#variant.Ok">Ok</a><a href="#variant.BufError">BufError</a><a href="#variant.StreamEnd">StreamEnd</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">Send</a><a href="#impl-Sync">Sync</a></div></div><p class='location'><a href='index.html'>flate2</a></p><script>window.sidebarCurrent = {name: 'Status', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -43,38 +55,43 @@
         </form>
     </nav>
 
-    <section id='main' class="content">
-<h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>flate2</a>::<wbr><a class="enum" href=''>Status</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>flate2</a>::<wbr><a class="enum" href=''>Status</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/flate2/mem.rs.html#115-139' title='goto source code'>[src]</a></span></h1>
-<pre class='rust enum'>pub enum Status {
+               </span><a class='srclink' href='../src/flate2/mem.rs.html#115-139' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust enum'>pub enum Status {
     Ok,
     BufError,
     StreamEnd,
-}</pre><div class='docblock'><p>Possible status results of compressing some data or successfully
+}</pre></div><div class='docblock'><p>Possible status results of compressing some data or successfully
 decompressing a block of data.</p>
-</div><h2 id='variants' class='variants'>Variants</h2>
-<span id='variant.Ok' class='variant'><span id='Ok.v' class='invisible'><code>Ok</code></span></span><div class='docblock'><p>Indicates success.</p>
-
-<p>Means that more input may be needed but isn&#39;t available
-and/or there&#39; smore output to be written but the output buffer is full.</p>
-</div><span id='variant.BufError' class='variant'><span id='BufError.v' class='invisible'><code>BufError</code></span></span><div class='docblock'><p>Indicates that forward progress is not possible due to input or output
+</div><h2 id='variants' class='variants small-section-header'>
+                   Variants<a href='#variants' class='anchor'></a></h2>
+<span id="variant.Ok" class="variant small-section-header"><a href="#variant.Ok" class="anchor field"></a><span id='Ok.v' class='invisible'><code>Ok</code></span></span><div class='docblock'><p>Indicates success.</p>
+<p>Means that more input may be needed but isn't available
+and/or there' smore output to be written but the output buffer is full.</p>
+</div><span id="variant.BufError" class="variant small-section-header"><a href="#variant.BufError" class="anchor field"></a><span id='BufError.v' class='invisible'><code>BufError</code></span></span><div class='docblock'><p>Indicates that forward progress is not possible due to input or output
 buffers being empty.</p>
-
 <p>For compression it means the input buffer needs some more data or the
 output buffer needs to be freed up before trying again.</p>
-
 <p>For decompression this means that more input is needed to continue or
-the output buffer isn&#39;t large enough to contain the result. The function
+the output buffer isn't large enough to contain the result. The function
 can be called again after fixing both.</p>
-</div><span id='variant.StreamEnd' class='variant'><span id='StreamEnd.v' class='invisible'><code>StreamEnd</code></span></span><div class='docblock'><p>Indicates that all input has been consumed and all output bytes have
+</div><span id="variant.StreamEnd" class="variant small-section-header"><a href="#variant.StreamEnd" class="anchor field"></a><span id='StreamEnd.v' class='invisible'><code>StreamEnd</code></span></span><div class='docblock'><p>Indicates that all input has been consumed and all output bytes have
 been written. Decompression/compression should not be called again.</p>
-
 <p>For decompression with zlib streams the adler-32 of the decompressed
 data has also been verified.</p>
-</div></section>
+</div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+            <div id='implementations-list'>
+        </div>
+                <h2 id='synthetic-implementations' class='small-section-header'>
+                  Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+                </h2>
+                <div id='synthetic-implementations-list'>
+            <h3 id='impl-Send' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="enum" href="../flate2/enum.Status.html" title="enum flate2::Status">Status</a></code><a href='#impl-Send' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="enum" href="../flate2/enum.Status.html" title="enum flate2::Status">Status</a></code><a href='#impl-Sync' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -87,18 +104,22 @@ data has also been verified.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

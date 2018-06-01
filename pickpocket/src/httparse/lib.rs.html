@@ -10,8 +10,12 @@
     <title>lib.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -990,9 +1002,9 @@
 <span id="945">945</span>
 <span id="946">946</span>
 </pre><pre class="rust ">
-<span class="attribute">#<span class="op">!</span>[<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>),  <span class="ident">no_std</span>)]</span>
-<span class="attribute">#<span class="op">!</span>[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">deny</span>(<span class="ident">warnings</span>))]</span>
-<span class="attribute">#<span class="op">!</span>[<span class="ident">deny</span>(<span class="ident">missing_docs</span>)]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>),  <span class="ident">no_std</span>)]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">deny</span>(<span class="ident">warnings</span>))]</span>
+<span class="attribute">#![<span class="ident">deny</span>(<span class="ident">missing_docs</span>)]</span>
 <span class="doccomment">//! # httparse</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! A push library for parsing HTTP/1.x requests and responses.</span>
@@ -1030,7 +1042,7 @@
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">e</span>:<span class="ident">expr</span> <span class="op">=&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pat</span>:<span class="ident">pat</span> <span class="op">|</span><span class="question-mark">?</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ret</span>:<span class="ident">expr</span>) <span class="op">=&gt;</span> {
         <span class="kw">match</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">e</span> {
             <span class="ident">v</span>@<span class="macro-nonterminal">$</span><span class="macro-nonterminal">pat</span> <span class="op">=&gt;</span> <span class="ident">v</span>,
-            _ <span class="op">=&gt;</span> <span class="kw">return</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ret</span>
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ret</span>
         }
     };
 }
@@ -1083,7 +1095,7 @@
             <span class="string">b&#39;\n&#39;</span> <span class="op">=&gt;</span> {
                 <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bytes</span>.<span class="ident">slice</span>();
             },
-            _ <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">NewLine</span>)
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">NewLine</span>)
         }
     })
 }
@@ -1337,7 +1349,7 @@
                 <span class="self">self</span>.<span class="ident">reason</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>);
             },
             <span class="string">b&#39;\n&#39;</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">reason</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>),
-            _ <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Status</span>),
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Status</span>),
         }
 
 
@@ -1384,7 +1396,7 @@
         <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">eight</span>.<span class="ident">_7</span>() {
             <span class="string">b&#39;0&#39;</span> <span class="op">=&gt;</span> <span class="number">0</span>,
             <span class="string">b&#39;1&#39;</span> <span class="op">=&gt;</span> <span class="number">1</span>,
-            _ <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Version</span>)
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Version</span>)
         };
         <span class="prelude-val">Ok</span>(<span class="ident">Status</span>::<span class="ident">Complete</span>(<span class="ident">v</span>))
     } <span class="kw">else</span> {
@@ -1653,7 +1665,7 @@
             <span class="string">b&#39;\r&#39;</span> <span class="op">=&gt;</span> {
                 <span class="kw">match</span> <span class="macro">next</span><span class="macro">!</span>(<span class="ident">bytes</span>) {
                     <span class="string">b&#39;\n&#39;</span> <span class="op">=&gt;</span> <span class="kw">break</span>,
-                    _ <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">InvalidChunkSize</span>),
+                    <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">InvalidChunkSize</span>),
                 }
             }
             <span class="comment">// If we weren&#39;t in the extension yet, the &quot;;&quot; signals its start</span>
@@ -1671,10 +1683,10 @@
             <span class="comment">// extensions would have a more strict syntax:</span>
             <span class="comment">//     (token [&quot;=&quot; (token | quoted-string)])</span>
             <span class="comment">// but we gain nothing by rejecting an otherwise valid chunk size.</span>
-            _ <span class="kw">if</span> <span class="ident">in_ext</span> <span class="op">=&gt;</span> {}
+            <span class="kw">_</span> <span class="kw">if</span> <span class="ident">in_ext</span> <span class="op">=&gt;</span> {}
             <span class="comment">// Finally, if we aren&#39;t in the extension and we&#39;re reading any</span>
             <span class="comment">// other octet, the chunk size line is invalid!</span>
-            _ <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">InvalidChunkSize</span>),
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">InvalidChunkSize</span>),
         }
     }
     <span class="prelude-val">Ok</span>(<span class="ident">Status</span>::<span class="ident">Complete</span>((<span class="ident">bytes</span>.<span class="ident">pos</span>(), <span class="ident">size</span>)))
@@ -1950,18 +1962,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

@@ -10,8 +10,12 @@
     <title>lib.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     <link rel="shortcut icon" href="https://rust-num.github.io/num/favicon.ico">
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         <a href='../../num_integer/index.html'><img src='https://rust-num.github.io/num/rust-logo-128x128-blk-v2.png' alt='logo' width='100'></a>
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -1043,7 +1055,7 @@
 <span class="comment">// except according to those terms.</span>
 
 <span class="doccomment">//! Integer trait and functions.</span>
-<span class="attribute">#<span class="op">!</span>[<span class="ident">doc</span>(<span class="ident">html_logo_url</span> <span class="op">=</span> <span class="string">&quot;https://rust-num.github.io/num/rust-logo-128x128-blk-v2.png&quot;</span>,
+<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_logo_url</span> <span class="op">=</span> <span class="string">&quot;https://rust-num.github.io/num/rust-logo-128x128-blk-v2.png&quot;</span>,
        <span class="ident">html_favicon_url</span> <span class="op">=</span> <span class="string">&quot;https://rust-num.github.io/num/favicon.ico&quot;</span>,
        <span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://rust-num.github.io/num/&quot;</span>,
        <span class="ident">html_playground_url</span> <span class="op">=</span> <span class="string">&quot;http://play.integer32.com/&quot;</span>)]</span>
@@ -1241,7 +1253,7 @@
                 <span class="kw">match</span> <span class="self">self</span>.<span class="ident">div_rem</span>(<span class="ident">other</span>) {
                     (<span class="ident">d</span>, <span class="ident">r</span>) <span class="kw">if</span> (<span class="ident">r</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="ident">other</span> <span class="op">&lt;</span> <span class="number">0</span>)
                            <span class="op">||</span> (<span class="ident">r</span> <span class="op">&lt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="ident">other</span> <span class="op">&gt;</span> <span class="number">0</span>) <span class="op">=&gt;</span> <span class="ident">d</span> <span class="op">-</span> <span class="number">1</span>,
-                    (<span class="ident">d</span>, _)                          <span class="op">=&gt;</span> <span class="ident">d</span>,
+                    (<span class="ident">d</span>, <span class="kw">_</span>)                          <span class="op">=&gt;</span> <span class="ident">d</span>,
                 }
             }
 
@@ -1853,7 +1865,7 @@
     <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">check_simple</span> {
         (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>:<span class="ident">ty</span>) <span class="op">=&gt;</span> { {
             <span class="kw">let</span> <span class="ident">n</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> <span class="op">=</span> <span class="number">3</span>;
-            <span class="kw">let</span> <span class="ident">c</span>: <span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">IterBinomial</span>::<span class="ident">new</span>(<span class="ident">n</span>).<span class="ident">collect</span>();
+            <span class="kw">let</span> <span class="ident">c</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">IterBinomial</span>::<span class="ident">new</span>(<span class="ident">n</span>).<span class="ident">collect</span>();
             <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">1</span>];
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c</span>, <span class="ident">expected</span>);
         } }
@@ -1871,7 +1883,7 @@
     <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">check_binomial</span> {
         (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>:<span class="ident">ty</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">n</span>:<span class="ident">expr</span>) <span class="op">=&gt;</span> { {
             <span class="kw">let</span> <span class="ident">n</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">n</span>;
-            <span class="kw">let</span> <span class="ident">c</span>: <span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">IterBinomial</span>::<span class="ident">new</span>(<span class="ident">n</span>).<span class="ident">collect</span>();
+            <span class="kw">let</span> <span class="ident">c</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">IterBinomial</span>::<span class="ident">new</span>(<span class="ident">n</span>).<span class="ident">collect</span>();
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">k</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span> <span class="op">=</span> <span class="number">0</span>;
             <span class="kw">for</span> <span class="ident">b</span> <span class="kw">in</span> <span class="ident">c</span> {
                 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">b</span>, <span class="ident">binomial</span>(<span class="ident">n</span>, <span class="ident">k</span>));
@@ -2034,18 +2046,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

@@ -10,8 +10,12 @@
     <title>pickpocket::cli::FileClient - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
+          id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -28,10 +32,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct FileClient</p><div class="block items"><ul><li><a href="#methods">Methods</a></li></ul></div><p class='location'><a href='../index.html'>pickpocket</a>::<wbr><a href='index.html'>cli</a></p><script>window.sidebarCurrent = {name: 'FileClient', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct FileClient</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.from_online">from_online</a><a href="#method.from_cache">from_cache</a><a href="#method.list_all">list_all</a><a href="#method.write_cache">write_cache</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">Send</a><a href="#impl-Sync">Sync</a></div></div><p class='location'><a href='../index.html'>pickpocket</a>::<wbr><a href='index.html'>cli</a></p><script>window.sidebarCurrent = {name: 'FileClient', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -43,18 +55,25 @@
         </form>
     </nav>
 
-    <section id='main' class="content">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>pickpocket</a>::<wbr><a href='index.html'>cli</a>::<wbr><a class="struct" href=''>FileClient</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>pickpocket</a>::<wbr><a href='index.html'>cli</a>::<wbr><a class="struct" href=''>FileClient</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/pickpocket/cli.rs.html#35-37' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct FileClient { /* fields omitted */ }</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../../pickpocket/cli/struct.FileClient.html" title="struct pickpocket::cli::FileClient">FileClient</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/pickpocket/cli.rs.html#39-68' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.from_online' class="method"><span id='from_online.v' class='invisible'><code>fn <a href='#method.from_online' class='fnname'>from_online</a>(list: <a class="type" href="../../pickpocket/type.ReadingList.html" title="type pickpocket::ReadingList">ReadingList</a>) -&gt; Self</code></span></h4>
-<h4 id='method.from_cache' class="method"><span id='from_cache.v' class='invisible'><code>fn <a href='#method.from_cache' class='fnname'>from_cache</a>(file_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;</code></span></h4>
-<h4 id='method.list_all' class="method"><span id='list_all.v' class='invisible'><code>fn <a href='#method.list_all' class='fnname'>list_all</a>(&amp;self) -&gt; &amp;<a class="type" href="../../pickpocket/type.ReadingList.html" title="type pickpocket::ReadingList">ReadingList</a></code></span></h4>
-<h4 id='method.write_cache' class="method"><span id='write_cache.v' class='invisible'><code>fn <a href='#method.write_cache' class='fnname'>write_cache</a>(&amp;self, file_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;</code></span></h4>
-</div></section>
+               </span><a class='srclink' href='../../src/pickpocket/cli.rs.html#35-37' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust struct'>pub struct FileClient { /* fields omitted */ }</pre></div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="struct" href="../../pickpocket/cli/struct.FileClient.html" title="struct pickpocket::cli::FileClient">FileClient</a></code><a href='#impl' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/pickpocket/cli.rs.html#39-68' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.from_online' class="method"><span id='from_online.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.from_online' class='fnname'>from_online</a>(list: <a class="type" href="../../pickpocket/type.ReadingList.html" title="type pickpocket::ReadingList">ReadingList</a>) -&gt; Self</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/pickpocket/cli.rs.html#40-42' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><h4 id='method.from_cache' class="method"><span id='from_cache.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.from_cache' class='fnname'>from_cache</a>(file_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/pickpocket/cli.rs.html#44-54' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><h4 id='method.list_all' class="method"><span id='list_all.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.list_all' class='fnname'>list_all</a>(&amp;self) -&gt; &amp;<a class="type" href="../../pickpocket/type.ReadingList.html" title="type pickpocket::ReadingList">ReadingList</a></code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/pickpocket/cli.rs.html#56-58' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><h4 id='method.write_cache' class="method"><span id='write_cache.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.write_cache' class='fnname'>write_cache</a>(&amp;self, file_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/pickpocket/cli.rs.html#60-67' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+            <div id='implementations-list'>
+        </div>
+                <h2 id='synthetic-implementations' class='small-section-header'>
+                  Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
+                </h2>
+                <div id='synthetic-implementations-list'>
+            <h3 id='impl-Send' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../../pickpocket/cli/struct.FileClient.html" title="struct pickpocket::cli::FileClient">FileClient</a></code><a href='#impl-Send' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../../pickpocket/cli/struct.FileClient.html" title="struct pickpocket::cli::FileClient">FileClient</a></code><a href='#impl-Sync' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -67,18 +86,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
