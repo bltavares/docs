@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["FavoriteStatus",""],["Status",""]],"fn":[["cleanup_url",""],["https_client",""],["url",""]],"mod":[["batch",""],["cli",""]],"struct":[["AuthorizationRequest",""],["BeginAuthentication",""],["Client",""],["Item",""]],"trait":[["ByUrl",""]],"type":[["ReadingList",""]]});
+initSidebarItems({"enum":[["FavoriteStatus",""],["Status",""]],"fn":[["cleanup_url",""],["https_client",""],["url",""]],"mod":[["batch",""],["cli",""]],"struct":[["AuthorizationRequest",""],["BeginAuthentication",""],["Client",""],["Item",""]],"type":[["ReadingList",""]]});

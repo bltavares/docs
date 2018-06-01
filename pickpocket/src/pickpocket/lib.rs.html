@@ -398,6 +398,18 @@
 <span id="341">341</span>
 <span id="342">342</span>
 <span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
 </pre><pre class="rust ">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde_json</span>;
@@ -467,28 +479,14 @@
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Status</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span> {
-        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>,
-               <span class="string">&quot;{}&quot;</span>,
-               <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-                   <span class="ident">Status</span>::<span class="ident">Read</span> <span class="op">=&gt;</span> <span class="string">&quot;Read&quot;</span>,
-                   <span class="ident">Status</span>::<span class="ident">Unread</span> <span class="op">=&gt;</span> <span class="string">&quot;Unread&quot;</span>,
-               })
-    }
-}
-
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ByUrl</span> {
-    <span class="kw">fn</span> <span class="ident">by_url</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="ident">Item</span><span class="op">&gt;</span>;
-}
-
-<span class="kw">impl</span> <span class="ident">ByUrl</span> <span class="kw">for</span> <span class="ident">ReadingList</span> {
-    <span class="kw">fn</span> <span class="ident">by_url</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="ident">Item</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">BTreeMap</span>::<span class="ident">new</span>();
-
-        <span class="kw">for</span> (<span class="kw">_</span>, <span class="ident">item</span>) <span class="kw">in</span> <span class="self">self</span> {
-            <span class="ident">result</span>.<span class="ident">insert</span>(<span class="ident">item</span>.<span class="ident">url</span>(), <span class="ident">item</span>);
-        }
-
-        <span class="ident">result</span>
+        <span class="macro">write</span><span class="macro">!</span>(
+            <span class="ident">f</span>,
+            <span class="string">&quot;{}&quot;</span>,
+            <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+                <span class="ident">Status</span>::<span class="ident">Read</span> <span class="op">=&gt;</span> <span class="string">&quot;Read&quot;</span>,
+                <span class="ident">Status</span>::<span class="ident">Unread</span> <span class="op">=&gt;</span> <span class="string">&quot;Unread&quot;</span>,
+            }
+        )
     }
 }
 
@@ -499,7 +497,11 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">title</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="kw">let</span> <span class="ident">title</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">resolved_title</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">given_title</span>);
-        <span class="kw">if</span> <span class="ident">title</span>.<span class="ident">is_empty</span>() { <span class="self">self</span>.<span class="ident">url</span>() } <span class="kw">else</span> { <span class="ident">title</span> }
+        <span class="kw">if</span> <span class="ident">title</span>.<span class="ident">is_empty</span>() {
+            <span class="self">self</span>.<span class="ident">url</span>()
+        } <span class="kw">else</span> {
+            <span class="ident">title</span>
+        }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">favorite</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">FavoriteStatus</span> {
@@ -521,19 +523,22 @@
 
 <span class="kw">impl</span> <span class="ident">Client</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mark_as_read</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ids</span>: <span class="ident">T</span>)
-        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">T</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
     {
         <span class="self">self</span>.<span class="ident">modify</span>(<span class="ident">Action</span>::<span class="ident">Archive</span>, <span class="ident">ids</span>);
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mark_as_favorite</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ids</span>: <span class="ident">T</span>)
-        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">T</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
     {
         <span class="self">self</span>.<span class="ident">modify</span>(<span class="ident">Action</span>::<span class="ident">Favorite</span>, <span class="ident">ids</span>);
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_urls</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">urls</span>: <span class="ident">T</span>)
-        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">T</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
     {
         <span class="self">self</span>.<span class="ident">modify</span>(<span class="ident">Action</span>::<span class="ident">Add</span>, <span class="ident">urls</span>);
     }
@@ -545,7 +550,8 @@
 
         <span class="kw">loop</span> {
             <span class="kw">let</span> <span class="ident">method</span> <span class="op">=</span> <span class="ident">url</span>(<span class="string">&quot;/get&quot;</span>);
-            <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">r##&quot;{{ &quot;consumer_key&quot;:&quot;{}&quot;,
+            <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(
+                <span class="string">r##&quot;{{ &quot;consumer_key&quot;:&quot;{}&quot;,
                                &quot;access_token&quot;:&quot;{}&quot;,
                                &quot;sort&quot;:&quot;site&quot;,
                                &quot;state&quot;:&quot;all&quot;,
@@ -553,10 +559,11 @@
                                &quot;count&quot;:&quot;{}&quot;,
                                &quot;offset&quot;:&quot;{}&quot;
                                }}&quot;##</span>,
-                                  <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">consumer_key</span>,
-                                  <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_code</span>,
-                                  <span class="ident">DEFAULT_COUNT</span>,
-                                  (<span class="ident">offset</span> <span class="op">*</span> <span class="ident">DEFAULT_COUNT</span>));
+                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">consumer_key</span>,
+                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_code</span>,
+                <span class="ident">DEFAULT_COUNT</span>,
+                (<span class="ident">offset</span> <span class="op">*</span> <span class="ident">DEFAULT_COUNT</span>)
+            );
 
             <span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">request</span>(<span class="ident">method</span>, <span class="ident">payload</span>);
             <span class="kw">match</span> <span class="ident">parse_all_response</span>(<span class="kw-2">&amp;</span><span class="ident">response</span>) {
@@ -573,7 +580,8 @@
     }
 
     <span class="kw">fn</span> <span class="ident">modify</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">action</span>: <span class="ident">Action</span>, <span class="ident">ids</span>: <span class="ident">T</span>)
-        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">T</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
     {
         <span class="kw">let</span> <span class="ident">method</span> <span class="op">=</span> <span class="ident">url</span>(<span class="string">&quot;/send&quot;</span>);
         <span class="kw">let</span> <span class="ident">action_verb</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">action</span> {
@@ -588,29 +596,30 @@
         <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="ident">chrono</span>::<span class="ident">UTC</span>::<span class="ident">now</span>().<span class="ident">timestamp</span>();
         <span class="kw">let</span> <span class="ident">actions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">ids</span>.<span class="ident">into_iter</span>()
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">id</span><span class="op">|</span> {
-                <span class="macro">format</span><span class="macro">!</span>(<span class="string">r##&quot;{{ &quot;action&quot;: &quot;{}&quot;, &quot;{}&quot;: &quot;{}&quot;, &quot;time&quot;: &quot;{}&quot; }}&quot;##</span>,
-                        <span class="ident">action_verb</span>,
-                        <span class="ident">item_key</span>,
-                        <span class="ident">id</span>,
-                        <span class="ident">time</span>)
+                <span class="macro">format</span><span class="macro">!</span>(
+                    <span class="string">r##&quot;{{ &quot;action&quot;: &quot;{}&quot;, &quot;{}&quot;: &quot;{}&quot;, &quot;time&quot;: &quot;{}&quot; }}&quot;##</span>,
+                    <span class="ident">action_verb</span>, <span class="ident">item_key</span>, <span class="ident">id</span>, <span class="ident">time</span>
+                )
             })
             .<span class="ident">collect</span>();
-        <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">r##&quot;{{ &quot;consumer_key&quot;:&quot;{}&quot;,
+        <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(
+            <span class="string">r##&quot;{{ &quot;consumer_key&quot;:&quot;{}&quot;,
                                &quot;access_token&quot;:&quot;{}&quot;,
                                &quot;actions&quot;: [{}]
                                }}&quot;##</span>,
-                              <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">consumer_key</span>,
-                              <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_code</span>,
-                              <span class="ident">actions</span>.<span class="ident">join</span>(<span class="string">&quot;, &quot;</span>));
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">consumer_key</span>,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">authorization_code</span>,
+            <span class="ident">actions</span>.<span class="ident">join</span>(<span class="string">&quot;, &quot;</span>)
+        );
 
         <span class="self">self</span>.<span class="ident">request</span>(<span class="ident">method</span>, <span class="ident">payload</span>);
     }
 
-
     <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">method</span>: <span class="ident">Url</span>, <span class="ident">payload</span>: <span class="ident">String</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
         <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">auth</span>::<span class="ident">https_client</span>();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">post</span>(<span class="ident">method</span>)
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">client</span>
+            .<span class="ident">post</span>(<span class="ident">method</span>)
             .<span class="ident">body</span>(<span class="kw-2">&amp;</span><span class="ident">payload</span>)
             .<span class="ident">header</span>(<span class="ident">ContentType</span>::<span class="ident">json</span>())
             .<span class="ident">header</span>(<span class="ident">Connection</span>::<span class="ident">close</span>())
@@ -618,7 +627,8 @@
             .<span class="ident">expect</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Coulnd&#39;t make request with payload: {}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">payload</span>));
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
-        <span class="ident">res</span>.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">body</span>).<span class="ident">expect</span>(<span class="string">&quot;Could not read the HTTP request&#39;s body&quot;</span>);
+        <span class="ident">res</span>.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">body</span>)
+            .<span class="ident">expect</span>(<span class="string">&quot;Could not read the HTTP request&#39;s body&quot;</span>);
         <span class="ident">body</span>
     }
 }
@@ -646,7 +656,11 @@
 }
 
 <span class="kw">fn</span> <span class="ident">start_domain_from</span>(<span class="ident">url</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-    <span class="kw">if</span> <span class="ident">url</span>.<span class="ident">starts_with</span>(<span class="string">&quot;www.&quot;</span>) { <span class="number">4</span> } <span class="kw">else</span> { <span class="number">0</span> }
+    <span class="kw">if</span> <span class="ident">url</span>.<span class="ident">starts_with</span>(<span class="string">&quot;www.&quot;</span>) {
+        <span class="number">4</span>
+    } <span class="kw">else</span> {
+        <span class="number">0</span>
+    }
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cleanup_url</span>(<span class="ident">url</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
@@ -654,9 +668,11 @@
     <span class="kw">let</span> <span class="ident">current_host</span> <span class="op">=</span> <span class="ident">parsed</span>.<span class="ident">host_str</span>().<span class="ident">expect</span>(<span class="string">&quot;Cleaned up an url without a host&quot;</span>);
     <span class="kw">let</span> <span class="ident">starts_from</span> <span class="op">=</span> <span class="ident">start_domain_from</span>(<span class="ident">current_host</span>);
 
-    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;https://{}{}&quot;</span>,
-            <span class="ident">fixup_blogspot</span>(<span class="kw-2">&amp;</span><span class="ident">current_host</span>[<span class="ident">starts_from</span>..]),
-            <span class="ident">parsed</span>.<span class="ident">path</span>())
+    <span class="macro">format</span><span class="macro">!</span>(
+        <span class="string">&quot;https://{}{}&quot;</span>,
+        <span class="ident">fixup_blogspot</span>(<span class="kw-2">&amp;</span><span class="ident">current_host</span>[<span class="ident">starts_from</span>..]),
+        <span class="ident">parsed</span>.<span class="ident">path</span>()
+    )
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -690,29 +706,37 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_cleanup_blogspot_first_tld</span>() {
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="string">&quot;https://this-is-a.blogspot.cl/asdf/asdf/asdf?asdf=1&quot;</span>;
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cleanup_url</span>(<span class="ident">url</span>),
-                   <span class="string">&quot;https://this-is-a.blogspot.com/asdf/asdf/asdf&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">cleanup_url</span>(<span class="ident">url</span>),
+            <span class="string">&quot;https://this-is-a.blogspot.com/asdf/asdf/asdf&quot;</span>
+        );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_cleanup_blogspot_second_tld</span>() {
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="string">&quot;https://this-is-a.blogspot.com.br/asdf/asdf/asdf?asdf=1&quot;</span>;
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cleanup_url</span>(<span class="ident">url</span>),
-                   <span class="string">&quot;https://this-is-a.blogspot.com/asdf/asdf/asdf&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">cleanup_url</span>(<span class="ident">url</span>),
+            <span class="string">&quot;https://this-is-a.blogspot.com/asdf/asdf/asdf&quot;</span>
+        );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_cleanup_www</span>() {
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="string">&quot;https://www.this-is-a.blogspot.com.br/asdf/asdf/asdf?asdf=1&quot;</span>;
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cleanup_url</span>(<span class="ident">url</span>),
-                   <span class="string">&quot;https://this-is-a.blogspot.com/asdf/asdf/asdf&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">cleanup_url</span>(<span class="ident">url</span>),
+            <span class="string">&quot;https://this-is-a.blogspot.com/asdf/asdf/asdf&quot;</span>
+        );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_cleanup_https_redirection</span>() {
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="string">&quot;http://www.this-is-a.blogspot.com.br/asdf/asdf/asdf?asdf=2&quot;</span>;
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">cleanup_url</span>(<span class="ident">url</span>),
-                   <span class="string">&quot;https://this-is-a.blogspot.com/asdf/asdf/asdf&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">cleanup_url</span>(<span class="ident">url</span>),
+            <span class="string">&quot;https://this-is-a.blogspot.com/asdf/asdf/asdf&quot;</span>
+        );
     }
 }
 
