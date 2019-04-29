@@ -1,48 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/tendril-0.2.2/src/fmt.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>fmt.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
-    
-
-    
-    
-</head>
-<body class="rustdoc">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        
-        
-    </nav>
-
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/tendril-0.4.1/src/fmt.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>fmt.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../tendril/index.html'><img src='../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -558,585 +514,522 @@
 <span id="514">514</span>
 <span id="515">515</span>
 <span id="516">516</span>
-</pre><pre class='rust '>
-<span class='comment'>// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or</span>
-<span class='comment'>// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license</span>
-<span class='comment'>// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your</span>
-<span class='comment'>// option. This file may not be copied, modified, or distributed</span>
-<span class='comment'>// except according to those terms.</span>
+</pre><div class="example-wrap"><pre class="rust ">
+<span class="comment">// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or</span>
+<span class="comment">// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license</span>
+<span class="comment">// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your</span>
+<span class="comment">// option. This file may not be copied, modified, or distributed</span>
+<span class="comment">// except according to those terms.</span>
 
-<span class='doccomment'>//! Marker types for formats.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! This module defines the types and traits used to mark a `Tendril`</span>
-<span class='doccomment'>//! with the format of data it contains. It includes those formats</span>
-<span class='doccomment'>//! for which `Tendril` supports at least some operations without</span>
-<span class='doccomment'>//! conversion.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! To convert a string tendril to/from a byte tendril in an arbitrary</span>
-<span class='doccomment'>//! character encoding, see the `encode` and `decode` methods on</span>
-<span class='doccomment'>//! `Tendril`.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! `Tendril` operations may become memory-unsafe if data invalid for</span>
-<span class='doccomment'>//! the format sneaks in. For that reason, these traits require</span>
-<span class='doccomment'>//! `unsafe impl`.</span>
+<span class="doccomment">//! Marker types for formats.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This module defines the types and traits used to mark a `Tendril`</span>
+<span class="doccomment">//! with the format of data it contains. It includes those formats</span>
+<span class="doccomment">//! for which `Tendril` supports at least some operations without</span>
+<span class="doccomment">//! conversion.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! To convert a string tendril to/from a byte tendril in an arbitrary</span>
+<span class="doccomment">//! character encoding, see the `encode` and `decode` methods on</span>
+<span class="doccomment">//! `Tendril`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! `Tendril` operations may become memory-unsafe if data invalid for</span>
+<span class="doccomment">//! the format sneaks in. For that reason, these traits require</span>
+<span class="doccomment">//! `unsafe impl`.</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>char</span>, <span class='ident'>str</span>, <span class='ident'>mem</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>default</span>::<span class='ident'>Default</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">char</span>, <span class="ident">str</span>, <span class="ident">mem</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">default</span>::<span class="ident">Default</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Write</span>;
 
-<span class='kw'>use</span> <span class='ident'>futf</span>::{<span class='self'>self</span>, <span class='ident'>Codepoint</span>, <span class='ident'>Meaning</span>};
+<span class="kw">use</span> <span class="ident">futf</span>::{<span class="self">self</span>, <span class="ident">Codepoint</span>, <span class="ident">Meaning</span>};
 
-<span class='kw'>use</span> <span class='ident'>util</span>::<span class='ident'>unsafe_slice</span>;
+<span class="kw">use</span> <span class="ident">util</span>::<span class="ident">unsafe_slice</span>;
 
-<span class='doccomment'>/// Implementation details.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// You don&#39;t need these unless you are implementing</span>
-<span class='doccomment'>/// a new format.</span>
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>imp</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>iter</span>, <span class='ident'>slice</span>, <span class='ident'>mem</span>};
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>default</span>::<span class='ident'>Default</span>;
+<span class="doccomment">/// Implementation details.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// You don&#39;t need these unless you are implementing</span>
+<span class="doccomment">/// a new format.</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">imp</span> {
+    <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">iter</span>, <span class="ident">slice</span>, <span class="ident">mem</span>};
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">default</span>::<span class="ident">Default</span>;
 
-    <span class='doccomment'>/// Describes how to fix up encodings when concatenating.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// We can drop characters on either side of the splice,</span>
-    <span class='doccomment'>/// and insert up to 4 bytes in the middle.</span>
-    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Fixup</span> {
-        <span class='kw'>pub</span> <span class='ident'>drop_left</span>: <span class='ident'>u32</span>,
-        <span class='kw'>pub</span> <span class='ident'>drop_right</span>: <span class='ident'>u32</span>,
-        <span class='kw'>pub</span> <span class='ident'>insert_len</span>: <span class='ident'>u32</span>,
-        <span class='kw'>pub</span> <span class='ident'>insert_bytes</span>: [<span class='ident'>u8</span>; <span class='number'>4</span>],
+    <span class="doccomment">/// Describes how to fix up encodings when concatenating.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// We can drop characters on either side of the splice,</span>
+    <span class="doccomment">/// and insert up to 4 bytes in the middle.</span>
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Fixup</span> {
+        <span class="kw">pub</span> <span class="ident">drop_left</span>: <span class="ident">u32</span>,
+        <span class="kw">pub</span> <span class="ident">drop_right</span>: <span class="ident">u32</span>,
+        <span class="kw">pub</span> <span class="ident">insert_len</span>: <span class="ident">u32</span>,
+        <span class="kw">pub</span> <span class="ident">insert_bytes</span>: [<span class="ident">u8</span>; <span class="number">4</span>],
     }
 
-    <span class='kw'>impl</span> <span class='ident'>Default</span> <span class='kw'>for</span> <span class='ident'>Fixup</span> {
-        <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-        <span class='kw'>fn</span> <span class='ident'>default</span>() <span class='op'>-&gt;</span> <span class='ident'>Fixup</span> {
-            <span class='ident'>Fixup</span> {
-                <span class='ident'>drop_left</span>: <span class='number'>0</span>,
-                <span class='ident'>drop_right</span>: <span class='number'>0</span>,
-                <span class='ident'>insert_len</span>: <span class='number'>0</span>,
-                <span class='ident'>insert_bytes</span>: [<span class='number'>0</span>; <span class='number'>4</span>],
+    <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Fixup</span> {
+        <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+        <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="ident">Fixup</span> {
+            <span class="ident">Fixup</span> {
+                <span class="ident">drop_left</span>: <span class="number">0</span>,
+                <span class="ident">drop_right</span>: <span class="number">0</span>,
+                <span class="ident">insert_len</span>: <span class="number">0</span>,
+                <span class="ident">insert_bytes</span>: [<span class="number">0</span>; <span class="number">4</span>],
             }
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_u32_unchecked</span>(<span class='ident'>n</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>char</span> {
-        <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>n</span>)
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_u32_unchecked</span>(<span class="ident">n</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="ident">char</span> {
+        <span class="ident">mem</span>::<span class="ident">transmute</span>(<span class="ident">n</span>)
     }
 
-    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SingleByteCharIndices</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-        <span class='ident'>inner</span>: <span class='ident'>iter</span>::<span class='ident'>Enumerate</span><span class='op'>&lt;</span><span class='ident'>slice</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>u8</span><span class='op'>&gt;&gt;</span>,
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SingleByteCharIndices</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">inner</span>: <span class="ident">iter</span>::<span class="ident">Enumerate</span><span class="op">&lt;</span><span class="ident">slice</span>::<span class="ident">Iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">u8</span><span class="op">&gt;&gt;</span>,
     }
 
-    <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>SingleByteCharIndices</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-        <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> (<span class='ident'>usize</span>, <span class='ident'>char</span>);
+    <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">SingleByteCharIndices</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> (<span class="ident">usize</span>, <span class="ident">char</span>);
 
-        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-        <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>usize</span>, <span class='ident'>char</span>)<span class='op'>&gt;</span> {
-            <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>next</span>().<span class='ident'>map</span>(<span class='op'>|</span>(<span class='ident'>i</span>, <span class='kw-2'>&amp;</span><span class='ident'>b</span>)<span class='op'>|</span> <span class='kw'>unsafe</span> {
-                (<span class='ident'>i</span>, <span class='ident'>from_u32_unchecked</span>(<span class='ident'>b</span> <span class='kw'>as</span> <span class='ident'>u32</span>))
+        <span class="attribute">#[<span class="ident">inline</span>]</span>
+        <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">char</span>)<span class="op">&gt;</span> {
+            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">next</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="kw-2">&amp;</span><span class="ident">b</span>)<span class="op">|</span> <span class="kw">unsafe</span> {
+                (<span class="ident">i</span>, <span class="ident">from_u32_unchecked</span>(<span class="ident">b</span> <span class="kw">as</span> <span class="ident">u32</span>))
             })
         }
     }
 
-    <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>SingleByteCharIndices</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>SingleByteCharIndices</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-            <span class='ident'>SingleByteCharIndices</span> {
-                <span class='ident'>inner</span>: <span class='ident'>buf</span>.<span class='ident'>iter</span>().<span class='ident'>enumerate</span>(),
+    <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">SingleByteCharIndices</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">inline</span>]</span>
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">SingleByteCharIndices</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+            <span class="ident">SingleByteCharIndices</span> {
+                <span class="ident">inner</span>: <span class="ident">buf</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>(),
             }
         }
     }
 }
 
-<span class='doccomment'>/// Trait for format marker types.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The type implementing this trait is usually not instantiated.</span>
-<span class='doccomment'>/// It&#39;s used with a phantom type parameter of `Tendril`.</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>Format</span> {
-    <span class='doccomment'>/// Check whether the buffer is valid for this format.</span>
-    <span class='kw'>fn</span> <span class='ident'>validate</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span>;
+<span class="doccomment">/// Trait for format marker types.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The type implementing this trait is usually not instantiated.</span>
+<span class="doccomment">/// It&#39;s used with a phantom type parameter of `Tendril`.</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">trait</span> <span class="ident">Format</span> {
+    <span class="doccomment">/// Check whether the buffer is valid for this format.</span>
+    <span class="kw">fn</span> <span class="ident">validate</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span>;
 
-    <span class='doccomment'>/// Check whether the buffer is valid for this format.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// You may assume the buffer is a prefix of a valid buffer.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate_prefix</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='op'>&lt;</span><span class='self'>Self</span> <span class='kw'>as</span> <span class='ident'>Format</span><span class='op'>&gt;</span>::<span class='ident'>validate</span>(<span class='ident'>buf</span>)
+    <span class="doccomment">/// Check whether the buffer is valid for this format.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// You may assume the buffer is a prefix of a valid buffer.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">validate_prefix</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Format</span><span class="op">&gt;</span>::<span class="ident">validate</span>(<span class="ident">buf</span>)
     }
 
-    <span class='doccomment'>/// Check whether the buffer is valid for this format.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// You may assume the buffer is a suffix of a valid buffer.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate_suffix</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='op'>&lt;</span><span class='self'>Self</span> <span class='kw'>as</span> <span class='ident'>Format</span><span class='op'>&gt;</span>::<span class='ident'>validate</span>(<span class='ident'>buf</span>)
+    <span class="doccomment">/// Check whether the buffer is valid for this format.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// You may assume the buffer is a suffix of a valid buffer.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">validate_suffix</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Format</span><span class="op">&gt;</span>::<span class="ident">validate</span>(<span class="ident">buf</span>)
     }
 
-    <span class='doccomment'>/// Check whether the buffer is valid for this format.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// You may assume the buffer is a contiguous subsequence</span>
-    <span class='doccomment'>/// of a valid buffer, but not necessarily a prefix or</span>
-    <span class='doccomment'>/// a suffix.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate_subseq</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='op'>&lt;</span><span class='self'>Self</span> <span class='kw'>as</span> <span class='ident'>Format</span><span class='op'>&gt;</span>::<span class='ident'>validate</span>(<span class='ident'>buf</span>)
+    <span class="doccomment">/// Check whether the buffer is valid for this format.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// You may assume the buffer is a contiguous subsequence</span>
+    <span class="doccomment">/// of a valid buffer, but not necessarily a prefix or</span>
+    <span class="doccomment">/// a suffix.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">validate_subseq</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Format</span><span class="op">&gt;</span>::<span class="ident">validate</span>(<span class="ident">buf</span>)
     }
 
-    <span class='doccomment'>/// Compute any fixup needed when concatenating buffers.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The default is to do nothing.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The function is `unsafe` because it may assume the input</span>
-    <span class='doccomment'>/// buffers are already valid for the format. Also, no</span>
-    <span class='doccomment'>/// bounds-checking is performed on the return value!</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>fixup</span>(<span class='ident'>_lhs</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>], <span class='ident'>_rhs</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>imp</span>::<span class='ident'>Fixup</span> {
-        <span class='ident'>Default</span>::<span class='ident'>default</span>()
+    <span class="doccomment">/// Compute any fixup needed when concatenating buffers.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The default is to do nothing.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The function is `unsafe` because it may assume the input</span>
+    <span class="doccomment">/// buffers are already valid for the format. Also, no</span>
+    <span class="doccomment">/// bounds-checking is performed on the return value!</span>
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">fixup</span>(<span class="ident">_lhs</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">_rhs</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">imp</span>::<span class="ident">Fixup</span> {
+        <span class="ident">Default</span>::<span class="ident">default</span>()
     }
 }
 
-<span class='doccomment'>/// Indicates that one format is a subset of another.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The subset format can be converted to the superset format</span>
-<span class='doccomment'>/// for free.</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>SubsetOf</span><span class='op'>&lt;</span><span class='ident'>Super</span><span class='op'>&gt;</span>: <span class='ident'>Format</span>
-    <span class='kw'>where</span> <span class='ident'>Super</span>: <span class='ident'>Format</span>,
+<span class="doccomment">/// Indicates that one format is a subset of another.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The subset format can be converted to the superset format</span>
+<span class="doccomment">/// for free.</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">trait</span> <span class="ident">SubsetOf</span><span class="op">&lt;</span><span class="ident">Super</span><span class="op">&gt;</span>: <span class="ident">Format</span>
+    <span class="kw">where</span> <span class="ident">Super</span>: <span class="ident">Format</span>,
 {
-    <span class='doccomment'>/// Validate the *other* direction of conversion; check if</span>
-    <span class='doccomment'>/// this buffer from the superset format conforms to the</span>
-    <span class='doccomment'>/// subset format.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The default calls `Self::validate`, but some conversions</span>
-    <span class='doccomment'>/// may implement a check which is cheaper than validating</span>
-    <span class='doccomment'>/// from scratch.</span>
-    <span class='kw'>fn</span> <span class='ident'>revalidate_subset</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='self'>Self</span>::<span class='ident'>validate</span>(<span class='ident'>x</span>)
+    <span class="doccomment">/// Validate the *other* direction of conversion; check if</span>
+    <span class="doccomment">/// this buffer from the superset format conforms to the</span>
+    <span class="doccomment">/// subset format.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The default calls `Self::validate`, but some conversions</span>
+    <span class="doccomment">/// may implement a check which is cheaper than validating</span>
+    <span class="doccomment">/// from scratch.</span>
+    <span class="kw">fn</span> <span class="ident">revalidate_subset</span>(<span class="ident">x</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">Self</span>::<span class="ident">validate</span>(<span class="ident">x</span>)
     }
 }
 
-<span class='doccomment'>/// Indicates a format which corresponds to a Rust slice type,</span>
-<span class='doccomment'>/// representing exactly the same invariants.</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>SliceFormat</span>: <span class='ident'>Format</span> <span class='op'>+</span> <span class='ident'>Sized</span> {
-    <span class='kw'>type</span> <span class='ident'>Slice</span>: ?<span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Slice</span>;
+<span class="doccomment">/// Indicates a format which corresponds to a Rust slice type,</span>
+<span class="doccomment">/// representing exactly the same invariants.</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">trait</span> <span class="ident">SliceFormat</span>: <span class="ident">Format</span> <span class="op">+</span> <span class="ident">Sized</span> {
+    <span class="kw">type</span> <span class="ident">Slice</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Slice</span>;
 }
 
-<span class='doccomment'>/// Indicates a format which contains characters from Unicode</span>
-<span class='doccomment'>/// (all of it, or some proper subset).</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>CharFormat</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>: <span class='ident'>Format</span> {
-    <span class='doccomment'>/// Iterator for characters and their byte indices.</span>
-    <span class='kw'>type</span> <span class='ident'>Iter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span>(<span class='ident'>usize</span>, <span class='ident'>char</span>)<span class='op'>&gt;</span>;
+<span class="doccomment">/// Indicates a format which contains characters from Unicode</span>
+<span class="doccomment">/// (all of it, or some proper subset).</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">trait</span> <span class="ident">CharFormat</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>: <span class="ident">Format</span> {
+    <span class="doccomment">/// Iterator for characters and their byte indices.</span>
+    <span class="kw">type</span> <span class="ident">Iter</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span>(<span class="ident">usize</span>, <span class="ident">char</span>)<span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Iterate over the characters of the string and their byte</span>
-    <span class='doccomment'>/// indices.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// You may assume the buffer is *already validated* for `Format`.</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>char_indices</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>Iter</span>;
+    <span class="doccomment">/// Iterate over the characters of the string and their byte</span>
+    <span class="doccomment">/// indices.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// You may assume the buffer is *already validated* for `Format`.</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">char_indices</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Iter</span>;
 
-    <span class='doccomment'>/// Encode the character as bytes and pass them to a continuation.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Returns `Err(())` iff the character cannot be represented.</span>
-    <span class='kw'>fn</span> <span class='ident'>encode_char</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>ch</span>: <span class='ident'>char</span>, <span class='ident'>cont</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), ()<span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]);
+    <span class="doccomment">/// Encode the character as bytes and pass them to a continuation.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Returns `Err(())` iff the character cannot be represented.</span>
+    <span class="kw">fn</span> <span class="ident">encode_char</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">ch</span>: <span class="ident">char</span>, <span class="ident">cont</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]);
 }
 
-<span class='doccomment'>/// Indicates a Rust slice type that is represented in memory as bytes.</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>trait</span> <span class='ident'>Slice</span> {
-    <span class='doccomment'>/// Access the raw bytes of the slice.</span>
-    <span class='kw'>fn</span> <span class='ident'>as_bytes</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>];
+<span class="doccomment">/// Indicates a Rust slice type that is represented in memory as bytes.</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">trait</span> <span class="ident">Slice</span> {
+    <span class="doccomment">/// Access the raw bytes of the slice.</span>
+    <span class="kw">fn</span> <span class="ident">as_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>];
 
-    <span class='doccomment'>/// Convert a byte slice to this kind of slice.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// You may assume the buffer is *already validated*</span>
-    <span class='doccomment'>/// for `Format`.</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_bytes</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='self'>Self</span>;
+    <span class="doccomment">/// Convert a byte slice to this kind of slice.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// You may assume the buffer is *already validated*</span>
+    <span class="doccomment">/// for `Format`.</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_bytes</span>(<span class="ident">x</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="self">Self</span>;
 
-    <span class='doccomment'>/// Convert a byte slice to this kind of slice.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// You may assume the buffer is *already validated*</span>
-    <span class='doccomment'>/// for `Format`.</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_mut_bytes</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>Self</span>;
+    <span class="doccomment">/// Convert a byte slice to this kind of slice.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// You may assume the buffer is *already validated*</span>
+    <span class="doccomment">/// for `Format`.</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_mut_bytes</span>(<span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>;
 }
 
-<span class='doccomment'>/// Marker type for uninterpreted bytes.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Validation will never fail for this format.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>Default</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Bytes</span>;
+<span class="doccomment">/// Marker type for uninterpreted bytes.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Validation will never fail for this format.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Bytes</span>;
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Format</span> <span class='kw'>for</span> <span class='ident'>Bytes</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate</span>(_: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='boolvalue'>true</span>
-    }
-}
-
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>SliceFormat</span> <span class='kw'>for</span> <span class='ident'>Bytes</span> {
-    <span class='kw'>type</span> <span class='ident'>Slice</span> <span class='op'>=</span> [<span class='ident'>u8</span>];
-}
-
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Slice</span> <span class='kw'>for</span> [<span class='ident'>u8</span>] {
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>as_bytes</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] {
-        <span class='self'>self</span>
-    }
-
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_bytes</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] {
-        <span class='ident'>x</span>
-    }
-
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_mut_bytes</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>] {
-        <span class='ident'>x</span>
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Format</span> <span class="kw">for</span> <span class="ident">Bytes</span> {
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">validate</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="bool-val">true</span>
     }
 }
 
-<span class='doccomment'>/// Marker type for ASCII text.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>Default</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ASCII</span>;
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">SliceFormat</span> <span class="kw">for</span> <span class="ident">Bytes</span> {
+    <span class="kw">type</span> <span class="ident">Slice</span> <span class="op">=</span> [<span class="ident">u8</span>];
+}
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Format</span> <span class='kw'>for</span> <span class='ident'>ASCII</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='ident'>buf</span>.<span class='ident'>iter</span>().<span class='ident'>all</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>n</span><span class='op'>|</span> <span class='ident'>n</span> <span class='op'>&lt;=</span> <span class='number'>127</span>)
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Slice</span> <span class="kw">for</span> [<span class="ident">u8</span>] {
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">as_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
+        <span class="self">self</span>
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate_prefix</span>(_: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='boolvalue'>true</span>
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_bytes</span>(<span class="ident">x</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
+        <span class="ident">x</span>
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate_suffix</span>(_: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='boolvalue'>true</span>
-    }
-
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate_subseq</span>(_: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='boolvalue'>true</span>
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_mut_bytes</span>(<span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>] {
+        <span class="ident">x</span>
     }
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>SubsetOf</span><span class='op'>&lt;</span><span class='ident'>UTF8</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>ASCII</span> { }
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>SubsetOf</span><span class='op'>&lt;</span><span class='ident'>Latin1</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>ASCII</span> { }
+<span class="doccomment">/// Marker type for ASCII text.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ASCII</span>;
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>CharFormat</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>ASCII</span> {
-    <span class='kw'>type</span> <span class='ident'>Iter</span> <span class='op'>=</span> <span class='ident'>imp</span>::<span class='ident'>SingleByteCharIndices</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>;
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>char_indices</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>imp</span>::<span class='ident'>SingleByteCharIndices</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-        <span class='ident'>imp</span>::<span class='ident'>SingleByteCharIndices</span>::<span class='ident'>new</span>(<span class='ident'>buf</span>)
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Format</span> <span class="kw">for</span> <span class="ident">ASCII</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">validate</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="ident">buf</span>.<span class="ident">iter</span>().<span class="ident">all</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">n</span><span class="op">|</span> <span class="ident">n</span> <span class="op">&lt;=</span> <span class="number">127</span>)
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>encode_char</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>ch</span>: <span class='ident'>char</span>, <span class='ident'>cont</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), ()<span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>])
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">validate_prefix</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="bool-val">true</span>
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">validate_suffix</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="bool-val">true</span>
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">validate_subseq</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="bool-val">true</span>
+    }
+}
+
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">SubsetOf</span><span class="op">&lt;</span><span class="ident">UTF8</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ASCII</span> { }
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">SubsetOf</span><span class="op">&lt;</span><span class="ident">Latin1</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ASCII</span> { }
+
+<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">CharFormat</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ASCII</span> {
+    <span class="kw">type</span> <span class="ident">Iter</span> <span class="op">=</span> <span class="ident">imp</span>::<span class="ident">SingleByteCharIndices</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>;
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">char_indices</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">imp</span>::<span class="ident">SingleByteCharIndices</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">imp</span>::<span class="ident">SingleByteCharIndices</span>::<span class="ident">new</span>(<span class="ident">buf</span>)
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">encode_char</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">ch</span>: <span class="ident">char</span>, <span class="ident">cont</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>])
     {
-        <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='ident'>ch</span> <span class='kw'>as</span> <span class='ident'>u32</span>;
-        <span class='kw'>if</span> <span class='ident'>n</span> <span class='op'>&gt;</span> <span class='number'>0x7F</span> { <span class='kw'>return</span> <span class='prelude-val'>Err</span>(()); }
-        <span class='ident'>cont</span>(<span class='kw-2'>&amp;</span>[<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>u8</span>]);
-        <span class='prelude-val'>Ok</span>(())
+        <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="ident">ch</span> <span class="kw">as</span> <span class="ident">u32</span>;
+        <span class="kw">if</span> <span class="ident">n</span> <span class="op">&gt;</span> <span class="number">0x7F</span> { <span class="kw">return</span> <span class="prelude-val">Err</span>(()); }
+        <span class="ident">cont</span>(<span class="kw-2">&amp;</span>[<span class="ident">n</span> <span class="kw">as</span> <span class="ident">u8</span>]);
+        <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class='doccomment'>/// Marker type for UTF-8 text.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>Default</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>UTF8</span>;
+<span class="doccomment">/// Marker type for UTF-8 text.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UTF8</span>;
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Format</span> <span class='kw'>for</span> <span class='ident'>UTF8</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>buf</span>).<span class='ident'>is_ok</span>()
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Format</span> <span class="kw">for</span> <span class="ident">UTF8</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">validate</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="ident">buf</span>).<span class="ident">is_ok</span>()
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate_prefix</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>if</span> <span class='ident'>buf</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span> {
-            <span class='kw'>return</span> <span class='boolvalue'>true</span>;
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">validate_prefix</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">if</span> <span class="ident">buf</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> {
+            <span class="kw">return</span> <span class="bool-val">true</span>;
         }
-        <span class='kw'>match</span> <span class='ident'>futf</span>::<span class='ident'>classify</span>(<span class='ident'>buf</span>, <span class='ident'>buf</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='number'>1</span>) {
-            <span class='prelude-val'>Some</span>(<span class='ident'>Codepoint</span> { <span class='ident'>meaning</span>: <span class='ident'>Meaning</span>::<span class='ident'>Whole</span>(_), .. }) <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
-            _ <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
-        }
-    }
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate_suffix</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>if</span> <span class='ident'>buf</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span> {
-            <span class='kw'>return</span> <span class='boolvalue'>true</span>;
-        }
-        <span class='kw'>match</span> <span class='ident'>futf</span>::<span class='ident'>classify</span>(<span class='ident'>buf</span>, <span class='number'>0</span>) {
-            <span class='prelude-val'>Some</span>(<span class='ident'>Codepoint</span> { <span class='ident'>meaning</span>: <span class='ident'>Meaning</span>::<span class='ident'>Whole</span>(_), .. }) <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
-            _ <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
+        <span class="kw">match</span> <span class="ident">futf</span>::<span class="ident">classify</span>(<span class="ident">buf</span>, <span class="ident">buf</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>) {
+            <span class="prelude-val">Some</span>(<span class="ident">Codepoint</span> { <span class="ident">meaning</span>: <span class="ident">Meaning</span>::<span class="ident">Whole</span>(<span class="kw">_</span>), .. }) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate_subseq</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='op'>&lt;</span><span class='self'>Self</span> <span class='kw'>as</span> <span class='ident'>Format</span><span class='op'>&gt;</span>::<span class='ident'>validate_prefix</span>(<span class='ident'>buf</span>)
-            <span class='op'>&amp;&amp;</span> <span class='op'>&lt;</span><span class='self'>Self</span> <span class='kw'>as</span> <span class='ident'>Format</span><span class='op'>&gt;</span>::<span class='ident'>validate_suffix</span>(<span class='ident'>buf</span>)
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">validate_suffix</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">if</span> <span class="ident">buf</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> {
+            <span class="kw">return</span> <span class="bool-val">true</span>;
+        }
+        <span class="kw">match</span> <span class="ident">futf</span>::<span class="ident">classify</span>(<span class="ident">buf</span>, <span class="number">0</span>) {
+            <span class="prelude-val">Some</span>(<span class="ident">Codepoint</span> { <span class="ident">meaning</span>: <span class="ident">Meaning</span>::<span class="ident">Whole</span>(<span class="kw">_</span>), .. }) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">validate_subseq</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Format</span><span class="op">&gt;</span>::<span class="ident">validate_prefix</span>(<span class="ident">buf</span>)
+            <span class="op">&amp;&amp;</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Format</span><span class="op">&gt;</span>::<span class="ident">validate_suffix</span>(<span class="ident">buf</span>)
     }
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>SubsetOf</span><span class='op'>&lt;</span><span class='ident'>WTF8</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>UTF8</span> { }
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">SubsetOf</span><span class="op">&lt;</span><span class="ident">WTF8</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">UTF8</span> { }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>SliceFormat</span> <span class='kw'>for</span> <span class='ident'>UTF8</span> {
-    <span class='kw'>type</span> <span class='ident'>Slice</span> <span class='op'>=</span> <span class='ident'>str</span>;
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">SliceFormat</span> <span class="kw">for</span> <span class="ident">UTF8</span> {
+    <span class="kw">type</span> <span class="ident">Slice</span> <span class="op">=</span> <span class="ident">str</span>;
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Slice</span> <span class='kw'>for</span> <span class='ident'>str</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>as_bytes</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] {
-        <span class='ident'>str</span>::<span class='ident'>as_bytes</span>(<span class='self'>self</span>)
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Slice</span> <span class="kw">for</span> <span class="ident">str</span> {
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">as_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
+        <span class="ident">str</span>::<span class="ident">as_bytes</span>(<span class="self">self</span>)
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_bytes</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='ident'>str</span>::<span class='ident'>from_utf8_unchecked</span>(<span class='ident'>x</span>)
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_bytes</span>(<span class="ident">x</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="ident">str</span>::<span class="ident">from_utf8_unchecked</span>(<span class="ident">x</span>)
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_mut_bytes</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>str</span> {
-        <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='ident'>x</span>)
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_mut_bytes</span>(<span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">str</span> {
+        <span class="ident">mem</span>::<span class="ident">transmute</span>(<span class="ident">x</span>)
     }
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>CharFormat</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>UTF8</span> {
-    <span class='kw'>type</span> <span class='ident'>Iter</span> <span class='op'>=</span> <span class='ident'>str</span>::<span class='ident'>CharIndices</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>;
+<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">CharFormat</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">UTF8</span> {
+    <span class="kw">type</span> <span class="ident">Iter</span> <span class="op">=</span> <span class="ident">str</span>::<span class="ident">CharIndices</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>;
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>char_indices</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>str</span>::<span class='ident'>CharIndices</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-        <span class='ident'>str</span>::<span class='ident'>from_utf8_unchecked</span>(<span class='ident'>buf</span>).<span class='ident'>char_indices</span>()
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">char_indices</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">str</span>::<span class="ident">CharIndices</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">str</span>::<span class="ident">from_utf8_unchecked</span>(<span class="ident">buf</span>).<span class="ident">char_indices</span>()
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>encode_char</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>ch</span>: <span class='ident'>char</span>, <span class='ident'>cont</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), ()<span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>])
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">encode_char</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">ch</span>: <span class="ident">char</span>, <span class="ident">cont</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>])
     {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>utf_8</span>: [<span class='ident'>u8</span>; <span class='number'>4</span>] <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>();
-            <span class='kw'>let</span> <span class='ident'>bytes_written</span> <span class='op'>=</span> {
-                <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buffer</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>utf_8</span>[..];
-                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>buffer</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>ch</span>).<span class='ident'>ok</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Tendril: internal error&quot;</span>);
-                <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>buffer</span>.<span class='ident'>len</span>() <span class='op'>&lt;=</span> <span class='number'>4</span>);
-                <span class='number'>4</span> <span class='op'>-</span> <span class='ident'>buffer</span>.<span class='ident'>len</span>()
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">utf_8</span>: [<span class="ident">u8</span>; <span class="number">4</span>] <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">uninitialized</span>();
+            <span class="kw">let</span> <span class="ident">bytes_written</span> <span class="op">=</span> {
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">utf_8</span>[..];
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">buffer</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">ch</span>).<span class="ident">ok</span>().<span class="ident">expect</span>(<span class="string">&quot;Tendril: internal error&quot;</span>);
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">buffer</span>.<span class="ident">len</span>() <span class="op">&lt;=</span> <span class="number">4</span>);
+                <span class="number">4</span> <span class="op">-</span> <span class="ident">buffer</span>.<span class="ident">len</span>()
             };
-            <span class='ident'>cont</span>(<span class='ident'>unsafe_slice</span>(<span class='kw-2'>&amp;</span><span class='ident'>utf_8</span>, <span class='number'>0</span>, <span class='ident'>bytes_written</span>));
-            <span class='prelude-val'>Ok</span>(())
+            <span class="ident">cont</span>(<span class="ident">unsafe_slice</span>(<span class="kw-2">&amp;</span><span class="ident">utf_8</span>, <span class="number">0</span>, <span class="ident">bytes_written</span>));
+            <span class="prelude-val">Ok</span>(())
         }
     }
 }
 
-<span class='doccomment'>/// Marker type for WTF-8 text.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// See the [WTF-8 spec](http://simonsapin.github.io/wtf-8/).</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>Default</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>WTF8</span>;
+<span class="doccomment">/// Marker type for WTF-8 text.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// See the [WTF-8 spec](http://simonsapin.github.io/wtf-8/).</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WTF8</span>;
 
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>fn</span> <span class='ident'>wtf8_meaningful</span>(<span class='ident'>m</span>: <span class='ident'>Meaning</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-    <span class='kw'>match</span> <span class='ident'>m</span> {
-        <span class='ident'>Meaning</span>::<span class='ident'>Whole</span>(_) <span class='op'>|</span> <span class='ident'>Meaning</span>::<span class='ident'>LeadSurrogate</span>(_)
-            <span class='op'>|</span> <span class='ident'>Meaning</span>::<span class='ident'>TrailSurrogate</span>(_) <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
-        _ <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">fn</span> <span class="ident">wtf8_meaningful</span>(<span class="ident">m</span>: <span class="ident">Meaning</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">match</span> <span class="ident">m</span> {
+        <span class="ident">Meaning</span>::<span class="ident">Whole</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Meaning</span>::<span class="ident">LeadSurrogate</span>(<span class="kw">_</span>)
+            <span class="op">|</span> <span class="ident">Meaning</span>::<span class="ident">TrailSurrogate</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
     }
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Format</span> <span class='kw'>for</span> <span class='ident'>WTF8</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0</span>;
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>prev_lead</span> <span class='op'>=</span> <span class='boolvalue'>false</span>;
-        <span class='kw'>while</span> <span class='ident'>i</span> <span class='op'>&lt;</span> <span class='ident'>buf</span>.<span class='ident'>len</span>() {
-            <span class='kw'>let</span> <span class='ident'>codept</span> <span class='op'>=</span> <span class='macro'>unwrap_or_return</span><span class='macro'>!</span>(<span class='ident'>futf</span>::<span class='ident'>classify</span>(<span class='ident'>buf</span>, <span class='ident'>i</span>), <span class='boolvalue'>false</span>);
-            <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>wtf8_meaningful</span>(<span class='ident'>codept</span>.<span class='ident'>meaning</span>) {
-                <span class='kw'>return</span> <span class='boolvalue'>false</span>;
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Format</span> <span class="kw">for</span> <span class="ident">WTF8</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">validate</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prev_lead</span> <span class="op">=</span> <span class="bool-val">false</span>;
+        <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">buf</span>.<span class="ident">len</span>() {
+            <span class="kw">let</span> <span class="ident">codept</span> <span class="op">=</span> <span class="macro">unwrap_or_return</span><span class="macro">!</span>(<span class="ident">futf</span>::<span class="ident">classify</span>(<span class="ident">buf</span>, <span class="ident">i</span>), <span class="bool-val">false</span>);
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">wtf8_meaningful</span>(<span class="ident">codept</span>.<span class="ident">meaning</span>) {
+                <span class="kw">return</span> <span class="bool-val">false</span>;
             }
-            <span class='ident'>i</span> <span class='op'>+=</span> <span class='ident'>codept</span>.<span class='ident'>bytes</span>.<span class='ident'>len</span>();
-            <span class='ident'>prev_lead</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>codept</span>.<span class='ident'>meaning</span> {
-                <span class='ident'>Meaning</span>::<span class='ident'>TrailSurrogate</span>(_) <span class='kw'>if</span> <span class='ident'>prev_lead</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='boolvalue'>false</span>,
-                <span class='ident'>Meaning</span>::<span class='ident'>LeadSurrogate</span>(_) <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
-                _ <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
+            <span class="ident">i</span> <span class="op">+=</span> <span class="ident">codept</span>.<span class="ident">bytes</span>.<span class="ident">len</span>();
+            <span class="ident">prev_lead</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">codept</span>.<span class="ident">meaning</span> {
+                <span class="ident">Meaning</span>::<span class="ident">TrailSurrogate</span>(<span class="kw">_</span>) <span class="kw">if</span> <span class="ident">prev_lead</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="bool-val">false</span>,
+                <span class="ident">Meaning</span>::<span class="ident">LeadSurrogate</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
             };
         }
 
-        <span class='boolvalue'>true</span>
+        <span class="bool-val">true</span>
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate_prefix</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>if</span> <span class='ident'>buf</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span> {
-            <span class='kw'>return</span> <span class='boolvalue'>true</span>;
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">validate_prefix</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">if</span> <span class="ident">buf</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> {
+            <span class="kw">return</span> <span class="bool-val">true</span>;
         }
-        <span class='kw'>match</span> <span class='ident'>futf</span>::<span class='ident'>classify</span>(<span class='ident'>buf</span>, <span class='ident'>buf</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='number'>1</span>) {
-            <span class='prelude-val'>Some</span>(<span class='ident'>c</span>) <span class='op'>=&gt;</span> <span class='ident'>wtf8_meaningful</span>(<span class='ident'>c</span>.<span class='ident'>meaning</span>),
-            _ <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
-        }
-    }
-
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate_suffix</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>if</span> <span class='ident'>buf</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span> {
-            <span class='kw'>return</span> <span class='boolvalue'>true</span>;
-        }
-        <span class='kw'>match</span> <span class='ident'>futf</span>::<span class='ident'>classify</span>(<span class='ident'>buf</span>, <span class='number'>0</span>) {
-            <span class='prelude-val'>Some</span>(<span class='ident'>c</span>) <span class='op'>=&gt;</span> <span class='ident'>wtf8_meaningful</span>(<span class='ident'>c</span>.<span class='ident'>meaning</span>),
-            _ <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
+        <span class="kw">match</span> <span class="ident">futf</span>::<span class="ident">classify</span>(<span class="ident">buf</span>, <span class="ident">buf</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>) {
+            <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> <span class="ident">wtf8_meaningful</span>(<span class="ident">c</span>.<span class="ident">meaning</span>),
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate_subseq</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='op'>&lt;</span><span class='self'>Self</span> <span class='kw'>as</span> <span class='ident'>Format</span><span class='op'>&gt;</span>::<span class='ident'>validate_prefix</span>(<span class='ident'>buf</span>)
-            <span class='op'>&amp;&amp;</span> <span class='op'>&lt;</span><span class='self'>Self</span> <span class='kw'>as</span> <span class='ident'>Format</span><span class='op'>&gt;</span>::<span class='ident'>validate_suffix</span>(<span class='ident'>buf</span>)
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">validate_suffix</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">if</span> <span class="ident">buf</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> {
+            <span class="kw">return</span> <span class="bool-val">true</span>;
+        }
+        <span class="kw">match</span> <span class="ident">futf</span>::<span class="ident">classify</span>(<span class="ident">buf</span>, <span class="number">0</span>) {
+            <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> <span class="ident">wtf8_meaningful</span>(<span class="ident">c</span>.<span class="ident">meaning</span>),
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+        }
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>fixup</span>(<span class='ident'>lhs</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>], <span class='ident'>rhs</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>imp</span>::<span class='ident'>Fixup</span> {
-        <span class='kw'>const</span> <span class='ident'>ERR</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;WTF8: internal error&quot;</span>;
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">validate_subseq</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Format</span><span class="op">&gt;</span>::<span class="ident">validate_prefix</span>(<span class="ident">buf</span>)
+            <span class="op">&amp;&amp;</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Format</span><span class="op">&gt;</span>::<span class="ident">validate_suffix</span>(<span class="ident">buf</span>)
+    }
 
-        <span class='kw'>if</span> <span class='ident'>lhs</span>.<span class='ident'>len</span>() <span class='op'>&gt;=</span> <span class='number'>3</span> <span class='op'>&amp;&amp;</span> <span class='ident'>rhs</span>.<span class='ident'>len</span>() <span class='op'>&gt;=</span> <span class='number'>3</span> {
-            <span class='kw'>if</span> <span class='kw'>let</span> (<span class='prelude-val'>Some</span>(<span class='ident'>Codepoint</span> { <span class='ident'>meaning</span>: <span class='ident'>Meaning</span>::<span class='ident'>LeadSurrogate</span>(<span class='ident'>hi</span>), .. }),
-                    <span class='prelude-val'>Some</span>(<span class='ident'>Codepoint</span> { <span class='ident'>meaning</span>: <span class='ident'>Meaning</span>::<span class='ident'>TrailSurrogate</span>(<span class='ident'>lo</span>), .. }))
-                <span class='op'>=</span> (<span class='ident'>futf</span>::<span class='ident'>classify</span>(<span class='ident'>lhs</span>, <span class='ident'>lhs</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='number'>1</span>), <span class='ident'>futf</span>::<span class='ident'>classify</span>(<span class='ident'>rhs</span>, <span class='number'>0</span>))
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">fixup</span>(<span class="ident">lhs</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">rhs</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">imp</span>::<span class="ident">Fixup</span> {
+        <span class="kw">const</span> <span class="ident">ERR</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;WTF8: internal error&quot;</span>;
+
+        <span class="kw">if</span> <span class="ident">lhs</span>.<span class="ident">len</span>() <span class="op">&gt;=</span> <span class="number">3</span> <span class="op">&amp;&amp;</span> <span class="ident">rhs</span>.<span class="ident">len</span>() <span class="op">&gt;=</span> <span class="number">3</span> {
+            <span class="kw">if</span> <span class="kw">let</span> (<span class="prelude-val">Some</span>(<span class="ident">Codepoint</span> { <span class="ident">meaning</span>: <span class="ident">Meaning</span>::<span class="ident">LeadSurrogate</span>(<span class="ident">hi</span>), .. }),
+                    <span class="prelude-val">Some</span>(<span class="ident">Codepoint</span> { <span class="ident">meaning</span>: <span class="ident">Meaning</span>::<span class="ident">TrailSurrogate</span>(<span class="ident">lo</span>), .. }))
+                <span class="op">=</span> (<span class="ident">futf</span>::<span class="ident">classify</span>(<span class="ident">lhs</span>, <span class="ident">lhs</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>), <span class="ident">futf</span>::<span class="ident">classify</span>(<span class="ident">rhs</span>, <span class="number">0</span>))
             {
-                <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>fixup</span> <span class='op'>=</span> <span class='ident'>imp</span>::<span class='ident'>Fixup</span> {
-                    <span class='ident'>drop_left</span>: <span class='number'>3</span>,
-                    <span class='ident'>drop_right</span>: <span class='number'>3</span>,
-                    <span class='ident'>insert_len</span>: <span class='number'>0</span>,
-                    <span class='ident'>insert_bytes</span>: <span class='ident'>mem</span>::<span class='ident'>uninitialized</span>(),
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fixup</span> <span class="op">=</span> <span class="ident">imp</span>::<span class="ident">Fixup</span> {
+                    <span class="ident">drop_left</span>: <span class="number">3</span>,
+                    <span class="ident">drop_right</span>: <span class="number">3</span>,
+                    <span class="ident">insert_len</span>: <span class="number">0</span>,
+                    <span class="ident">insert_bytes</span>: <span class="ident">mem</span>::<span class="ident">uninitialized</span>(),
                 };
 
-                <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='number'>0x10000</span> <span class='op'>+</span> ((<span class='ident'>hi</span> <span class='kw'>as</span> <span class='ident'>u32</span>) <span class='op'>&lt;&lt;</span> <span class='number'>10</span>) <span class='op'>+</span> (<span class='ident'>lo</span> <span class='kw'>as</span> <span class='ident'>u32</span>);
+                <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="number">0x10000</span> <span class="op">+</span> ((<span class="ident">hi</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;&lt;</span> <span class="number">10</span>) <span class="op">+</span> (<span class="ident">lo</span> <span class="kw">as</span> <span class="ident">u32</span>);
 
-                <span class='ident'>fixup</span>.<span class='ident'>insert_len</span> <span class='op'>=</span> {
-                    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buffer</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fixup</span>.<span class='ident'>insert_bytes</span>[..];
-                    <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>buffer</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>char</span>::<span class='ident'>from_u32</span>(<span class='ident'>n</span>).<span class='ident'>expect</span>(<span class='ident'>ERR</span>)).<span class='ident'>ok</span>().<span class='ident'>expect</span>(<span class='ident'>ERR</span>);
-                    <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>buffer</span>.<span class='ident'>len</span>() <span class='op'>&lt;=</span> <span class='number'>4</span>);
-                    <span class='number'>4</span> <span class='op'>-</span> <span class='ident'>buffer</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u32</span>
+                <span class="ident">fixup</span>.<span class="ident">insert_len</span> <span class="op">=</span> {
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fixup</span>.<span class="ident">insert_bytes</span>[..];
+                    <span class="macro">write</span><span class="macro">!</span>(<span class="ident">buffer</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">char</span>::<span class="ident">from_u32</span>(<span class="ident">n</span>).<span class="ident">expect</span>(<span class="ident">ERR</span>)).<span class="ident">ok</span>().<span class="ident">expect</span>(<span class="ident">ERR</span>);
+                    <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">buffer</span>.<span class="ident">len</span>() <span class="op">&lt;=</span> <span class="number">4</span>);
+                    <span class="number">4</span> <span class="op">-</span> <span class="ident">buffer</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>
                 };
 
-                <span class='kw'>return</span> <span class='ident'>fixup</span>;
+                <span class="kw">return</span> <span class="ident">fixup</span>;
             }
         }
 
-        <span class='ident'>Default</span>::<span class='ident'>default</span>()
+        <span class="ident">Default</span>::<span class="ident">default</span>()
     }
 }
 
-<span class='doccomment'>/// Marker type for the single-byte encoding of the first 256 Unicode codepoints.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This is IANA&#39;s &quot;ISO-8859-1&quot;. It&#39;s ISO&#39;s &quot;ISO 8859-1&quot; with the addition of the</span>
-<span class='doccomment'>/// C0 and C1 control characters from ECMA-48 / ISO 6429.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Not to be confused with WHATWG&#39;s &quot;latin1&quot; or &quot;iso8859-1&quot; labels (or the</span>
-<span class='doccomment'>/// many other aliases), which actually stand for Windows-1252.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>Default</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Latin1</span>;
+<span class="doccomment">/// Marker type for the single-byte encoding of the first 256 Unicode codepoints.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This is IANA&#39;s &quot;ISO-8859-1&quot;. It&#39;s ISO&#39;s &quot;ISO 8859-1&quot; with the addition of the</span>
+<span class="doccomment">/// C0 and C1 control characters from ECMA-48 / ISO 6429.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Not to be confused with WHATWG&#39;s &quot;latin1&quot; or &quot;iso8859-1&quot; labels (or the</span>
+<span class="doccomment">/// many other aliases), which actually stand for Windows-1252.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Latin1</span>;
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span> <span class='ident'>Format</span> <span class='kw'>for</span> <span class='ident'>Latin1</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate</span>(_: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='boolvalue'>true</span>
+<span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">Format</span> <span class="kw">for</span> <span class="ident">Latin1</span> {
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">validate</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="bool-val">true</span>
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate_prefix</span>(_: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='boolvalue'>true</span>
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">validate_prefix</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="bool-val">true</span>
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate_suffix</span>(_: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='boolvalue'>true</span>
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">validate_suffix</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="bool-val">true</span>
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>validate_subseq</span>(_: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='boolvalue'>true</span>
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">validate_subseq</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="bool-val">true</span>
     }
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>CharFormat</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Latin1</span> {
-    <span class='kw'>type</span> <span class='ident'>Iter</span> <span class='op'>=</span> <span class='ident'>imp</span>::<span class='ident'>SingleByteCharIndices</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>;
+<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">CharFormat</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Latin1</span> {
+    <span class="kw">type</span> <span class="ident">Iter</span> <span class="op">=</span> <span class="ident">imp</span>::<span class="ident">SingleByteCharIndices</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>;
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>char_indices</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>imp</span>::<span class='ident'>SingleByteCharIndices</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-        <span class='ident'>imp</span>::<span class='ident'>SingleByteCharIndices</span>::<span class='ident'>new</span>(<span class='ident'>buf</span>)
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">char_indices</span>(<span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">imp</span>::<span class="ident">SingleByteCharIndices</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">imp</span>::<span class="ident">SingleByteCharIndices</span>::<span class="ident">new</span>(<span class="ident">buf</span>)
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>encode_char</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>ch</span>: <span class='ident'>char</span>, <span class='ident'>cont</span>: <span class='ident'>F</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), ()<span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>])
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">encode_char</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">ch</span>: <span class="ident">char</span>, <span class="ident">cont</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>])
     {
-        <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='ident'>ch</span> <span class='kw'>as</span> <span class='ident'>u32</span>;
-        <span class='kw'>if</span> <span class='ident'>n</span> <span class='op'>&gt;</span> <span class='number'>0xFF</span> { <span class='kw'>return</span> <span class='prelude-val'>Err</span>(()); }
-        <span class='ident'>cont</span>(<span class='kw-2'>&amp;</span>[<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>u8</span>]);
-        <span class='prelude-val'>Ok</span>(())
+        <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="ident">ch</span> <span class="kw">as</span> <span class="ident">u32</span>;
+        <span class="kw">if</span> <span class="ident">n</span> <span class="op">&gt;</span> <span class="number">0xFF</span> { <span class="kw">return</span> <span class="prelude-val">Err</span>(()); }
+        <span class="ident">cont</span>(<span class="kw-2">&amp;</span>[<span class="ident">n</span> <span class="kw">as</span> <span class="ident">u8</span>]);
+        <span class="prelude-val">Ok</span>(())
     }
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt>?</dt>
-                    <dd>Show this help dialog</dd>
-                    <dt>S</dt>
-                    <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
-                    <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
-                    <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
-                    <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "tendril";
-        window.playgroundUrl = "";
-    </script>
-    <script src="../../jquery.js"></script>
-    <script src="../../main.js"></script>
-    
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "tendril";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

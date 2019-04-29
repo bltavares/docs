@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Attributes","Convenience wrapper around a hashmap that adds method for attributes in the null namespace."]]});

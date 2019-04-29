@@ -1,48 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/html5ever-0.5.4/src/tree_builder/data.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>data.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
-    
-
-    
-    
-</head>
-<body class="rustdoc">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        
-        
-    </nav>
-
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/html5ever-0.22.8/src/tree_builder/data.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>data.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../html5ever/index.html'><img src='../../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -201,228 +157,189 @@
 <span id="157">157</span>
 <span id="158">158</span>
 <span id="159">159</span>
-</pre><pre class='rust '>
-<span class='comment'>// Copyright 2014 The html5ever Project Developers. See the</span>
-<span class='comment'>// COPYRIGHT file at the top-level directory of this distribution.</span>
-<span class='comment'>//</span>
-<span class='comment'>// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or</span>
-<span class='comment'>// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license</span>
-<span class='comment'>// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your</span>
-<span class='comment'>// option. This file may not be copied, modified, or distributed</span>
-<span class='comment'>// except according to those terms.</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+</pre><div class="example-wrap"><pre class="rust ">
+<span class="comment">// Copyright 2014-2017 The html5ever Project Developers. See the</span>
+<span class="comment">// COPYRIGHT file at the top-level directory of this distribution.</span>
+<span class="comment">//</span>
+<span class="comment">// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or</span>
+<span class="comment">// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license</span>
+<span class="comment">// &lt;LICENSE-MIT or http://opensource.org/licenses/MIT&gt;, at your</span>
+<span class="comment">// option. This file may not be copied, modified, or distributed</span>
+<span class="comment">// except according to those terms.</span>
 
-<span class='kw'>use</span> <span class='ident'>tokenizer</span>::<span class='ident'>Doctype</span>;
-<span class='kw'>use</span> <span class='ident'>tree_builder</span>::<span class='ident'>interface</span>::{<span class='ident'>QuirksMode</span>, <span class='ident'>Quirks</span>, <span class='ident'>LimitedQuirks</span>, <span class='ident'>NoQuirks</span>};
+<span class="kw">use</span> <span class="ident">interface</span>::{<span class="ident">LimitedQuirks</span>, <span class="ident">NoQuirks</span>, <span class="ident">Quirks</span>, <span class="ident">QuirksMode</span>};
+<span class="kw">use</span> <span class="ident">tendril</span>::<span class="ident">StrTendril</span>;
+<span class="kw">use</span> <span class="ident">tokenizer</span>::<span class="ident">Doctype</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ascii</span>::<span class='ident'>AsciiExt</span>;
-<span class='kw'>use</span> <span class='ident'>tendril</span>::<span class='ident'>StrTendril</span>;
-
-<span class='comment'>// These should all be lowercase, for ASCII-case-insensitive matching.</span>
-<span class='kw'>static</span> <span class='ident'>QUIRKY_PUBLIC_PREFIXES</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> [<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>] <span class='op'>=</span> <span class='kw-2'>&amp;</span>[
-    <span class='string'>&quot;-//advasoft ltd//dtd html 3.0 aswedit + extensions//&quot;</span>,
-    <span class='string'>&quot;-//as//dtd html 3.0 aswedit + extensions//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html 2.0 level 1//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html 2.0 level 2//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html 2.0 strict level 1//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html 2.0 strict level 2//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html 2.0 strict//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html 2.0//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html 2.1e//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html 3.0//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html 3.2 final//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html 3.2//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html 3//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html level 0//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html level 1//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html level 2//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html level 3//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html strict level 0//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html strict level 1//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html strict level 2//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html strict level 3//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html strict//&quot;</span>,
-    <span class='string'>&quot;-//ietf//dtd html//&quot;</span>,
-    <span class='string'>&quot;-//metrius//dtd metrius presentational//&quot;</span>,
-    <span class='string'>&quot;-//microsoft//dtd internet explorer 2.0 html strict//&quot;</span>,
-    <span class='string'>&quot;-//microsoft//dtd internet explorer 2.0 html//&quot;</span>,
-    <span class='string'>&quot;-//microsoft//dtd internet explorer 2.0 tables//&quot;</span>,
-    <span class='string'>&quot;-//microsoft//dtd internet explorer 3.0 html strict//&quot;</span>,
-    <span class='string'>&quot;-//microsoft//dtd internet explorer 3.0 html//&quot;</span>,
-    <span class='string'>&quot;-//microsoft//dtd internet explorer 3.0 tables//&quot;</span>,
-    <span class='string'>&quot;-//netscape comm. corp.//dtd html//&quot;</span>,
-    <span class='string'>&quot;-//netscape comm. corp.//dtd strict html//&quot;</span>,
-    <span class='string'>&quot;-//o&#39;reilly and associates//dtd html 2.0//&quot;</span>,
-    <span class='string'>&quot;-//o&#39;reilly and associates//dtd html extended 1.0//&quot;</span>,
-    <span class='string'>&quot;-//o&#39;reilly and associates//dtd html extended relaxed 1.0//&quot;</span>,
-    <span class='string'>&quot;-//softquad software//dtd hotmetal pro 6.0::19990601::extensions to html 4.0//&quot;</span>,
-    <span class='string'>&quot;-//softquad//dtd hotmetal pro 4.0::19971010::extensions to html 4.0//&quot;</span>,
-    <span class='string'>&quot;-//spyglass//dtd html 2.0 extended//&quot;</span>,
-    <span class='string'>&quot;-//sq//dtd html 2.0 hotmetal + extensions//&quot;</span>,
-    <span class='string'>&quot;-//sun microsystems corp.//dtd hotjava html//&quot;</span>,
-    <span class='string'>&quot;-//sun microsystems corp.//dtd hotjava strict html//&quot;</span>,
-    <span class='string'>&quot;-//w3c//dtd html 3 1995-03-24//&quot;</span>,
-    <span class='string'>&quot;-//w3c//dtd html 3.2 draft//&quot;</span>,
-    <span class='string'>&quot;-//w3c//dtd html 3.2 final//&quot;</span>,
-    <span class='string'>&quot;-//w3c//dtd html 3.2//&quot;</span>,
-    <span class='string'>&quot;-//w3c//dtd html 3.2s draft//&quot;</span>,
-    <span class='string'>&quot;-//w3c//dtd html 4.0 frameset//&quot;</span>,
-    <span class='string'>&quot;-//w3c//dtd html 4.0 transitional//&quot;</span>,
-    <span class='string'>&quot;-//w3c//dtd html experimental 19960712//&quot;</span>,
-    <span class='string'>&quot;-//w3c//dtd html experimental 970421//&quot;</span>,
-    <span class='string'>&quot;-//w3c//dtd w3 html//&quot;</span>,
-    <span class='string'>&quot;-//w3o//dtd w3 html 3.0//&quot;</span>,
-    <span class='string'>&quot;-//webtechs//dtd mozilla html 2.0//&quot;</span>,
-    <span class='string'>&quot;-//webtechs//dtd mozilla html//&quot;</span>,
+<span class="comment">// These should all be lowercase, for ASCII-case-insensitive matching.</span>
+<span class="kw">static</span> <span class="ident">QUIRKY_PUBLIC_PREFIXES</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[
+    <span class="string">&quot;-//advasoft ltd//dtd html 3.0 aswedit + extensions//&quot;</span>,
+    <span class="string">&quot;-//as//dtd html 3.0 aswedit + extensions//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html 2.0 level 1//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html 2.0 level 2//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html 2.0 strict level 1//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html 2.0 strict level 2//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html 2.0 strict//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html 2.0//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html 2.1e//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html 3.0//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html 3.2 final//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html 3.2//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html 3//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html level 0//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html level 1//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html level 2//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html level 3//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html strict level 0//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html strict level 1//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html strict level 2//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html strict level 3//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html strict//&quot;</span>,
+    <span class="string">&quot;-//ietf//dtd html//&quot;</span>,
+    <span class="string">&quot;-//metrius//dtd metrius presentational//&quot;</span>,
+    <span class="string">&quot;-//microsoft//dtd internet explorer 2.0 html strict//&quot;</span>,
+    <span class="string">&quot;-//microsoft//dtd internet explorer 2.0 html//&quot;</span>,
+    <span class="string">&quot;-//microsoft//dtd internet explorer 2.0 tables//&quot;</span>,
+    <span class="string">&quot;-//microsoft//dtd internet explorer 3.0 html strict//&quot;</span>,
+    <span class="string">&quot;-//microsoft//dtd internet explorer 3.0 html//&quot;</span>,
+    <span class="string">&quot;-//microsoft//dtd internet explorer 3.0 tables//&quot;</span>,
+    <span class="string">&quot;-//netscape comm. corp.//dtd html//&quot;</span>,
+    <span class="string">&quot;-//netscape comm. corp.//dtd strict html//&quot;</span>,
+    <span class="string">&quot;-//o&#39;reilly and associates//dtd html 2.0//&quot;</span>,
+    <span class="string">&quot;-//o&#39;reilly and associates//dtd html extended 1.0//&quot;</span>,
+    <span class="string">&quot;-//o&#39;reilly and associates//dtd html extended relaxed 1.0//&quot;</span>,
+    <span class="string">&quot;-//softquad software//dtd hotmetal pro 6.0::19990601::extensions to html 4.0//&quot;</span>,
+    <span class="string">&quot;-//softquad//dtd hotmetal pro 4.0::19971010::extensions to html 4.0//&quot;</span>,
+    <span class="string">&quot;-//spyglass//dtd html 2.0 extended//&quot;</span>,
+    <span class="string">&quot;-//sq//dtd html 2.0 hotmetal + extensions//&quot;</span>,
+    <span class="string">&quot;-//sun microsystems corp.//dtd hotjava html//&quot;</span>,
+    <span class="string">&quot;-//sun microsystems corp.//dtd hotjava strict html//&quot;</span>,
+    <span class="string">&quot;-//w3c//dtd html 3 1995-03-24//&quot;</span>,
+    <span class="string">&quot;-//w3c//dtd html 3.2 draft//&quot;</span>,
+    <span class="string">&quot;-//w3c//dtd html 3.2 final//&quot;</span>,
+    <span class="string">&quot;-//w3c//dtd html 3.2//&quot;</span>,
+    <span class="string">&quot;-//w3c//dtd html 3.2s draft//&quot;</span>,
+    <span class="string">&quot;-//w3c//dtd html 4.0 frameset//&quot;</span>,
+    <span class="string">&quot;-//w3c//dtd html 4.0 transitional//&quot;</span>,
+    <span class="string">&quot;-//w3c//dtd html experimental 19960712//&quot;</span>,
+    <span class="string">&quot;-//w3c//dtd html experimental 970421//&quot;</span>,
+    <span class="string">&quot;-//w3c//dtd w3 html//&quot;</span>,
+    <span class="string">&quot;-//w3o//dtd w3 html 3.0//&quot;</span>,
+    <span class="string">&quot;-//webtechs//dtd mozilla html 2.0//&quot;</span>,
+    <span class="string">&quot;-//webtechs//dtd mozilla html//&quot;</span>,
 ];
 
-<span class='kw'>static</span> <span class='ident'>QUIRKY_PUBLIC_MATCHES</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> [<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>] <span class='op'>=</span> <span class='kw-2'>&amp;</span>[
-    <span class='string'>&quot;-//w3o//dtd w3 html strict 3.0//en//&quot;</span>,
-    <span class='string'>&quot;-/w3c/dtd html 4.0 transitional/en&quot;</span>,
-    <span class='string'>&quot;html&quot;</span>,
+<span class="kw">static</span> <span class="ident">QUIRKY_PUBLIC_MATCHES</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[
+    <span class="string">&quot;-//w3o//dtd w3 html strict 3.0//en//&quot;</span>,
+    <span class="string">&quot;-/w3c/dtd html 4.0 transitional/en&quot;</span>,
+    <span class="string">&quot;html&quot;</span>,
 ];
 
-<span class='kw'>static</span> <span class='ident'>QUIRKY_SYSTEM_MATCHES</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> [<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>] <span class='op'>=</span> <span class='kw-2'>&amp;</span>[
-    <span class='string'>&quot;http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd&quot;</span>,
+<span class="kw">static</span> <span class="ident">QUIRKY_SYSTEM_MATCHES</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>] <span class="op">=</span>
+    <span class="kw-2">&amp;</span>[<span class="string">&quot;http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd&quot;</span>];
+
+<span class="kw">static</span> <span class="ident">LIMITED_QUIRKY_PUBLIC_PREFIXES</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[
+    <span class="string">&quot;-//w3c//dtd xhtml 1.0 frameset//&quot;</span>,
+    <span class="string">&quot;-//w3c//dtd xhtml 1.0 transitional//&quot;</span>,
 ];
 
-<span class='kw'>static</span> <span class='ident'>LIMITED_QUIRKY_PUBLIC_PREFIXES</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> [<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>] <span class='op'>=</span> <span class='kw-2'>&amp;</span>[
-    <span class='string'>&quot;-//w3c//dtd xhtml 1.0 frameset//&quot;</span>,
-    <span class='string'>&quot;-//w3c//dtd xhtml 1.0 transitional//&quot;</span>,
+<span class="kw">static</span> <span class="ident">HTML4_PUBLIC_PREFIXES</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[
+    <span class="string">&quot;-//w3c//dtd html 4.01 frameset//&quot;</span>,
+    <span class="string">&quot;-//w3c//dtd html 4.01 transitional//&quot;</span>,
 ];
 
-<span class='kw'>static</span> <span class='ident'>HTML4_PUBLIC_PREFIXES</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> [<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>] <span class='op'>=</span> <span class='kw-2'>&amp;</span>[
-    <span class='string'>&quot;-//w3c//dtd html 4.01 frameset//&quot;</span>,
-    <span class='string'>&quot;-//w3c//dtd html 4.01 transitional//&quot;</span>,
-];
-
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>doctype_error_and_quirks</span>(<span class='ident'>doctype</span>: <span class='kw-2'>&amp;</span><span class='ident'>Doctype</span>, <span class='ident'>iframe_srcdoc</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> (<span class='ident'>bool</span>, <span class='ident'>QuirksMode</span>) {
-    <span class='kw'>fn</span> <span class='ident'>opt_string_as_slice</span><span class='op'>&lt;</span><span class='lifetime'>&#39;t</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;t</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;t</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
-        <span class='ident'>x</span>.<span class='ident'>as_ref</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>y</span><span class='op'>|</span> <span class='kw-2'>&amp;</span><span class='ident'>y</span>[..])
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">doctype_error_and_quirks</span>(<span class="ident">doctype</span>: <span class="kw-2">&amp;</span><span class="ident">Doctype</span>, <span class="ident">iframe_srcdoc</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> (<span class="ident">bool</span>, <span class="ident">QuirksMode</span>) {
+    <span class="kw">fn</span> <span class="ident">opt_string_as_slice</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>(<span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;t</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;t</span> <span class="ident">str</span><span class="op">&gt;</span> {
+        <span class="ident">x</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">y</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">y</span>[..])
     }
 
-    <span class='kw'>fn</span> <span class='ident'>opt_tendril_as_slice</span><span class='op'>&lt;</span><span class='lifetime'>&#39;t</span><span class='op'>&gt;</span>(<span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;t</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>StrTendril</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;t</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>x</span> {
-            <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>t</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>t</span>),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
+    <span class="kw">fn</span> <span class="ident">opt_tendril_as_slice</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>(<span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;t</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StrTendril</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;t</span> <span class="ident">str</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">x</span> {
+            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">t</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">t</span>),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>opt_to_ascii_lower</span>(<span class='ident'>x</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-        <span class='ident'>x</span>.<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>y</span><span class='op'>|</span> <span class='ident'>y</span>.<span class='ident'>to_ascii_lowercase</span>())
+    <span class="kw">fn</span> <span class="ident">opt_to_ascii_lower</span>(<span class="ident">x</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="ident">x</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">y</span><span class="op">|</span> <span class="ident">y</span>.<span class="ident">to_ascii_lowercase</span>())
     }
 
-    <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>opt_tendril_as_slice</span>(<span class='kw-2'>&amp;</span><span class='ident'>doctype</span>.<span class='ident'>name</span>);
-    <span class='kw'>let</span> <span class='ident'>public</span> <span class='op'>=</span> <span class='ident'>opt_tendril_as_slice</span>(<span class='kw-2'>&amp;</span><span class='ident'>doctype</span>.<span class='ident'>public_id</span>);
-    <span class='kw'>let</span> <span class='ident'>system</span> <span class='op'>=</span> <span class='ident'>opt_tendril_as_slice</span>(<span class='kw-2'>&amp;</span><span class='ident'>doctype</span>.<span class='ident'>system_id</span>);
+    <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">opt_tendril_as_slice</span>(<span class="kw-2">&amp;</span><span class="ident">doctype</span>.<span class="ident">name</span>);
+    <span class="kw">let</span> <span class="ident">public</span> <span class="op">=</span> <span class="ident">opt_tendril_as_slice</span>(<span class="kw-2">&amp;</span><span class="ident">doctype</span>.<span class="ident">public_id</span>);
+    <span class="kw">let</span> <span class="ident">system</span> <span class="op">=</span> <span class="ident">opt_tendril_as_slice</span>(<span class="kw-2">&amp;</span><span class="ident">doctype</span>.<span class="ident">system_id</span>);
 
-    <span class='kw'>let</span> <span class='ident'>err</span> <span class='op'>=</span> <span class='kw'>match</span> (<span class='ident'>name</span>, <span class='ident'>public</span>, <span class='ident'>system</span>) {
-          (<span class='prelude-val'>Some</span>(<span class='string'>&quot;html&quot;</span>), <span class='prelude-val'>None</span>, <span class='prelude-val'>None</span>)
-        <span class='op'>|</span> (<span class='prelude-val'>Some</span>(<span class='string'>&quot;html&quot;</span>), <span class='prelude-val'>None</span>, <span class='prelude-val'>Some</span>(<span class='string'>&quot;about:legacy-compat&quot;</span>))
-        <span class='op'>|</span> (<span class='prelude-val'>Some</span>(<span class='string'>&quot;html&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;-//W3C//DTD HTML 4.0//EN&quot;</span>), <span class='prelude-val'>None</span>)
-        <span class='op'>|</span> (<span class='prelude-val'>Some</span>(<span class='string'>&quot;html&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;-//W3C//DTD HTML 4.0//EN&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;</span>))
-        <span class='op'>|</span> (<span class='prelude-val'>Some</span>(<span class='string'>&quot;html&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;-//W3C//DTD HTML 4.01//EN&quot;</span>), <span class='prelude-val'>None</span>)
-        <span class='op'>|</span> (<span class='prelude-val'>Some</span>(<span class='string'>&quot;html&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;-//W3C//DTD HTML 4.01//EN&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;http://www.w3.org/TR/html4/strict.dtd&quot;</span>))
-        <span class='op'>|</span> (<span class='prelude-val'>Some</span>(<span class='string'>&quot;html&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;</span>))
-        <span class='op'>|</span> (<span class='prelude-val'>Some</span>(<span class='string'>&quot;html&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;-//W3C//DTD XHTML 1.1//EN&quot;</span>), <span class='prelude-val'>Some</span>(<span class='string'>&quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;</span>))
-            <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
+    <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="kw">match</span> (<span class="ident">name</span>, <span class="ident">public</span>, <span class="ident">system</span>) {
+        (<span class="prelude-val">Some</span>(<span class="string">&quot;html&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>) <span class="op">|</span>
+        (<span class="prelude-val">Some</span>(<span class="string">&quot;html&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;about:legacy-compat&quot;</span>)) <span class="op">|</span>
+        (<span class="prelude-val">Some</span>(<span class="string">&quot;html&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;-//W3C//DTD HTML 4.0//EN&quot;</span>), <span class="prelude-val">None</span>) <span class="op">|</span>
+        (
+            <span class="prelude-val">Some</span>(<span class="string">&quot;html&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">&quot;-//W3C//DTD HTML 4.0//EN&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">&quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;</span>),
+        ) <span class="op">|</span>
+        (<span class="prelude-val">Some</span>(<span class="string">&quot;html&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;-//W3C//DTD HTML 4.01//EN&quot;</span>), <span class="prelude-val">None</span>) <span class="op">|</span>
+        (
+            <span class="prelude-val">Some</span>(<span class="string">&quot;html&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">&quot;-//W3C//DTD HTML 4.01//EN&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">&quot;http://www.w3.org/TR/html4/strict.dtd&quot;</span>),
+        ) <span class="op">|</span>
+        (
+            <span class="prelude-val">Some</span>(<span class="string">&quot;html&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">&quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;</span>),
+        ) <span class="op">|</span>
+        (
+            <span class="prelude-val">Some</span>(<span class="string">&quot;html&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">&quot;-//W3C//DTD XHTML 1.1//EN&quot;</span>),
+            <span class="prelude-val">Some</span>(<span class="string">&quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;</span>),
+        ) <span class="op">=&gt;</span> <span class="bool-val">false</span>,
 
-        _ <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
+        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
     };
 
-    <span class='comment'>// FIXME: We could do something asymptotically faster here.</span>
-    <span class='comment'>// But there aren&#39;t many strings, and this happens at most once per parse.</span>
-    <span class='kw'>fn</span> <span class='ident'>contains_pfx</span>(<span class='ident'>haystack</span>: <span class='kw-2'>&amp;</span>[<span class='kw-2'>&amp;</span><span class='ident'>str</span>], <span class='ident'>needle</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='ident'>haystack</span>.<span class='ident'>iter</span>().<span class='ident'>any</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>needle</span>.<span class='ident'>starts_with</span>(<span class='ident'>x</span>))
+    <span class="comment">// FIXME: We could do something asymptotically faster here.</span>
+    <span class="comment">// But there aren&#39;t many strings, and this happens at most once per parse.</span>
+    <span class="kw">fn</span> <span class="ident">contains_pfx</span>(<span class="ident">haystack</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>], <span class="ident">needle</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="ident">haystack</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">x</span><span class="op">|</span> <span class="ident">needle</span>.<span class="ident">starts_with</span>(<span class="ident">x</span>))
     }
 
-    <span class='comment'>// Quirks-mode matches are case-insensitive.</span>
-    <span class='kw'>let</span> <span class='ident'>public</span> <span class='op'>=</span> <span class='ident'>opt_to_ascii_lower</span>(<span class='ident'>public</span>);
-    <span class='kw'>let</span> <span class='ident'>system</span> <span class='op'>=</span> <span class='ident'>opt_to_ascii_lower</span>(<span class='ident'>system</span>);
+    <span class="comment">// Quirks-mode matches are case-insensitive.</span>
+    <span class="kw">let</span> <span class="ident">public</span> <span class="op">=</span> <span class="ident">opt_to_ascii_lower</span>(<span class="ident">public</span>);
+    <span class="kw">let</span> <span class="ident">system</span> <span class="op">=</span> <span class="ident">opt_to_ascii_lower</span>(<span class="ident">system</span>);
 
-    <span class='kw'>let</span> <span class='ident'>quirk</span> <span class='op'>=</span> <span class='kw'>match</span> (<span class='ident'>opt_string_as_slice</span>(<span class='kw-2'>&amp;</span><span class='ident'>public</span>), <span class='ident'>opt_string_as_slice</span>(<span class='kw-2'>&amp;</span><span class='ident'>system</span>)) {
-        _ <span class='kw'>if</span> <span class='ident'>doctype</span>.<span class='ident'>force_quirks</span> <span class='op'>=&gt;</span> <span class='ident'>Quirks</span>,
-        _ <span class='kw'>if</span> <span class='ident'>name</span> <span class='op'>!=</span> <span class='prelude-val'>Some</span>(<span class='string'>&quot;html&quot;</span>) <span class='op'>=&gt;</span> <span class='ident'>Quirks</span>,
+    <span class="kw">let</span> <span class="ident">quirk</span> <span class="op">=</span> <span class="kw">match</span> (<span class="ident">opt_string_as_slice</span>(<span class="kw-2">&amp;</span><span class="ident">public</span>), <span class="ident">opt_string_as_slice</span>(<span class="kw-2">&amp;</span><span class="ident">system</span>)) {
+        <span class="kw">_</span> <span class="kw">if</span> <span class="ident">doctype</span>.<span class="ident">force_quirks</span> <span class="op">=&gt;</span> <span class="ident">Quirks</span>,
+        <span class="kw">_</span> <span class="kw">if</span> <span class="ident">name</span> <span class="op">!=</span> <span class="prelude-val">Some</span>(<span class="string">&quot;html&quot;</span>) <span class="op">=&gt;</span> <span class="ident">Quirks</span>,
 
-        _ <span class='kw'>if</span> <span class='ident'>iframe_srcdoc</span> <span class='op'>=&gt;</span> <span class='ident'>NoQuirks</span>,
+        <span class="kw">_</span> <span class="kw">if</span> <span class="ident">iframe_srcdoc</span> <span class="op">=&gt;</span> <span class="ident">NoQuirks</span>,
 
-        (<span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>p</span>), _) <span class='kw'>if</span> <span class='ident'>QUIRKY_PUBLIC_MATCHES</span>.<span class='ident'>contains</span>(<span class='ident'>p</span>) <span class='op'>=&gt;</span> <span class='ident'>Quirks</span>,
-        (_, <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>s</span>)) <span class='kw'>if</span> <span class='ident'>QUIRKY_SYSTEM_MATCHES</span>.<span class='ident'>contains</span>(<span class='ident'>s</span>) <span class='op'>=&gt;</span> <span class='ident'>Quirks</span>,
+        (<span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">p</span>), <span class="kw">_</span>) <span class="kw">if</span> <span class="ident">QUIRKY_PUBLIC_MATCHES</span>.<span class="ident">contains</span>(<span class="ident">p</span>) <span class="op">=&gt;</span> <span class="ident">Quirks</span>,
+        (<span class="kw">_</span>, <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">s</span>)) <span class="kw">if</span> <span class="ident">QUIRKY_SYSTEM_MATCHES</span>.<span class="ident">contains</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">Quirks</span>,
 
-        (<span class='prelude-val'>Some</span>(<span class='ident'>p</span>), _) <span class='kw'>if</span> <span class='ident'>contains_pfx</span>(<span class='ident'>QUIRKY_PUBLIC_PREFIXES</span>, <span class='ident'>p</span>) <span class='op'>=&gt;</span> <span class='ident'>Quirks</span>,
-        (<span class='prelude-val'>Some</span>(<span class='ident'>p</span>), _) <span class='kw'>if</span> <span class='ident'>contains_pfx</span>(<span class='ident'>LIMITED_QUIRKY_PUBLIC_PREFIXES</span>, <span class='ident'>p</span>) <span class='op'>=&gt;</span> <span class='ident'>LimitedQuirks</span>,
+        (<span class="prelude-val">Some</span>(<span class="ident">p</span>), <span class="kw">_</span>) <span class="kw">if</span> <span class="ident">contains_pfx</span>(<span class="ident">QUIRKY_PUBLIC_PREFIXES</span>, <span class="ident">p</span>) <span class="op">=&gt;</span> <span class="ident">Quirks</span>,
+        (<span class="prelude-val">Some</span>(<span class="ident">p</span>), <span class="kw">_</span>) <span class="kw">if</span> <span class="ident">contains_pfx</span>(<span class="ident">LIMITED_QUIRKY_PUBLIC_PREFIXES</span>, <span class="ident">p</span>) <span class="op">=&gt;</span> <span class="ident">LimitedQuirks</span>,
 
-        (<span class='prelude-val'>Some</span>(<span class='ident'>p</span>), <span class='ident'>s</span>) <span class='kw'>if</span> <span class='ident'>contains_pfx</span>(<span class='ident'>HTML4_PUBLIC_PREFIXES</span>, <span class='ident'>p</span>) <span class='op'>=&gt;</span> <span class='kw'>match</span> <span class='ident'>s</span> {
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>Quirks</span>,
-            <span class='prelude-val'>Some</span>(_) <span class='op'>=&gt;</span> <span class='ident'>LimitedQuirks</span>,
+        (<span class="prelude-val">Some</span>(<span class="ident">p</span>), <span class="ident">s</span>) <span class="kw">if</span> <span class="ident">contains_pfx</span>(<span class="ident">HTML4_PUBLIC_PREFIXES</span>, <span class="ident">p</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">s</span> {
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">Quirks</span>,
+            <span class="prelude-val">Some</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">LimitedQuirks</span>,
         },
 
-        _ <span class='op'>=&gt;</span> <span class='ident'>NoQuirks</span>,
+        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">NoQuirks</span>,
     };
 
-    (<span class='ident'>err</span>, <span class='ident'>quirk</span>)
+    (<span class="ident">err</span>, <span class="ident">quirk</span>)
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt>?</dt>
-                    <dd>Show this help dialog</dd>
-                    <dt>S</dt>
-                    <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
-                    <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
-                    <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
-                    <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../../";
-        window.currentCrate = "html5ever";
-        window.playgroundUrl = "";
-    </script>
-    <script src="../../../jquery.js"></script>
-    <script src="../../../main.js"></script>
-    
-    <script defer src="../../../search-index.js"></script>
-</body>
-</html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../../";window.currentCrate = "html5ever";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

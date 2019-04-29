@@ -1,48 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/git/checkouts/kuchiki-1305be684854c41b/master/src/iter.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>iter.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
-    
-
-    
-    
-</head>
-<body class="rustdoc">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        
-        
-    </nav>
-
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/git/checkouts/kuchiki-1305be684854c41b/616690f/src/iter.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>iter.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../kuchiki/index.html'><img src='../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -464,491 +420,442 @@
 <span id="420">420</span>
 <span id="421">421</span>
 <span id="422">422</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Node iterators</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+</pre><div class="example-wrap"><pre class="rust ">
+<span class="doccomment">//! Node iterators</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Borrow</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::<span class='ident'>RefCell</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>Rev</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Borrow</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cell</span>::<span class="ident">RefCell</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Rev</span>;
 
-<span class='kw'>use</span> <span class='ident'>tree</span>::{<span class='ident'>NodeRef</span>, <span class='ident'>ElementData</span>};
-<span class='kw'>use</span> <span class='ident'>select</span>::<span class='ident'>Selectors</span>;
-<span class='kw'>use</span> <span class='ident'>node_data_ref</span>::<span class='ident'>NodeDataRef</span>;
+<span class="kw">use</span> <span class="ident">tree</span>::{<span class="ident">NodeRef</span>, <span class="ident">ElementData</span>};
+<span class="kw">use</span> <span class="ident">select</span>::<span class="ident">Selectors</span>;
+<span class="kw">use</span> <span class="ident">node_data_ref</span>::<span class="ident">NodeDataRef</span>;
 
-<span class='kw'>impl</span> <span class='ident'>NodeRef</span> {
-    <span class='doccomment'>/// Return an iterator of references to this node and its ancestors.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>inclusive_ancestors</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Ancestors</span> {
-        <span class='ident'>Ancestors</span>(<span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='ident'>clone</span>()))
+<span class="kw">impl</span> <span class="ident">NodeRef</span> {
+    <span class="doccomment">/// Return an iterator of references to this node and its ancestors.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inclusive_ancestors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Ancestors</span> {
+        <span class="ident">Ancestors</span>(<span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">clone</span>()))
     }
 
-    <span class='doccomment'>/// Return an iterator of references to this node’s ancestors.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ancestors</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Ancestors</span> {
-        <span class='ident'>Ancestors</span>(<span class='self'>self</span>.<span class='ident'>parent</span>())
+    <span class="doccomment">/// Return an iterator of references to this node’s ancestors.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ancestors</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Ancestors</span> {
+        <span class="ident">Ancestors</span>(<span class="self">self</span>.<span class="ident">parent</span>())
     }
 
-    <span class='doccomment'>/// Return an iterator of references to this node and the siblings before it.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>inclusive_preceding_siblings</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Rev</span><span class='op'>&lt;</span><span class='ident'>Siblings</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>parent</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>parent</span>) <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>first_sibling</span> <span class='op'>=</span> <span class='ident'>parent</span>.<span class='ident'>first_child</span>().<span class='ident'>unwrap</span>();
-                <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>previous_sibling</span>().<span class='ident'>is_some</span>() <span class='op'>||</span> <span class='op'>*</span><span class='self'>self</span> <span class='op'>==</span> <span class='ident'>first_sibling</span>);
-                <span class='ident'>Siblings</span>(<span class='prelude-val'>Some</span>(<span class='ident'>State</span> { <span class='ident'>next</span>: <span class='ident'>first_sibling</span>, <span class='ident'>next_back</span>: <span class='self'>self</span>.<span class='ident'>clone</span>() }))
+    <span class="doccomment">/// Return an iterator of references to this node and the siblings before it.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inclusive_preceding_siblings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Rev</span><span class="op">&lt;</span><span class="ident">Siblings</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">parent</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">first_sibling</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">first_child</span>().<span class="ident">unwrap</span>();
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">previous_sibling</span>().<span class="ident">is_some</span>() <span class="op">||</span> <span class="kw-2">*</span><span class="self">self</span> <span class="op">==</span> <span class="ident">first_sibling</span>);
+                <span class="ident">Siblings</span>(<span class="prelude-val">Some</span>(<span class="ident">State</span> { <span class="ident">next</span>: <span class="ident">first_sibling</span>, <span class="ident">next_back</span>: <span class="self">self</span>.<span class="ident">clone</span>() }))
             }
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-                <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>previous_sibling</span>().<span class='ident'>is_none</span>());
-                <span class='ident'>Siblings</span>(<span class='prelude-val'>Some</span>(<span class='ident'>State</span> { <span class='ident'>next</span>: <span class='self'>self</span>.<span class='ident'>clone</span>(), <span class='ident'>next_back</span>: <span class='self'>self</span>.<span class='ident'>clone</span>() }))
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">previous_sibling</span>().<span class="ident">is_none</span>());
+                <span class="ident">Siblings</span>(<span class="prelude-val">Some</span>(<span class="ident">State</span> { <span class="ident">next</span>: <span class="self">self</span>.<span class="ident">clone</span>(), <span class="ident">next_back</span>: <span class="self">self</span>.<span class="ident">clone</span>() }))
             }
-        }.<span class='ident'>rev</span>()
+        }.<span class="ident">rev</span>()
     }
 
-    <span class='doccomment'>/// Return an iterator of references to this node’s siblings before it.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>preceding_siblings</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Rev</span><span class='op'>&lt;</span><span class='ident'>Siblings</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> (<span class='self'>self</span>.<span class='ident'>parent</span>(), <span class='self'>self</span>.<span class='ident'>previous_sibling</span>()) {
-            (<span class='prelude-val'>Some</span>(<span class='ident'>parent</span>), <span class='prelude-val'>Some</span>(<span class='ident'>previous_sibling</span>)) <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>first_sibling</span> <span class='op'>=</span> <span class='ident'>parent</span>.<span class='ident'>first_child</span>().<span class='ident'>unwrap</span>();
-                <span class='ident'>Siblings</span>(<span class='prelude-val'>Some</span>(<span class='ident'>State</span> { <span class='ident'>next</span>: <span class='ident'>first_sibling</span>, <span class='ident'>next_back</span>: <span class='ident'>previous_sibling</span> }))
+    <span class="doccomment">/// Return an iterator of references to this node’s siblings before it.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">preceding_siblings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Rev</span><span class="op">&lt;</span><span class="ident">Siblings</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> (<span class="self">self</span>.<span class="ident">parent</span>(), <span class="self">self</span>.<span class="ident">previous_sibling</span>()) {
+            (<span class="prelude-val">Some</span>(<span class="ident">parent</span>), <span class="prelude-val">Some</span>(<span class="ident">previous_sibling</span>)) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">first_sibling</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">first_child</span>().<span class="ident">unwrap</span>();
+                <span class="ident">Siblings</span>(<span class="prelude-val">Some</span>(<span class="ident">State</span> { <span class="ident">next</span>: <span class="ident">first_sibling</span>, <span class="ident">next_back</span>: <span class="ident">previous_sibling</span> }))
             }
-            _ <span class='op'>=&gt;</span> <span class='ident'>Siblings</span>(<span class='prelude-val'>None</span>)
-        }.<span class='ident'>rev</span>()
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">Siblings</span>(<span class="prelude-val">None</span>)
+        }.<span class="ident">rev</span>()
     }
 
-    <span class='doccomment'>/// Return an iterator of references to this node and the siblings after it.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>inclusive_following_siblings</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Siblings</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>parent</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>parent</span>) <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>last_sibling</span> <span class='op'>=</span> <span class='ident'>parent</span>.<span class='ident'>last_child</span>().<span class='ident'>unwrap</span>();
-                <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>next_sibling</span>().<span class='ident'>is_some</span>() <span class='op'>||</span> <span class='op'>*</span><span class='self'>self</span> <span class='op'>==</span> <span class='ident'>last_sibling</span>);
-                <span class='ident'>Siblings</span>(<span class='prelude-val'>Some</span>(<span class='ident'>State</span> { <span class='ident'>next</span>: <span class='self'>self</span>.<span class='ident'>clone</span>(), <span class='ident'>next_back</span>: <span class='ident'>last_sibling</span> }))
+    <span class="doccomment">/// Return an iterator of references to this node and the siblings after it.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inclusive_following_siblings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Siblings</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">parent</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">last_sibling</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">last_child</span>().<span class="ident">unwrap</span>();
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">next_sibling</span>().<span class="ident">is_some</span>() <span class="op">||</span> <span class="kw-2">*</span><span class="self">self</span> <span class="op">==</span> <span class="ident">last_sibling</span>);
+                <span class="ident">Siblings</span>(<span class="prelude-val">Some</span>(<span class="ident">State</span> { <span class="ident">next</span>: <span class="self">self</span>.<span class="ident">clone</span>(), <span class="ident">next_back</span>: <span class="ident">last_sibling</span> }))
             }
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-                <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>next_sibling</span>().<span class='ident'>is_none</span>());
-                <span class='ident'>Siblings</span>(<span class='prelude-val'>Some</span>(<span class='ident'>State</span> { <span class='ident'>next</span>: <span class='self'>self</span>.<span class='ident'>clone</span>(), <span class='ident'>next_back</span>: <span class='self'>self</span>.<span class='ident'>clone</span>() }))
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">next_sibling</span>().<span class="ident">is_none</span>());
+                <span class="ident">Siblings</span>(<span class="prelude-val">Some</span>(<span class="ident">State</span> { <span class="ident">next</span>: <span class="self">self</span>.<span class="ident">clone</span>(), <span class="ident">next_back</span>: <span class="self">self</span>.<span class="ident">clone</span>() }))
             }
         }
     }
 
-    <span class='doccomment'>/// Return an iterator of references to this node’s siblings after it.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>following_siblings</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Siblings</span> {
-        <span class='kw'>match</span> (<span class='self'>self</span>.<span class='ident'>parent</span>(), <span class='self'>self</span>.<span class='ident'>next_sibling</span>()) {
-            (<span class='prelude-val'>Some</span>(<span class='ident'>parent</span>), <span class='prelude-val'>Some</span>(<span class='ident'>next_sibling</span>)) <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>last_sibling</span> <span class='op'>=</span> <span class='ident'>parent</span>.<span class='ident'>last_child</span>().<span class='ident'>unwrap</span>();
-                <span class='ident'>Siblings</span>(<span class='prelude-val'>Some</span>(<span class='ident'>State</span> { <span class='ident'>next</span>: <span class='ident'>next_sibling</span>, <span class='ident'>next_back</span>: <span class='ident'>last_sibling</span> }))
+    <span class="doccomment">/// Return an iterator of references to this node’s siblings after it.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">following_siblings</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Siblings</span> {
+        <span class="kw">match</span> (<span class="self">self</span>.<span class="ident">parent</span>(), <span class="self">self</span>.<span class="ident">next_sibling</span>()) {
+            (<span class="prelude-val">Some</span>(<span class="ident">parent</span>), <span class="prelude-val">Some</span>(<span class="ident">next_sibling</span>)) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">last_sibling</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">last_child</span>().<span class="ident">unwrap</span>();
+                <span class="ident">Siblings</span>(<span class="prelude-val">Some</span>(<span class="ident">State</span> { <span class="ident">next</span>: <span class="ident">next_sibling</span>, <span class="ident">next_back</span>: <span class="ident">last_sibling</span> }))
             }
-            _ <span class='op'>=&gt;</span> <span class='ident'>Siblings</span>(<span class='prelude-val'>None</span>)
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">Siblings</span>(<span class="prelude-val">None</span>)
         }
     }
 
-    <span class='doccomment'>/// Return an iterator of references to this node’s children.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>children</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Siblings</span> {
-        <span class='kw'>match</span> (<span class='self'>self</span>.<span class='ident'>first_child</span>(), <span class='self'>self</span>.<span class='ident'>last_child</span>()) {
-            (<span class='prelude-val'>Some</span>(<span class='ident'>first_child</span>), <span class='prelude-val'>Some</span>(<span class='ident'>last_child</span>)) <span class='op'>=&gt;</span> {
-                <span class='ident'>Siblings</span>(<span class='prelude-val'>Some</span>(<span class='ident'>State</span> { <span class='ident'>next</span>: <span class='ident'>first_child</span>, <span class='ident'>next_back</span>: <span class='ident'>last_child</span> }))
+    <span class="doccomment">/// Return an iterator of references to this node’s children.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">children</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Siblings</span> {
+        <span class="kw">match</span> (<span class="self">self</span>.<span class="ident">first_child</span>(), <span class="self">self</span>.<span class="ident">last_child</span>()) {
+            (<span class="prelude-val">Some</span>(<span class="ident">first_child</span>), <span class="prelude-val">Some</span>(<span class="ident">last_child</span>)) <span class="op">=&gt;</span> {
+                <span class="ident">Siblings</span>(<span class="prelude-val">Some</span>(<span class="ident">State</span> { <span class="ident">next</span>: <span class="ident">first_child</span>, <span class="ident">next_back</span>: <span class="ident">last_child</span> }))
             }
-            (<span class='prelude-val'>None</span>, <span class='prelude-val'>None</span>) <span class='op'>=&gt;</span> <span class='ident'>Siblings</span>(<span class='prelude-val'>None</span>),
-            _ <span class='op'>=&gt;</span> <span class='macro'>unreachable</span><span class='macro'>!</span>()
+            (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) <span class="op">=&gt;</span> <span class="ident">Siblings</span>(<span class="prelude-val">None</span>),
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>()
         }
     }
 
-    <span class='doccomment'>/// Return an iterator of references to this node and its descendants, in tree order.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Parent nodes appear before the descendants.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note: this is the `NodeEdge::Start` items from `traverse()`.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>inclusive_descendants</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Descendants</span> {
-        <span class='ident'>Descendants</span>(<span class='self'>self</span>.<span class='ident'>traverse_inclusive</span>())
+    <span class="doccomment">/// Return an iterator of references to this node and its descendants, in tree order.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Parent nodes appear before the descendants.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note: this is the `NodeEdge::Start` items from `traverse()`.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">inclusive_descendants</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Descendants</span> {
+        <span class="ident">Descendants</span>(<span class="self">self</span>.<span class="ident">traverse_inclusive</span>())
     }
 
-    <span class='doccomment'>/// Return an iterator of references to this node’s descendants, in tree order.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Parent nodes appear before the descendants.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note: this is the `NodeEdge::Start` items from `traverse()`.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>descendants</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Descendants</span> {
-        <span class='ident'>Descendants</span>(<span class='self'>self</span>.<span class='ident'>traverse</span>())
+    <span class="doccomment">/// Return an iterator of references to this node’s descendants, in tree order.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Parent nodes appear before the descendants.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note: this is the `NodeEdge::Start` items from `traverse()`.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">descendants</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Descendants</span> {
+        <span class="ident">Descendants</span>(<span class="self">self</span>.<span class="ident">traverse</span>())
     }
 
-    <span class='doccomment'>/// Return an iterator of the start and end edges of this node and its descendants,</span>
-    <span class='doccomment'>/// in tree order.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>traverse_inclusive</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Traverse</span> {
-        <span class='ident'>Traverse</span>(<span class='prelude-val'>Some</span>(<span class='ident'>State</span> {
-            <span class='ident'>next</span>: <span class='ident'>NodeEdge</span>::<span class='ident'>Start</span>(<span class='self'>self</span>.<span class='ident'>clone</span>()),
-            <span class='ident'>next_back</span>: <span class='ident'>NodeEdge</span>::<span class='ident'>End</span>(<span class='self'>self</span>.<span class='ident'>clone</span>()),
+    <span class="doccomment">/// Return an iterator of the start and end edges of this node and its descendants,</span>
+    <span class="doccomment">/// in tree order.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">traverse_inclusive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Traverse</span> {
+        <span class="ident">Traverse</span>(<span class="prelude-val">Some</span>(<span class="ident">State</span> {
+            <span class="ident">next</span>: <span class="ident">NodeEdge</span>::<span class="ident">Start</span>(<span class="self">self</span>.<span class="ident">clone</span>()),
+            <span class="ident">next_back</span>: <span class="ident">NodeEdge</span>::<span class="ident">End</span>(<span class="self">self</span>.<span class="ident">clone</span>()),
         }))
     }
 
-    <span class='doccomment'>/// Return an iterator of the start and end edges of this node’s descendants,</span>
-    <span class='doccomment'>/// in tree order.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>traverse</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Traverse</span> {
-        <span class='kw'>match</span> (<span class='self'>self</span>.<span class='ident'>first_child</span>(), <span class='self'>self</span>.<span class='ident'>last_child</span>()) {
-            (<span class='prelude-val'>Some</span>(<span class='ident'>first_child</span>), <span class='prelude-val'>Some</span>(<span class='ident'>last_child</span>)) <span class='op'>=&gt;</span> {
-                <span class='ident'>Traverse</span>(<span class='prelude-val'>Some</span>(<span class='ident'>State</span> {
-                    <span class='ident'>next</span>: <span class='ident'>NodeEdge</span>::<span class='ident'>Start</span>(<span class='ident'>first_child</span>),
-                    <span class='ident'>next_back</span>: <span class='ident'>NodeEdge</span>::<span class='ident'>End</span>(<span class='ident'>last_child</span>)
+    <span class="doccomment">/// Return an iterator of the start and end edges of this node’s descendants,</span>
+    <span class="doccomment">/// in tree order.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">traverse</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Traverse</span> {
+        <span class="kw">match</span> (<span class="self">self</span>.<span class="ident">first_child</span>(), <span class="self">self</span>.<span class="ident">last_child</span>()) {
+            (<span class="prelude-val">Some</span>(<span class="ident">first_child</span>), <span class="prelude-val">Some</span>(<span class="ident">last_child</span>)) <span class="op">=&gt;</span> {
+                <span class="ident">Traverse</span>(<span class="prelude-val">Some</span>(<span class="ident">State</span> {
+                    <span class="ident">next</span>: <span class="ident">NodeEdge</span>::<span class="ident">Start</span>(<span class="ident">first_child</span>),
+                    <span class="ident">next_back</span>: <span class="ident">NodeEdge</span>::<span class="ident">End</span>(<span class="ident">last_child</span>)
                 }))
             }
-            (<span class='prelude-val'>None</span>, <span class='prelude-val'>None</span>) <span class='op'>=&gt;</span> <span class='ident'>Traverse</span>(<span class='prelude-val'>None</span>),
-            _ <span class='op'>=&gt;</span> <span class='macro'>unreachable</span><span class='macro'>!</span>()
+            (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) <span class="op">=&gt;</span> <span class="ident">Traverse</span>(<span class="prelude-val">None</span>),
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>()
         }
     }
 
-    <span class='doccomment'>/// Return an iterator of the inclusive descendants element that match the given selector list.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>select</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>selectors</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Select</span><span class='op'>&lt;</span><span class='ident'>Elements</span><span class='op'>&lt;</span><span class='ident'>Descendants</span><span class='op'>&gt;&gt;</span>, ()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>inclusive_descendants</span>().<span class='ident'>select</span>(<span class='ident'>selectors</span>)
+    <span class="doccomment">/// Return an iterator of the inclusive descendants element that match the given selector list.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">select</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">selectors</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Select</span><span class="op">&lt;</span><span class="ident">Elements</span><span class="op">&lt;</span><span class="ident">Descendants</span><span class="op">&gt;&gt;</span>, ()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">inclusive_descendants</span>().<span class="ident">select</span>(<span class="ident">selectors</span>)
+    }
+
+    <span class="doccomment">/// Return the first inclusive descendants element that match the given selector list.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">select_first</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">selectors</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">NodeDataRef</span><span class="op">&lt;</span><span class="ident">ElementData</span><span class="op">&gt;</span>, ()<span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">elements</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">select</span>(<span class="ident">selectors</span>)<span class="question-mark">?</span>;
+        <span class="ident">elements</span>.<span class="ident">next</span>().<span class="ident">ok_or</span>(())
     }
 }
 
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>struct</span> <span class='ident'>State</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='ident'>next</span>: <span class='ident'>T</span>,
-    <span class='ident'>next_back</span>: <span class='ident'>T</span>,
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">struct</span> <span class="ident">State</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="ident">next</span>: <span class="ident">T</span>,
+    <span class="ident">next_back</span>: <span class="ident">T</span>,
 }
 
 
-<span class='doccomment'>/// A double-ended iterator of sibling nodes.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Siblings</span>(<span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>State</span><span class='op'>&lt;</span><span class='ident'>NodeRef</span><span class='op'>&gt;&gt;</span>);
+<span class="doccomment">/// A double-ended iterator of sibling nodes.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Siblings</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">State</span><span class="op">&lt;</span><span class="ident">NodeRef</span><span class="op">&gt;&gt;</span>);
 
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>siblings_next</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next</span>: <span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next_back</span>: <span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next_sibling</span>: <span class='ident'>ident</span>) <span class='op'>=&gt;</span> {
-        <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NodeRef</span><span class='op'>&gt;</span> {
-            <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>non_shorthand_field_patterns</span>)]</span>
-            <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>take</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>State</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next</span>: <span class='ident'>next</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next_back</span>: <span class='ident'>next_back</span> }<span class='op'>|</span> {
-                <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>sibling</span>) <span class='op'>=</span> <span class='ident'>next</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next_sibling</span>() {
-                    <span class='kw'>if</span> <span class='ident'>next</span> <span class='op'>!=</span> <span class='ident'>next_back</span> {
-                        <span class='self'>self</span>.<span class='number'>0</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>State</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next</span>: <span class='ident'>sibling</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next_back</span>: <span class='ident'>next_back</span> })
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">siblings_next</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next_back</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next_sibling</span>: <span class="ident">ident</span>) <span class="op">=&gt;</span> {
+        <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeRef</span><span class="op">&gt;</span> {
+            <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_shorthand_field_patterns</span>)]</span>
+            <span class="self">self</span>.<span class="number">0</span>.<span class="ident">take</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">State</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>: <span class="ident">next</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next_back</span>: <span class="ident">next_back</span> }<span class="op">|</span> {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">sibling</span>) <span class="op">=</span> <span class="ident">next</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">next_sibling</span>() {
+                    <span class="kw">if</span> <span class="ident">next</span> <span class="op">!=</span> <span class="ident">next_back</span> {
+                        <span class="self">self</span>.<span class="number">0</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">State</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>: <span class="ident">sibling</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next_back</span>: <span class="ident">next_back</span> })
                     }
                 }
-                <span class='ident'>next</span>
+                <span class="ident">next</span>
             })
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>Siblings</span> {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>NodeRef</span>;
-    <span class='macro'>siblings_next</span><span class='macro'>!</span>(<span class='ident'>next</span>, <span class='ident'>next_back</span>, <span class='ident'>next_sibling</span>);
+<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Siblings</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">NodeRef</span>;
+    <span class="macro">siblings_next</span><span class="macro">!</span>(<span class="ident">next</span>, <span class="ident">next_back</span>, <span class="ident">next_sibling</span>);
 }
 
-<span class='kw'>impl</span> <span class='ident'>DoubleEndedIterator</span> <span class='kw'>for</span> <span class='ident'>Siblings</span> {
-    <span class='macro'>siblings_next</span><span class='macro'>!</span>(<span class='ident'>next_back</span>, <span class='ident'>next</span>, <span class='ident'>previous_sibling</span>);
+<span class="kw">impl</span> <span class="ident">DoubleEndedIterator</span> <span class="kw">for</span> <span class="ident">Siblings</span> {
+    <span class="macro">siblings_next</span><span class="macro">!</span>(<span class="ident">next_back</span>, <span class="ident">next</span>, <span class="ident">previous_sibling</span>);
 }
 
 
-<span class='doccomment'>/// An iterator on ancestor nodes.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Ancestors</span>(<span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NodeRef</span><span class='op'>&gt;</span>);
+<span class="doccomment">/// An iterator on ancestor nodes.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Ancestors</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeRef</span><span class="op">&gt;</span>);
 
-<span class='kw'>impl</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>Ancestors</span> {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>NodeRef</span>;
+<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Ancestors</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">NodeRef</span>;
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NodeRef</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>take</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>node</span><span class='op'>|</span> {
-            <span class='self'>self</span>.<span class='number'>0</span> <span class='op'>=</span> <span class='ident'>node</span>.<span class='ident'>parent</span>();
-            <span class='ident'>node</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeRef</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">take</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> {
+            <span class="self">self</span>.<span class="number">0</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">parent</span>();
+            <span class="ident">node</span>
         })
     }
 }
 
 
-<span class='doccomment'>/// An iterator of references to a given node and its descendants, in tree order.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Descendants</span>(<span class='ident'>Traverse</span>);
+<span class="doccomment">/// An iterator of references to a given node and its descendants, in tree order.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Descendants</span>(<span class="ident">Traverse</span>);
 
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>descendants_next</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next</span>: <span class='ident'>ident</span>) <span class='op'>=&gt;</span> {
-        <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-        <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NodeRef</span><span class='op'>&gt;</span> {
-            <span class='kw'>loop</span> {
-                <span class='kw'>match</span> (<span class='self'>self</span>.<span class='number'>0</span>).<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next</span>() {
-                    <span class='prelude-val'>Some</span>(<span class='ident'>NodeEdge</span>::<span class='ident'>Start</span>(<span class='ident'>node</span>)) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>node</span>),
-                    <span class='prelude-val'>Some</span>(<span class='ident'>NodeEdge</span>::<span class='ident'>End</span>(_)) <span class='op'>=&gt;</span> {}
-                    <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>None</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">descendants_next</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>: <span class="ident">ident</span>) <span class="op">=&gt;</span> {
+        <span class="attribute">#[<span class="ident">inline</span>]</span>
+        <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeRef</span><span class="op">&gt;</span> {
+            <span class="kw">loop</span> {
+                <span class="kw">match</span> (<span class="self">self</span>.<span class="number">0</span>).<span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>() {
+                    <span class="prelude-val">Some</span>(<span class="ident">NodeEdge</span>::<span class="ident">Start</span>(<span class="ident">node</span>)) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">node</span>),
+                    <span class="prelude-val">Some</span>(<span class="ident">NodeEdge</span>::<span class="ident">End</span>(<span class="kw">_</span>)) <span class="op">=&gt;</span> {}
+                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>
                 }
             }
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>Descendants</span> {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>NodeRef</span>;
-    <span class='macro'>descendants_next</span><span class='macro'>!</span>(<span class='ident'>next</span>);
+<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Descendants</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">NodeRef</span>;
+    <span class="macro">descendants_next</span><span class="macro">!</span>(<span class="ident">next</span>);
 }
 
-<span class='kw'>impl</span> <span class='ident'>DoubleEndedIterator</span> <span class='kw'>for</span> <span class='ident'>Descendants</span> {
-    <span class='macro'>descendants_next</span><span class='macro'>!</span>(<span class='ident'>next_back</span>);
+<span class="kw">impl</span> <span class="ident">DoubleEndedIterator</span> <span class="kw">for</span> <span class="ident">Descendants</span> {
+    <span class="macro">descendants_next</span><span class="macro">!</span>(<span class="ident">next_back</span>);
 }
 
-<span class='doccomment'>/// Marks either the start or the end of a node.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>NodeEdge</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Indicates that start of a node that has children.</span>
-    <span class='doccomment'>/// Yielded by `Traverse::next` before the node’s descendants.</span>
-    <span class='doccomment'>/// In HTML or XML, this corresponds to an opening tag like `&lt;div&gt;`</span>
-    <span class='ident'>Start</span>(<span class='ident'>T</span>),
+<span class="doccomment">/// Marks either the start or the end of a node.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">NodeEdge</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Indicates that start of a node that has children.</span>
+    <span class="doccomment">/// Yielded by `Traverse::next` before the node’s descendants.</span>
+    <span class="doccomment">/// In HTML or XML, this corresponds to an opening tag like `&lt;div&gt;`</span>
+    <span class="ident">Start</span>(<span class="ident">T</span>),
 
-    <span class='doccomment'>/// Indicates that end of a node that has children.</span>
-    <span class='doccomment'>/// Yielded by `Traverse::next` after the node’s descendants.</span>
-    <span class='doccomment'>/// In HTML or XML, this corresponds to a closing tag like `&lt;/div&gt;`</span>
-    <span class='ident'>End</span>(<span class='ident'>T</span>),
+    <span class="doccomment">/// Indicates that end of a node that has children.</span>
+    <span class="doccomment">/// Yielded by `Traverse::next` after the node’s descendants.</span>
+    <span class="doccomment">/// In HTML or XML, this corresponds to a closing tag like `&lt;/div&gt;`</span>
+    <span class="ident">End</span>(<span class="ident">T</span>),
 }
 
 
-<span class='doccomment'>/// An iterator of the start and end edges of the nodes in a given subtree.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Traverse</span>(<span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>State</span><span class='op'>&lt;</span><span class='ident'>NodeEdge</span><span class='op'>&lt;</span><span class='ident'>NodeRef</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>);
+<span class="doccomment">/// An iterator of the start and end edges of the nodes in a given subtree.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Traverse</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">State</span><span class="op">&lt;</span><span class="ident">NodeEdge</span><span class="op">&lt;</span><span class="ident">NodeRef</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>);
 
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>traverse_next</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next</span>: <span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next_back</span>: <span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>first_child</span>: <span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next_sibling</span>: <span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Start</span>: <span class='ident'>ident</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>End</span>: <span class='ident'>ident</span>) <span class='op'>=&gt;</span> {
-        <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NodeEdge</span><span class='op'>&lt;</span><span class='ident'>NodeRef</span><span class='op'>&gt;&gt;</span> {
-            <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>non_shorthand_field_patterns</span>)]</span>
-            <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>take</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>State</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next</span>: <span class='ident'>next</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next_back</span>: <span class='ident'>next_back</span> }<span class='op'>|</span> {
-                <span class='kw'>if</span> <span class='ident'>next</span> <span class='op'>!=</span> <span class='ident'>next_back</span> {
-                    <span class='self'>self</span>.<span class='number'>0</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>next</span> {
-                        <span class='ident'>NodeEdge</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Start</span>(<span class='kw-2'>ref</span> <span class='ident'>node</span>) <span class='op'>=&gt;</span> {
-                            <span class='kw'>match</span> <span class='ident'>node</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>first_child</span>() {
-                                <span class='prelude-val'>Some</span>(<span class='ident'>child</span>) <span class='op'>=&gt;</span> {
-                                    <span class='prelude-val'>Some</span>(<span class='ident'>State</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next</span>: <span class='ident'>NodeEdge</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Start</span>(<span class='ident'>child</span>), <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next_back</span>: <span class='ident'>next_back</span> })
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">traverse_next</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next_back</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_child</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next_sibling</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">Start</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">End</span>: <span class="ident">ident</span>) <span class="op">=&gt;</span> {
+        <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeEdge</span><span class="op">&lt;</span><span class="ident">NodeRef</span><span class="op">&gt;&gt;</span> {
+            <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_shorthand_field_patterns</span>)]</span>
+            <span class="self">self</span>.<span class="number">0</span>.<span class="ident">take</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">State</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>: <span class="ident">next</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next_back</span>: <span class="ident">next_back</span> }<span class="op">|</span> {
+                <span class="kw">if</span> <span class="ident">next</span> <span class="op">!=</span> <span class="ident">next_back</span> {
+                    <span class="self">self</span>.<span class="number">0</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">next</span> {
+                        <span class="ident">NodeEdge</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">Start</span>(<span class="kw-2">ref</span> <span class="ident">node</span>) <span class="op">=&gt;</span> {
+                            <span class="kw">match</span> <span class="ident">node</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_child</span>() {
+                                <span class="prelude-val">Some</span>(<span class="ident">child</span>) <span class="op">=&gt;</span> {
+                                    <span class="prelude-val">Some</span>(<span class="ident">State</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>: <span class="ident">NodeEdge</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">Start</span>(<span class="ident">child</span>), <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next_back</span>: <span class="ident">next_back</span> })
                                 }
-                                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>State</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next</span>: <span class='ident'>NodeEdge</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>End</span>(<span class='ident'>node</span>.<span class='ident'>clone</span>()), <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next_back</span>: <span class='ident'>next_back</span> })
+                                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">State</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>: <span class="ident">NodeEdge</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">End</span>(<span class="ident">node</span>.<span class="ident">clone</span>()), <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next_back</span>: <span class="ident">next_back</span> })
                             }
                         }
-                        <span class='ident'>NodeEdge</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>End</span>(<span class='kw-2'>ref</span> <span class='ident'>node</span>) <span class='op'>=&gt;</span> {
-                            <span class='kw'>match</span> <span class='ident'>node</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next_sibling</span>() {
-                                <span class='prelude-val'>Some</span>(<span class='ident'>sibling</span>) <span class='op'>=&gt;</span> {
-                                    <span class='prelude-val'>Some</span>(<span class='ident'>State</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next</span>: <span class='ident'>NodeEdge</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Start</span>(<span class='ident'>sibling</span>), <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next_back</span>: <span class='ident'>next_back</span> })
+                        <span class="ident">NodeEdge</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">End</span>(<span class="kw-2">ref</span> <span class="ident">node</span>) <span class="op">=&gt;</span> {
+                            <span class="kw">match</span> <span class="ident">node</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">next_sibling</span>() {
+                                <span class="prelude-val">Some</span>(<span class="ident">sibling</span>) <span class="op">=&gt;</span> {
+                                    <span class="prelude-val">Some</span>(<span class="ident">State</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>: <span class="ident">NodeEdge</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">Start</span>(<span class="ident">sibling</span>), <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next_back</span>: <span class="ident">next_back</span> })
                                 }
-                                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>node</span>.<span class='ident'>parent</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>parent</span><span class='op'>|</span> {
-                                    <span class='ident'>State</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next</span>: <span class='ident'>NodeEdge</span>::<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>End</span>(<span class='ident'>parent</span>), <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>next_back</span>: <span class='ident'>next_back</span> }
+                                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">node</span>.<span class="ident">parent</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">parent</span><span class="op">|</span> {
+                                    <span class="ident">State</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>: <span class="ident">NodeEdge</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">End</span>(<span class="ident">parent</span>), <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next_back</span>: <span class="ident">next_back</span> }
                                 })
                             }
                         }
                     };
                 }
-                <span class='ident'>next</span>
+                <span class="ident">next</span>
             })
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>Traverse</span> {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>NodeEdge</span><span class='op'>&lt;</span><span class='ident'>NodeRef</span><span class='op'>&gt;</span>;
-    <span class='macro'>traverse_next</span><span class='macro'>!</span>(<span class='ident'>next</span>, <span class='ident'>next_back</span>, <span class='ident'>first_child</span>, <span class='ident'>next_sibling</span>, <span class='ident'>Start</span>, <span class='ident'>End</span>);
+<span class="kw">impl</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Traverse</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">NodeEdge</span><span class="op">&lt;</span><span class="ident">NodeRef</span><span class="op">&gt;</span>;
+    <span class="macro">traverse_next</span><span class="macro">!</span>(<span class="ident">next</span>, <span class="ident">next_back</span>, <span class="ident">first_child</span>, <span class="ident">next_sibling</span>, <span class="ident">Start</span>, <span class="ident">End</span>);
 }
 
-<span class='kw'>impl</span> <span class='ident'>DoubleEndedIterator</span> <span class='kw'>for</span> <span class='ident'>Traverse</span> {
-    <span class='macro'>traverse_next</span><span class='macro'>!</span>(<span class='ident'>next_back</span>, <span class='ident'>next</span>, <span class='ident'>last_child</span>, <span class='ident'>previous_sibling</span>, <span class='ident'>End</span>, <span class='ident'>Start</span>);
+<span class="kw">impl</span> <span class="ident">DoubleEndedIterator</span> <span class="kw">for</span> <span class="ident">Traverse</span> {
+    <span class="macro">traverse_next</span><span class="macro">!</span>(<span class="ident">next_back</span>, <span class="ident">next</span>, <span class="ident">last_child</span>, <span class="ident">previous_sibling</span>, <span class="ident">End</span>, <span class="ident">Start</span>);
 }
 
 
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>filter_map_like_iterator</span> {
-    (<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>doc</span>: <span class='ident'>meta</span>]</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>: <span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span>: <span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>from</span>: <span class='ident'>ty</span> <span class='op'>=&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>to</span>: <span class='ident'>ty</span>) <span class='op'>=&gt;</span> {
-        <span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>doc</span>]</span>
-        <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
-        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw'>pub</span> <span class='ident'>I</span>);
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">filter_map_like_iterator</span> {
+    (<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">doc</span>: <span class="ident">meta</span>]</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>: <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">from</span>: <span class="ident">ty</span> <span class="op">=&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">to</span>: <span class="ident">ty</span>) <span class="op">=&gt;</span> {
+        <span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">doc</span>]</span>
+        <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="kw">pub</span> <span class="ident">I</span>);
 
-        <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>from</span><span class='op'>&gt;</span> {
-            <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>to</span>;
+        <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">from</span><span class="op">&gt;</span> {
+            <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">to</span>;
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>to</span><span class='op'>&gt;</span> {
-                <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>by_ref</span>() {
-                    <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>y</span>) <span class='op'>=</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span>)(<span class='ident'>x</span>) {
-                        <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>y</span>)
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">to</span><span class="op">&gt;</span> {
+                <span class="kw">for</span> <span class="ident">x</span> <span class="kw">in</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">by_ref</span>() {
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">y</span>) <span class="op">=</span> (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>)(<span class="ident">x</span>) {
+                        <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">y</span>)
                     }
                 }
-                <span class='prelude-val'>None</span>
+                <span class="prelude-val">None</span>
             }
         }
 
-        <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span> <span class='ident'>DoubleEndedIterator</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>DoubleEndedIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>from</span><span class='op'>&gt;</span> {
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>next_back</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>to</span><span class='op'>&gt;</span> {
-                <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>by_ref</span>().<span class='ident'>rev</span>() {
-                    <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>y</span>) <span class='op'>=</span> (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span>)(<span class='ident'>x</span>) {
-                        <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>y</span>)
+        <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span> <span class="ident">DoubleEndedIterator</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">DoubleEndedIterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">from</span><span class="op">&gt;</span> {
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">next_back</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">to</span><span class="op">&gt;</span> {
+                <span class="kw">for</span> <span class="ident">x</span> <span class="kw">in</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">by_ref</span>().<span class="ident">rev</span>() {
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">y</span>) <span class="op">=</span> (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>)(<span class="ident">x</span>) {
+                        <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">y</span>)
                     }
                 }
-                <span class='prelude-val'>None</span>
+                <span class="prelude-val">None</span>
             }
         }
     }
 }
 
-<span class='macro'>filter_map_like_iterator</span><span class='macro'>!</span> {
-    <span class='doccomment'>/// A node iterator adaptor that yields element nodes.</span>
-    <span class='ident'>Elements</span>: <span class='ident'>NodeRef</span>::<span class='ident'>into_element_ref</span>, <span class='ident'>NodeRef</span> <span class='op'>=&gt;</span> <span class='ident'>NodeDataRef</span><span class='op'>&lt;</span><span class='ident'>ElementData</span><span class='op'>&gt;</span>
+<span class="macro">filter_map_like_iterator</span><span class="macro">!</span> {
+    <span class="doccomment">/// A node iterator adaptor that yields element nodes.</span>
+    <span class="ident">Elements</span>: <span class="ident">NodeRef</span>::<span class="ident">into_element_ref</span>, <span class="ident">NodeRef</span> <span class="op">=&gt;</span> <span class="ident">NodeDataRef</span><span class="op">&lt;</span><span class="ident">ElementData</span><span class="op">&gt;</span>
 }
 
-<span class='macro'>filter_map_like_iterator</span><span class='macro'>!</span> {
-    <span class='doccomment'>/// A node iterator adaptor that yields comment nodes.</span>
-    <span class='ident'>Comments</span>: <span class='ident'>NodeRef</span>::<span class='ident'>into_comment_ref</span>, <span class='ident'>NodeRef</span> <span class='op'>=&gt;</span> <span class='ident'>NodeDataRef</span><span class='op'>&lt;</span><span class='ident'>RefCell</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>
+<span class="macro">filter_map_like_iterator</span><span class="macro">!</span> {
+    <span class="doccomment">/// A node iterator adaptor that yields comment nodes.</span>
+    <span class="ident">Comments</span>: <span class="ident">NodeRef</span>::<span class="ident">into_comment_ref</span>, <span class="ident">NodeRef</span> <span class="op">=&gt;</span> <span class="ident">NodeDataRef</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>
 }
 
-<span class='macro'>filter_map_like_iterator</span><span class='macro'>!</span> {
-    <span class='doccomment'>/// A node iterator adaptor that yields text nodes.</span>
-    <span class='ident'>TextNodes</span>: <span class='ident'>NodeRef</span>::<span class='ident'>into_text_ref</span>, <span class='ident'>NodeRef</span> <span class='op'>=&gt;</span> <span class='ident'>NodeDataRef</span><span class='op'>&lt;</span><span class='ident'>RefCell</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>
+<span class="macro">filter_map_like_iterator</span><span class="macro">!</span> {
+    <span class="doccomment">/// A node iterator adaptor that yields text nodes.</span>
+    <span class="ident">TextNodes</span>: <span class="ident">NodeRef</span>::<span class="ident">into_text_ref</span>, <span class="ident">NodeRef</span> <span class="op">=&gt;</span> <span class="ident">NodeDataRef</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>
 }
 
 
-<span class='doccomment'>/// An element iterator adaptor that yields elements maching given selectors.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Select</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>S</span><span class='op'>=</span><span class='ident'>Selectors</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>NodeDataRef</span><span class='op'>&lt;</span><span class='ident'>ElementData</span><span class='op'>&gt;&gt;</span>,
-      <span class='ident'>S</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Selectors</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// The underlying iterator.</span>
-    <span class='kw'>pub</span> <span class='ident'>iter</span>: <span class='ident'>I</span>,
+<span class="doccomment">/// An element iterator adaptor that yields elements maching given selectors.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Select</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span><span class="op">=</span><span class="ident">Selectors</span><span class="op">&gt;</span>
+<span class="kw">where</span> <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">NodeDataRef</span><span class="op">&lt;</span><span class="ident">ElementData</span><span class="op">&gt;&gt;</span>,
+      <span class="ident">S</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Selectors</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// The underlying iterator.</span>
+    <span class="kw">pub</span> <span class="ident">iter</span>: <span class="ident">I</span>,
 
-    <span class='doccomment'>/// The selectors to be matched.</span>
-    <span class='kw'>pub</span> <span class='ident'>selectors</span>: <span class='ident'>S</span>,
+    <span class="doccomment">/// The selectors to be matched.</span>
+    <span class="kw">pub</span> <span class="ident">selectors</span>: <span class="ident">S</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>S</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>Select</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>S</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>NodeDataRef</span><span class='op'>&lt;</span><span class='ident'>ElementData</span><span class='op'>&gt;&gt;</span>,
-      <span class='ident'>S</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Selectors</span><span class='op'>&gt;</span> {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>NodeDataRef</span><span class='op'>&lt;</span><span class='ident'>ElementData</span><span class='op'>&gt;</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Select</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span><span class="op">&gt;</span>
+<span class="kw">where</span> <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">NodeDataRef</span><span class="op">&lt;</span><span class="ident">ElementData</span><span class="op">&gt;&gt;</span>,
+      <span class="ident">S</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Selectors</span><span class="op">&gt;</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">NodeDataRef</span><span class="op">&lt;</span><span class="ident">ElementData</span><span class="op">&gt;</span>;
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NodeDataRef</span><span class='op'>&lt;</span><span class='ident'>ElementData</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>for</span> <span class='ident'>element</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>by_ref</span>() {
-            <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>selectors</span>.<span class='ident'>borrow</span>().<span class='ident'>matches</span>(<span class='kw-2'>&amp;</span><span class='ident'>element</span>) {
-                <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>element</span>)
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeDataRef</span><span class="op">&lt;</span><span class="ident">ElementData</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">for</span> <span class="ident">element</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">by_ref</span>() {
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">selectors</span>.<span class="ident">borrow</span>().<span class="ident">matches</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>) {
+                <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">element</span>)
             }
         }
-        <span class='prelude-val'>None</span>
+        <span class="prelude-val">None</span>
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>S</span><span class='op'>&gt;</span> <span class='ident'>DoubleEndedIterator</span> <span class='kw'>for</span> <span class='ident'>Select</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>S</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>DoubleEndedIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>NodeDataRef</span><span class='op'>&lt;</span><span class='ident'>ElementData</span><span class='op'>&gt;&gt;</span>,
-      <span class='ident'>S</span>: <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>Selectors</span><span class='op'>&gt;</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>next_back</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NodeDataRef</span><span class='op'>&lt;</span><span class='ident'>ElementData</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>for</span> <span class='ident'>element</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>by_ref</span>().<span class='ident'>rev</span>() {
-            <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>selectors</span>.<span class='ident'>borrow</span>().<span class='ident'>matches</span>(<span class='kw-2'>&amp;</span><span class='ident'>element</span>) {
-                <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>element</span>)
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span><span class="op">&gt;</span> <span class="ident">DoubleEndedIterator</span> <span class="kw">for</span> <span class="ident">Select</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">S</span><span class="op">&gt;</span>
+<span class="kw">where</span> <span class="ident">I</span>: <span class="ident">DoubleEndedIterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">NodeDataRef</span><span class="op">&lt;</span><span class="ident">ElementData</span><span class="op">&gt;&gt;</span>,
+      <span class="ident">S</span>: <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Selectors</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">next_back</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeDataRef</span><span class="op">&lt;</span><span class="ident">ElementData</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">for</span> <span class="ident">element</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">by_ref</span>().<span class="ident">rev</span>() {
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">selectors</span>.<span class="ident">borrow</span>().<span class="ident">matches</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>) {
+                <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">element</span>)
             }
         }
-        <span class='prelude-val'>None</span>
+        <span class="prelude-val">None</span>
     }
 }
 
 
-<span class='doccomment'>/// Convenience methods for node iterators.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>NodeIterator</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>NodeRef</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Filter this element iterator to elements.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>elements</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Elements</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
-        <span class='ident'>Elements</span>(<span class='self'>self</span>)
+<span class="doccomment">/// Convenience methods for node iterators.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NodeIterator</span>: <span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">NodeRef</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Filter this element iterator to elements.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">elements</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Elements</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="ident">Elements</span>(<span class="self">self</span>)
     }
 
-    <span class='doccomment'>/// Filter this node iterator to text nodes.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>text_nodes</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>TextNodes</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
-        <span class='ident'>TextNodes</span>(<span class='self'>self</span>)
+    <span class="doccomment">/// Filter this node iterator to text nodes.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">text_nodes</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">TextNodes</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="ident">TextNodes</span>(<span class="self">self</span>)
     }
 
-    <span class='doccomment'>/// Filter this node iterator to comment nodes.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>comments</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Comments</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
-        <span class='ident'>Comments</span>(<span class='self'>self</span>)
+    <span class="doccomment">/// Filter this node iterator to comment nodes.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">comments</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Comments</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="ident">Comments</span>(<span class="self">self</span>)
     }
 
-    <span class='doccomment'>/// Filter this node iterator to elements maching the given selectors.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>select</span>(<span class='self'>self</span>, <span class='ident'>selectors</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Select</span><span class='op'>&lt;</span><span class='ident'>Elements</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;&gt;</span>, ()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>elements</span>().<span class='ident'>select</span>(<span class='ident'>selectors</span>)
+    <span class="doccomment">/// Filter this node iterator to elements maching the given selectors.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">select</span>(<span class="self">self</span>, <span class="ident">selectors</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Select</span><span class="op">&lt;</span><span class="ident">Elements</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;&gt;</span>, ()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">elements</span>().<span class="ident">select</span>(<span class="ident">selectors</span>)
     }
 }
 
-<span class='doccomment'>/// Convenience methods for element iterators.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>ElementIterator</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>NodeDataRef</span><span class='op'>&lt;</span><span class='ident'>ElementData</span><span class='op'>&gt;&gt;</span> {
-    <span class='doccomment'>/// Filter this element iterator to elements maching the given selectors.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>select</span>(<span class='self'>self</span>, <span class='ident'>selectors</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Select</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>, ()<span class='op'>&gt;</span> {
-        <span class='ident'>Selectors</span>::<span class='ident'>compile</span>(<span class='ident'>selectors</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>s</span><span class='op'>|</span> <span class='ident'>Select</span> {
-            <span class='ident'>iter</span>: <span class='self'>self</span>,
-            <span class='ident'>selectors</span>: <span class='ident'>s</span>,
+<span class="doccomment">/// Convenience methods for element iterators.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ElementIterator</span>: <span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">NodeDataRef</span><span class="op">&lt;</span><span class="ident">ElementData</span><span class="op">&gt;&gt;</span> {
+    <span class="doccomment">/// Filter this element iterator to elements maching the given selectors.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">select</span>(<span class="self">self</span>, <span class="ident">selectors</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Select</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, ()<span class="op">&gt;</span> {
+        <span class="ident">Selectors</span>::<span class="ident">compile</span>(<span class="ident">selectors</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">Select</span> {
+            <span class="ident">iter</span>: <span class="self">self</span>,
+            <span class="ident">selectors</span>: <span class="ident">s</span>,
         })
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span> <span class='ident'>NodeIterator</span> <span class='kw'>for</span> <span class='ident'>I</span> <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>NodeRef</span><span class='op'>&gt;</span> {}
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span> <span class='ident'>ElementIterator</span> <span class='kw'>for</span> <span class='ident'>I</span> <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>NodeDataRef</span><span class='op'>&lt;</span><span class='ident'>ElementData</span><span class='op'>&gt;&gt;</span> {}
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt>?</dt>
-                    <dd>Show this help dialog</dd>
-                    <dt>S</dt>
-                    <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
-                    <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
-                    <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
-                    <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "kuchiki";
-        window.playgroundUrl = "";
-    </script>
-    <script src="../../jquery.js"></script>
-    <script src="../../main.js"></script>
-    
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span> <span class="ident">NodeIterator</span> <span class="kw">for</span> <span class="ident">I</span> <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">NodeRef</span><span class="op">&gt;</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span> <span class="ident">ElementIterator</span> <span class="kw">for</span> <span class="ident">I</span> <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">NodeDataRef</span><span class="op">&lt;</span><span class="ident">ElementData</span><span class="op">&gt;&gt;</span> {}
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "kuchiki";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

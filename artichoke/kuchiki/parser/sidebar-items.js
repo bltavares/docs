@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["parse_html","Parse an HTML document with html5ever and the default configuration."]],"struct":[["ParseOpts","Options for the HTML parser."]]});

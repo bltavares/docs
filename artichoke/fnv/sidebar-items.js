@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["FnvHasher","An implementation of the Fowler–Noll–Vo hash function."]]});

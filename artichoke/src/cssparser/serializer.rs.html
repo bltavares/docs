@@ -1,48 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/cssparser-0.5.6/src/serializer.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>serializer.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
-    
-
-    
-    
-</head>
-<body class="rustdoc">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        
-        
-    </nav>
-
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/cssparser-0.24.1/src/serializer.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>serializer.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../cssparser/index.html'><img src='../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -478,505 +434,512 @@
 <span id="434">434</span>
 <span id="435">435</span>
 <span id="436">436</span>
-</pre><pre class='rust '>
-<span class='comment'>/* This Source Code Form is subject to the terms of the Mozilla Public
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+</pre><div class="example-wrap"><pre class="rust ">
+<span class="comment">/* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ascii</span>::<span class='ident'>AsciiExt</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::{<span class='self'>self</span>, <span class='ident'>Write</span>};
+<span class="kw">use</span> <span class="ident">dtoa_short</span>::{<span class="self">self</span>, <span class="ident">Notation</span>};
+<span class="kw">use</span> <span class="ident">itoa</span>;
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_imports</span>)]</span> <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ascii</span>::<span class="ident">AsciiExt</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="self">self</span>, <span class="ident">Write</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>;
 
-<span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Token</span>, <span class='ident'>NumericValue</span>, <span class='ident'>PercentageValue</span>};
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Token</span>;
 
 
-<span class='doccomment'>/// Trait for things the can serialize themselves in CSS syntax.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>ToCss</span> {
-    <span class='doccomment'>/// Serialize `self` in CSS syntax, writing to `dest`.</span>
-    <span class='kw'>fn</span> <span class='ident'>to_css</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>dest</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> <span class='kw'>where</span> <span class='ident'>W</span>: <span class='ident'>fmt</span>::<span class='ident'>Write</span>;
+<span class="doccomment">/// Trait for things the can serialize themselves in CSS syntax.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ToCss</span> {
+    <span class="doccomment">/// Serialize `self` in CSS syntax, writing to `dest`.</span>
+    <span class="kw">fn</span> <span class="ident">to_css</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> <span class="kw">where</span> <span class="ident">W</span>: <span class="ident">fmt</span>::<span class="ident">Write</span>;
 
-    <span class='doccomment'>/// Serialize `self` in CSS syntax and return a string.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// (This is a convenience wrapper for `to_css` and probably should not be overridden.)</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>to_css_string</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
-        <span class='self'>self</span>.<span class='ident'>to_css</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>s</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>s</span>
-    }
-
-    <span class='doccomment'>/// Serialize `self` in CSS syntax and return a result compatible with `std::fmt::Show`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Typical usage is, for a `Foo` that implements `ToCss`:</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```{rust,ignore}</span>
-    <span class='doccomment'>/// use std::fmt;</span>
-    <span class='doccomment'>/// impl fmt::Show for Foo {</span>
-    <span class='doccomment'>///     #[inline] fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result { self.fmt_to_css(f) }</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// (This is a convenience wrapper for `to_css` and probably should not be overridden.)</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>fmt_to_css</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>dest</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> <span class='kw'>where</span> <span class='ident'>W</span>: <span class='ident'>fmt</span>::<span class='ident'>Write</span> {
-        <span class='self'>self</span>.<span class='ident'>to_css</span>(<span class='ident'>dest</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>fmt</span>::<span class='ident'>Error</span>)
+    <span class="doccomment">/// Serialize `self` in CSS syntax and return a string.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// (This is a convenience wrapper for `to_css` and probably should not be overridden.)</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">to_css_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
+        <span class="self">self</span>.<span class="ident">to_css</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">s</span>).<span class="ident">unwrap</span>();
+        <span class="ident">s</span>
     }
 }
 
-
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>fn</span> <span class='ident'>write_numeric</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>(<span class='ident'>value</span>: <span class='ident'>NumericValue</span>, <span class='ident'>dest</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> <span class='kw'>where</span> <span class='ident'>W</span>: <span class='ident'>fmt</span>::<span class='ident'>Write</span> {
-    <span class='comment'>// `value.value &gt;= 0` is true for negative 0.</span>
-    <span class='kw'>if</span> <span class='ident'>value</span>.<span class='ident'>has_sign</span> <span class='op'>&amp;&amp;</span> <span class='ident'>value</span>.<span class='ident'>value</span>.<span class='ident'>is_sign_positive</span>() {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;+&quot;</span>));
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">fn</span> <span class="ident">write_numeric</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="ident">value</span>: <span class="ident">f32</span>, <span class="ident">int_value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>, <span class="ident">has_sign</span>: <span class="ident">bool</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>)
+                    <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> <span class="kw">where</span> <span class="ident">W</span>: <span class="ident">fmt</span>::<span class="ident">Write</span> {
+    <span class="comment">// `value.value &gt;= 0` is true for negative 0.</span>
+    <span class="kw">if</span> <span class="ident">has_sign</span> <span class="op">&amp;&amp;</span> <span class="ident">value</span>.<span class="ident">is_sign_positive</span>() {
+        <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;+&quot;</span>)<span class="question-mark">?</span>;
     }
 
-    <span class='kw'>if</span> <span class='ident'>value</span>.<span class='ident'>value</span> <span class='op'>==</span> <span class='number'>0.0</span> <span class='op'>&amp;&amp;</span> <span class='ident'>value</span>.<span class='ident'>value</span>.<span class='ident'>is_sign_negative</span>() {
-        <span class='comment'>// Negative zero. Work around #20596.</span>
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;-0&quot;</span>))
-    } <span class='kw'>else</span> {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>dest</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>value</span>.<span class='ident'>value</span>))
-    }
+    <span class="kw">let</span> <span class="ident">notation</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">value</span> <span class="op">==</span> <span class="number">0.0</span> <span class="op">&amp;&amp;</span> <span class="ident">value</span>.<span class="ident">is_sign_negative</span>() {
+        <span class="comment">// Negative zero. Work around #20596.</span>
+        <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;-0&quot;</span>)<span class="question-mark">?</span>;
+        <span class="ident">Notation</span> { <span class="ident">decimal_point</span>: <span class="bool-val">false</span>, <span class="ident">scientific</span>: <span class="bool-val">false</span> }
+    } <span class="kw">else</span> {
+        <span class="ident">dtoa_short</span>::<span class="ident">write</span>(<span class="ident">dest</span>, <span class="ident">value</span>)<span class="question-mark">?</span>
+    };
 
-    <span class='kw'>if</span> <span class='ident'>value</span>.<span class='ident'>int_value</span>.<span class='ident'>is_none</span>() <span class='op'>&amp;&amp;</span> <span class='ident'>value</span>.<span class='ident'>value</span>.<span class='ident'>fract</span>() <span class='op'>==</span> <span class='number'>0.</span> {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;.0&quot;</span>));
+    <span class="kw">if</span> <span class="ident">int_value</span>.<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="ident">value</span>.<span class="ident">fract</span>() <span class="op">==</span> <span class="number">0.</span> {
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">notation</span>.<span class="ident">decimal_point</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">notation</span>.<span class="ident">scientific</span> {
+            <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;.0&quot;</span>)<span class="question-mark">?</span>;
+        }
     }
-    <span class='prelude-val'>Ok</span>(())
+    <span class="prelude-val">Ok</span>(())
 }
 
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ToCss</span> <span class='kw'>for</span> <span class='ident'>Token</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>to_css</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>dest</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> <span class='kw'>where</span> <span class='ident'>W</span>: <span class='ident'>fmt</span>::<span class='ident'>Write</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>Token</span>::<span class='ident'>Ident</span>(<span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialize_identifier</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='op'>*</span><span class='ident'>value</span>, <span class='ident'>dest</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>AtKeyword</span>(<span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;@&quot;</span>));
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialize_identifier</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='op'>*</span><span class='ident'>value</span>, <span class='ident'>dest</span>));
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ToCss</span> <span class="kw">for</span> <span class="ident">Token</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">to_css</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> <span class="kw">where</span> <span class="ident">W</span>: <span class="ident">fmt</span>::<span class="ident">Write</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Token</span>::<span class="ident">Ident</span>(<span class="kw-2">ref</span> <span class="ident">value</span>) <span class="op">=&gt;</span> <span class="ident">serialize_identifier</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">value</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">AtKeyword</span>(<span class="kw-2">ref</span> <span class="ident">value</span>) <span class="op">=&gt;</span> {
+                <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;@&quot;</span>)<span class="question-mark">?</span>;
+                <span class="ident">serialize_identifier</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">value</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>;
             },
-            <span class='ident'>Token</span>::<span class='ident'>Hash</span>(<span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;#&quot;</span>));
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialize_name</span>(<span class='ident'>value</span>, <span class='ident'>dest</span>));
+            <span class="ident">Token</span>::<span class="ident">Hash</span>(<span class="kw-2">ref</span> <span class="ident">value</span>) <span class="op">=&gt;</span> {
+                <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;#&quot;</span>)<span class="question-mark">?</span>;
+                <span class="ident">serialize_name</span>(<span class="ident">value</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>;
             },
-            <span class='ident'>Token</span>::<span class='ident'>IDHash</span>(<span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;#&quot;</span>));
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialize_identifier</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='op'>*</span><span class='ident'>value</span>, <span class='ident'>dest</span>));
+            <span class="ident">Token</span>::<span class="ident">IDHash</span>(<span class="kw-2">ref</span> <span class="ident">value</span>) <span class="op">=&gt;</span> {
+                <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;#&quot;</span>)<span class="question-mark">?</span>;
+                <span class="ident">serialize_identifier</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">value</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>;
             }
-            <span class='ident'>Token</span>::<span class='ident'>QuotedString</span>(<span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialize_string</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='op'>*</span><span class='ident'>value</span>, <span class='ident'>dest</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>UnquotedUrl</span>(<span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;url(&quot;</span>));
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialize_unquoted_url</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='op'>*</span><span class='ident'>value</span>, <span class='ident'>dest</span>));
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;)&quot;</span>));
+            <span class="ident">Token</span>::<span class="ident">QuotedString</span>(<span class="kw-2">ref</span> <span class="ident">value</span>) <span class="op">=&gt;</span> <span class="ident">serialize_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">value</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">UnquotedUrl</span>(<span class="kw-2">ref</span> <span class="ident">value</span>) <span class="op">=&gt;</span> {
+                <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;url(&quot;</span>)<span class="question-mark">?</span>;
+                <span class="ident">serialize_unquoted_url</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">value</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>;
+                <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;)&quot;</span>)<span class="question-mark">?</span>;
             },
-            <span class='ident'>Token</span>::<span class='ident'>Delim</span>(<span class='ident'>value</span>) <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>dest</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>value</span>)),
+            <span class="ident">Token</span>::<span class="ident">Delim</span>(<span class="ident">value</span>) <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_char</span>(<span class="ident">value</span>)<span class="question-mark">?</span>,
 
-            <span class='ident'>Token</span>::<span class='ident'>Number</span>(<span class='ident'>value</span>) <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>write_numeric</span>(<span class='ident'>value</span>, <span class='ident'>dest</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>Percentage</span>(<span class='ident'>PercentageValue</span> { <span class='ident'>unit_value</span>, <span class='ident'>int_value</span>, <span class='ident'>has_sign</span> }) <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='ident'>value</span> <span class='op'>=</span> <span class='ident'>NumericValue</span> {
-                    <span class='ident'>value</span>: <span class='ident'>unit_value</span> <span class='op'>*</span> <span class='number'>100.</span>,
-                    <span class='ident'>int_value</span>: <span class='ident'>int_value</span>,
-                    <span class='ident'>has_sign</span>: <span class='ident'>has_sign</span>,
-                };
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>write_numeric</span>(<span class='ident'>value</span>, <span class='ident'>dest</span>));
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;%&quot;</span>));
+            <span class="ident">Token</span>::<span class="ident">Number</span> { <span class="ident">value</span>, <span class="ident">int_value</span>, <span class="ident">has_sign</span> } <span class="op">=&gt;</span> {
+                <span class="ident">write_numeric</span>(<span class="ident">value</span>, <span class="ident">int_value</span>, <span class="ident">has_sign</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>
+            }
+            <span class="ident">Token</span>::<span class="ident">Percentage</span> { <span class="ident">unit_value</span>, <span class="ident">int_value</span>, <span class="ident">has_sign</span> } <span class="op">=&gt;</span> {
+                <span class="ident">write_numeric</span>(<span class="ident">unit_value</span> <span class="op">*</span> <span class="number">100.</span>, <span class="ident">int_value</span>, <span class="ident">has_sign</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>;
+                <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;%&quot;</span>)<span class="question-mark">?</span>;
             },
-            <span class='ident'>Token</span>::<span class='ident'>Dimension</span>(<span class='ident'>value</span>, <span class='kw-2'>ref</span> <span class='ident'>unit</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>write_numeric</span>(<span class='ident'>value</span>, <span class='ident'>dest</span>));
-                <span class='comment'>// Disambiguate with scientific notation.</span>
-                <span class='kw'>let</span> <span class='ident'>unit</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='op'>*</span><span class='ident'>unit</span>;
-                <span class='kw'>if</span> <span class='ident'>unit</span> <span class='op'>==</span> <span class='string'>&quot;e&quot;</span> <span class='op'>||</span> <span class='ident'>unit</span> <span class='op'>==</span> <span class='string'>&quot;E&quot;</span> <span class='op'>||</span> <span class='ident'>unit</span>.<span class='ident'>starts_with</span>(<span class='string'>&quot;e-&quot;</span>) <span class='op'>||</span> <span class='ident'>unit</span>.<span class='ident'>starts_with</span>(<span class='string'>&quot;E-&quot;</span>) {
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;\\65 &quot;</span>));
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialize_name</span>(<span class='kw-2'>&amp;</span><span class='ident'>unit</span>[<span class='number'>1</span>..], <span class='ident'>dest</span>));
-                } <span class='kw'>else</span> {
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialize_identifier</span>(<span class='ident'>unit</span>, <span class='ident'>dest</span>));
+            <span class="ident">Token</span>::<span class="ident">Dimension</span> { <span class="ident">value</span>, <span class="ident">int_value</span>, <span class="ident">has_sign</span>, <span class="kw-2">ref</span> <span class="ident">unit</span> } <span class="op">=&gt;</span> {
+                <span class="ident">write_numeric</span>(<span class="ident">value</span>, <span class="ident">int_value</span>, <span class="ident">has_sign</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>;
+                <span class="comment">// Disambiguate with scientific notation.</span>
+                <span class="kw">let</span> <span class="ident">unit</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">unit</span>;
+                <span class="kw">if</span> <span class="ident">unit</span> <span class="op">==</span> <span class="string">&quot;e&quot;</span> <span class="op">||</span> <span class="ident">unit</span> <span class="op">==</span> <span class="string">&quot;E&quot;</span> <span class="op">||</span> <span class="ident">unit</span>.<span class="ident">starts_with</span>(<span class="string">&quot;e-&quot;</span>) <span class="op">||</span> <span class="ident">unit</span>.<span class="ident">starts_with</span>(<span class="string">&quot;E-&quot;</span>) {
+                    <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;\\65 &quot;</span>)<span class="question-mark">?</span>;
+                    <span class="ident">serialize_name</span>(<span class="kw-2">&amp;</span><span class="ident">unit</span>[<span class="number">1</span>..], <span class="ident">dest</span>)<span class="question-mark">?</span>;
+                } <span class="kw">else</span> {
+                    <span class="ident">serialize_identifier</span>(<span class="ident">unit</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>;
                 }
             },
 
-            <span class='ident'>Token</span>::<span class='ident'>UnicodeRange</span>(<span class='ident'>start</span>, <span class='ident'>end</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;U+&quot;</span>));
-                <span class='kw'>let</span> <span class='ident'>bits</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='ident'>start</span>.<span class='ident'>trailing_zeros</span>(), (<span class='op'>!</span><span class='ident'>end</span>).<span class='ident'>trailing_zeros</span>());
-                <span class='kw'>let</span> <span class='ident'>question_marks</span> <span class='op'>=</span> <span class='ident'>bits</span> <span class='op'>/</span> <span class='number'>4</span>;
-                <span class='kw'>let</span> <span class='ident'>bits</span> <span class='op'>=</span> <span class='ident'>question_marks</span> <span class='op'>*</span> <span class='number'>4</span>;
-                <span class='kw'>let</span> <span class='ident'>truncated_start</span> <span class='op'>=</span> <span class='ident'>start</span> <span class='op'>&gt;&gt;</span> <span class='ident'>bits</span>;
-                <span class='kw'>let</span> <span class='ident'>truncated_end</span> <span class='op'>=</span> <span class='ident'>end</span> <span class='op'>&gt;&gt;</span> <span class='ident'>bits</span>;
-                <span class='kw'>if</span> <span class='ident'>truncated_start</span> <span class='op'>==</span> <span class='ident'>truncated_end</span> {
-                    <span class='kw'>if</span> <span class='ident'>truncated_start</span> <span class='op'>!=</span> <span class='number'>0</span> {
-                        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>dest</span>, <span class='string'>&quot;{:X}&quot;</span>, <span class='ident'>truncated_start</span>));
-                    }
-                    <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='number'>0</span>..<span class='ident'>question_marks</span> {
-                        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;?&quot;</span>));
-                    }
-                } <span class='kw'>else</span> {
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>dest</span>, <span class='string'>&quot;{:X}&quot;</span>, <span class='ident'>start</span>));
-                    <span class='kw'>if</span> <span class='ident'>end</span> <span class='op'>!=</span> <span class='ident'>start</span> {
-                        <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>dest</span>, <span class='string'>&quot;-{:X}&quot;</span>, <span class='ident'>end</span>));
-                    }
-                }
+            <span class="ident">Token</span>::<span class="ident">WhiteSpace</span>(<span class="ident">content</span>) <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="ident">content</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">Comment</span>(<span class="ident">content</span>) <span class="op">=&gt;</span> {
+                <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;/*&quot;</span>)<span class="question-mark">?</span>;
+                <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="ident">content</span>)<span class="question-mark">?</span>;
+                <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;*/&quot;</span>)<span class="question-mark">?</span>
             }
+            <span class="ident">Token</span>::<span class="ident">Colon</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;:&quot;</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">Semicolon</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;;&quot;</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">Comma</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;,&quot;</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">IncludeMatch</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;~=&quot;</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">DashMatch</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;|=&quot;</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">PrefixMatch</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;^=&quot;</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">SuffixMatch</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;$=&quot;</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">SubstringMatch</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;*=&quot;</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">CDO</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;&lt;!--&quot;</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">CDC</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;--&gt;&quot;</span>)<span class="question-mark">?</span>,
 
-            <span class='ident'>Token</span>::<span class='ident'>WhiteSpace</span>(<span class='ident'>content</span>) <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='ident'>content</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>Comment</span>(<span class='ident'>content</span>) <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>dest</span>, <span class='string'>&quot;/*{}*/&quot;</span>, <span class='ident'>content</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>Colon</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;:&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>Semicolon</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;;&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>Comma</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;,&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>IncludeMatch</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;~=&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>DashMatch</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;|=&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>PrefixMatch</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;^=&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>SuffixMatch</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;$=&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>SubstringMatch</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;*=&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>Column</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;||&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>CDO</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;&lt;!--&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>CDC</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;--&gt;&quot;</span>)),
-
-            <span class='ident'>Token</span>::<span class='ident'>Function</span>(<span class='kw-2'>ref</span> <span class='ident'>name</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serialize_identifier</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='op'>*</span><span class='ident'>name</span>, <span class='ident'>dest</span>));
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;(&quot;</span>));
+            <span class="ident">Token</span>::<span class="ident">Function</span>(<span class="kw-2">ref</span> <span class="ident">name</span>) <span class="op">=&gt;</span> {
+                <span class="ident">serialize_identifier</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">name</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>;
+                <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;(&quot;</span>)<span class="question-mark">?</span>;
             },
-            <span class='ident'>Token</span>::<span class='ident'>ParenthesisBlock</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;(&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>SquareBracketBlock</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;[&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>CurlyBracketBlock</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;{&quot;</span>)),
+            <span class="ident">Token</span>::<span class="ident">ParenthesisBlock</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;(&quot;</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">SquareBracketBlock</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;[&quot;</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">CurlyBracketBlock</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;{&quot;</span>)<span class="question-mark">?</span>,
 
-            <span class='ident'>Token</span>::<span class='ident'>BadUrl</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;url(&lt;bad url&gt;)&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>BadString</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;\&quot;&lt;bad string&gt;\n&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>CloseParenthesis</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;)&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>CloseSquareBracket</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;]&quot;</span>)),
-            <span class='ident'>Token</span>::<span class='ident'>CloseCurlyBracket</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;}&quot;</span>)),
+            <span class="ident">Token</span>::<span class="ident">BadUrl</span>(<span class="kw-2">ref</span> <span class="ident">contents</span>) <span class="op">=&gt;</span> {
+                <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;url(&quot;</span>)<span class="question-mark">?</span>;
+                <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="ident">contents</span>)<span class="question-mark">?</span>;
+                <span class="ident">dest</span>.<span class="ident">write_char</span>(<span class="string">&#39;)&#39;</span>)<span class="question-mark">?</span>;
+            }
+            <span class="ident">Token</span>::<span class="ident">BadString</span>(<span class="kw-2">ref</span> <span class="ident">value</span>) <span class="op">=&gt;</span> {
+                <span class="comment">// During tokenization, an unescaped newline after a quote causes</span>
+                <span class="comment">// the token to be a BadString instead of a QuotedString.</span>
+                <span class="comment">// The BadString token ends just before the newline</span>
+                <span class="comment">// (which is in a separate WhiteSpace token),</span>
+                <span class="comment">// and therefore does not have a closing quote.</span>
+                <span class="ident">dest</span>.<span class="ident">write_char</span>(<span class="string">&#39;&quot;&#39;</span>)<span class="question-mark">?</span>;
+                <span class="ident">CssStringWriter</span>::<span class="ident">new</span>(<span class="ident">dest</span>).<span class="ident">write_str</span>(<span class="ident">value</span>)<span class="question-mark">?</span>;
+            },
+            <span class="ident">Token</span>::<span class="ident">CloseParenthesis</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;)&quot;</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">CloseSquareBracket</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;]&quot;</span>)<span class="question-mark">?</span>,
+            <span class="ident">Token</span>::<span class="ident">CloseCurlyBracket</span> <span class="op">=&gt;</span> <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;}&quot;</span>)<span class="question-mark">?</span>,
         }
-        <span class='prelude-val'>Ok</span>(())
+        <span class="prelude-val">Ok</span>(())
     }
 }
 
+<span class="kw">fn</span> <span class="ident">hex_escape</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="ident">ascii_byte</span>: <span class="ident">u8</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> <span class="kw">where</span> <span class="ident">W</span>:<span class="ident">fmt</span>::<span class="ident">Write</span> {
+    <span class="kw">static</span> <span class="ident">HEX_DIGITS</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">16</span>] <span class="op">=</span> <span class="string">b&quot;0123456789abcdef&quot;</span>;
+    <span class="kw">let</span> <span class="ident">b3</span>;
+    <span class="kw">let</span> <span class="ident">b4</span>;
+    <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">ascii_byte</span> <span class="op">&gt;</span> <span class="number">0x0F</span> {
+        <span class="kw">let</span> <span class="ident">high</span> <span class="op">=</span> (<span class="ident">ascii_byte</span> <span class="op">&gt;&gt;</span> <span class="number">4</span>) <span class="kw">as</span> <span class="ident">usize</span>;
+        <span class="kw">let</span> <span class="ident">low</span> <span class="op">=</span> (<span class="ident">ascii_byte</span> <span class="op">&amp;</span> <span class="number">0x0F</span>) <span class="kw">as</span> <span class="ident">usize</span>;
+        <span class="ident">b4</span> <span class="op">=</span> [<span class="string">b&#39;\\&#39;</span>, <span class="ident">HEX_DIGITS</span>[<span class="ident">high</span>], <span class="ident">HEX_DIGITS</span>[<span class="ident">low</span>], <span class="string">b&#39; &#39;</span>];
+        <span class="kw-2">&amp;</span><span class="ident">b4</span>[..]
+    } <span class="kw">else</span> {
+        <span class="ident">b3</span> <span class="op">=</span> [<span class="string">b&#39;\\&#39;</span>, <span class="ident">HEX_DIGITS</span>[<span class="ident">ascii_byte</span> <span class="kw">as</span> <span class="ident">usize</span>], <span class="string">b&#39; &#39;</span>];
+        <span class="kw-2">&amp;</span><span class="ident">b3</span>[..]
+    };
+    <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="kw">unsafe</span> { <span class="ident">str</span>::<span class="ident">from_utf8_unchecked</span>(<span class="kw-2">&amp;</span><span class="ident">bytes</span>) })
+}
 
-<span class='doccomment'>/// Write a CSS identifier, escaping characters as necessary.</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>serialize_identifier</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>dest</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> <span class='kw'>where</span> <span class='ident'>W</span>:<span class='ident'>fmt</span>::<span class='ident'>Write</span> {
-    <span class='kw'>if</span> <span class='ident'>value</span>.<span class='ident'>is_empty</span>() {
-        <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(())
+<span class="kw">fn</span> <span class="ident">char_escape</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="ident">ascii_byte</span>: <span class="ident">u8</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> <span class="kw">where</span> <span class="ident">W</span>:<span class="ident">fmt</span>::<span class="ident">Write</span> {
+    <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> [<span class="string">b&#39;\\&#39;</span>, <span class="ident">ascii_byte</span>];
+    <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="kw">unsafe</span> { <span class="ident">str</span>::<span class="ident">from_utf8_unchecked</span>(<span class="kw-2">&amp;</span><span class="ident">bytes</span>) })
+}
+
+<span class="doccomment">/// Write a CSS identifier, escaping characters as necessary.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">serialize_identifier</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> <span class="kw">where</span> <span class="ident">W</span>:<span class="ident">fmt</span>::<span class="ident">Write</span> {
+    <span class="kw">if</span> <span class="ident">value</span>.<span class="ident">is_empty</span>() {
+        <span class="kw">return</span> <span class="prelude-val">Ok</span>(())
     }
 
-    <span class='kw'>if</span> <span class='ident'>value</span>.<span class='ident'>starts_with</span>(<span class='string'>&quot;--&quot;</span>) {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;--&quot;</span>));
-        <span class='ident'>serialize_name</span>(<span class='kw-2'>&amp;</span><span class='ident'>value</span>[<span class='number'>2</span>..], <span class='ident'>dest</span>)
-    } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>value</span> <span class='op'>==</span> <span class='string'>&quot;-&quot;</span> {
-        <span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;\\-&quot;</span>)
-    } <span class='kw'>else</span> {
-        <span class='kw'>if</span> <span class='ident'>value</span>.<span class='ident'>as_bytes</span>()[<span class='number'>0</span>] <span class='op'>==</span> <span class='string'>b&#39;-&#39;</span> {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;-&quot;</span>));
-            <span class='ident'>value</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>value</span>[<span class='number'>1</span>..];
+    <span class="kw">if</span> <span class="ident">value</span>.<span class="ident">starts_with</span>(<span class="string">&quot;--&quot;</span>) {
+        <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;--&quot;</span>)<span class="question-mark">?</span>;
+        <span class="ident">serialize_name</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>[<span class="number">2</span>..], <span class="ident">dest</span>)
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">value</span> <span class="op">==</span> <span class="string">&quot;-&quot;</span> {
+        <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;\\-&quot;</span>)
+    } <span class="kw">else</span> {
+        <span class="kw">if</span> <span class="ident">value</span>.<span class="ident">as_bytes</span>()[<span class="number">0</span>] <span class="op">==</span> <span class="string">b&#39;-&#39;</span> {
+            <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;-&quot;</span>)<span class="question-mark">?</span>;
+            <span class="ident">value</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">value</span>[<span class="number">1</span>..];
         }
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>digit</span> @ <span class='string'>b&#39;0&#39;</span>...<span class='string'>b&#39;9&#39;</span> <span class='op'>=</span> <span class='ident'>value</span>.<span class='ident'>as_bytes</span>()[<span class='number'>0</span>] {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>dest</span>, <span class='string'>&quot;\\3{} &quot;</span>, <span class='ident'>digit</span> <span class='kw'>as</span> <span class='ident'>char</span>));
-            <span class='ident'>value</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>value</span>[<span class='number'>1</span>..];
+        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">digit</span> @ <span class="string">b&#39;0&#39;</span>...<span class="string">b&#39;9&#39;</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">as_bytes</span>()[<span class="number">0</span>] {
+            <span class="ident">hex_escape</span>(<span class="ident">digit</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>;
+            <span class="ident">value</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">value</span>[<span class="number">1</span>..];
         }
-        <span class='ident'>serialize_name</span>(<span class='ident'>value</span>, <span class='ident'>dest</span>)
+        <span class="ident">serialize_name</span>(<span class="ident">value</span>, <span class="ident">dest</span>)
     }
 }
 
-
-<span class='kw'>fn</span> <span class='ident'>serialize_name</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>dest</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> <span class='kw'>where</span> <span class='ident'>W</span>:<span class='ident'>fmt</span>::<span class='ident'>Write</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>chunk_start</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>for</span> (<span class='ident'>i</span>, <span class='ident'>b</span>) <span class='kw'>in</span> <span class='ident'>value</span>.<span class='ident'>bytes</span>().<span class='ident'>enumerate</span>() {
-        <span class='kw'>let</span> <span class='ident'>escaped</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>b</span> {
-            <span class='string'>b&#39;0&#39;</span>...<span class='string'>b&#39;9&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;A&#39;</span>...<span class='string'>b&#39;Z&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;a&#39;</span>...<span class='string'>b&#39;z&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;_&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;-&#39;</span> <span class='op'>=&gt;</span> <span class='kw'>continue</span>,
-            _ <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>b</span>.<span class='ident'>is_ascii</span>() <span class='op'>=&gt;</span> <span class='kw'>continue</span>,
-            <span class='string'>b&#39;\0&#39;</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='string'>&quot;\u{FFFD}&quot;</span>),
-            _ <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
+<span class="doccomment">/// Write a CSS name, like a custom property name.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// You should only use this when you know what you&#39;re doing, when in doubt,</span>
+<span class="doccomment">/// consider using `serialize_identifier`.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">serialize_name</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> <span class="kw">where</span> <span class="ident">W</span>:<span class="ident">fmt</span>::<span class="ident">Write</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chunk_start</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">b</span>) <span class="kw">in</span> <span class="ident">value</span>.<span class="ident">bytes</span>().<span class="ident">enumerate</span>() {
+        <span class="kw">let</span> <span class="ident">escaped</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">b</span> {
+            <span class="string">b&#39;0&#39;</span>...<span class="string">b&#39;9&#39;</span> <span class="op">|</span> <span class="string">b&#39;A&#39;</span>...<span class="string">b&#39;Z&#39;</span> <span class="op">|</span> <span class="string">b&#39;a&#39;</span>...<span class="string">b&#39;z&#39;</span> <span class="op">|</span> <span class="string">b&#39;_&#39;</span> <span class="op">|</span> <span class="string">b&#39;-&#39;</span> <span class="op">=&gt;</span> <span class="kw">continue</span>,
+            <span class="kw">_</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">b</span>.<span class="ident">is_ascii</span>() <span class="op">=&gt;</span> <span class="kw">continue</span>,
+            <span class="string">b&#39;\0&#39;</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="string">&quot;\u{FFFD}&quot;</span>),
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         };
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>value</span>[<span class='ident'>chunk_start</span>..<span class='ident'>i</span>]));
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>escaped</span>) <span class='op'>=</span> <span class='ident'>escaped</span> {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='ident'>escaped</span>));
-        } <span class='kw'>else</span> <span class='kw'>if</span> (<span class='ident'>b</span> <span class='op'>&gt;=</span> <span class='string'>b&#39;\x01&#39;</span> <span class='op'>&amp;&amp;</span> <span class='ident'>b</span> <span class='op'>&lt;=</span> <span class='string'>b&#39;\x1F&#39;</span>) <span class='op'>||</span> <span class='ident'>b</span> <span class='op'>==</span> <span class='string'>b&#39;\x7F&#39;</span> {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>dest</span>, <span class='string'>&quot;\\{:x} &quot;</span>, <span class='ident'>b</span>));
-        } <span class='kw'>else</span> {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>dest</span>, <span class='string'>&quot;\\{}&quot;</span>, <span class='ident'>b</span> <span class='kw'>as</span> <span class='ident'>char</span>));
+        <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>[<span class="ident">chunk_start</span>..<span class="ident">i</span>])<span class="question-mark">?</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">escaped</span>) <span class="op">=</span> <span class="ident">escaped</span> {
+            <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="ident">escaped</span>)<span class="question-mark">?</span>;
+        } <span class="kw">else</span> <span class="kw">if</span> (<span class="ident">b</span> <span class="op">&gt;=</span> <span class="string">b&#39;\x01&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">b</span> <span class="op">&lt;=</span> <span class="string">b&#39;\x1F&#39;</span>) <span class="op">||</span> <span class="ident">b</span> <span class="op">==</span> <span class="string">b&#39;\x7F&#39;</span> {
+            <span class="ident">hex_escape</span>(<span class="ident">b</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>;
+        } <span class="kw">else</span> {
+            <span class="ident">char_escape</span>(<span class="ident">b</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>;
         }
-        <span class='ident'>chunk_start</span> <span class='op'>=</span> <span class='ident'>i</span> <span class='op'>+</span> <span class='number'>1</span>;
+        <span class="ident">chunk_start</span> <span class="op">=</span> <span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>;
     }
-    <span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>value</span>[<span class='ident'>chunk_start</span>..])
+    <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>[<span class="ident">chunk_start</span>..])
 }
 
 
-<span class='kw'>fn</span> <span class='ident'>serialize_unquoted_url</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>dest</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> <span class='kw'>where</span> <span class='ident'>W</span>:<span class='ident'>fmt</span>::<span class='ident'>Write</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>chunk_start</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>for</span> (<span class='ident'>i</span>, <span class='ident'>b</span>) <span class='kw'>in</span> <span class='ident'>value</span>.<span class='ident'>bytes</span>().<span class='ident'>enumerate</span>() {
-        <span class='kw'>let</span> <span class='ident'>hex</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>b</span> {
-            <span class='string'>b&#39;\0&#39;</span> ... <span class='string'>b&#39; &#39;</span> <span class='op'>|</span> <span class='string'>b&#39;\x7F&#39;</span> <span class='op'>=&gt;</span> <span class='boolvalue'>true</span>,
-            <span class='string'>b&#39;(&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;)&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;&quot;&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;\&#39;&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;\\&#39;</span> <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
-            _ <span class='op'>=&gt;</span> <span class='kw'>continue</span>
+<span class="kw">fn</span> <span class="ident">serialize_unquoted_url</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> <span class="kw">where</span> <span class="ident">W</span>:<span class="ident">fmt</span>::<span class="ident">Write</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chunk_start</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">b</span>) <span class="kw">in</span> <span class="ident">value</span>.<span class="ident">bytes</span>().<span class="ident">enumerate</span>() {
+        <span class="kw">let</span> <span class="ident">hex</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">b</span> {
+            <span class="string">b&#39;\0&#39;</span> ... <span class="string">b&#39; &#39;</span> <span class="op">|</span> <span class="string">b&#39;\x7F&#39;</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+            <span class="string">b&#39;(&#39;</span> <span class="op">|</span> <span class="string">b&#39;)&#39;</span> <span class="op">|</span> <span class="string">b&#39;&quot;&#39;</span> <span class="op">|</span> <span class="string">b&#39;\&#39;&#39;</span> <span class="op">|</span> <span class="string">b&#39;\\&#39;</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">continue</span>
         };
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>value</span>[<span class='ident'>chunk_start</span>..<span class='ident'>i</span>]));
-        <span class='kw'>if</span> <span class='ident'>hex</span> {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>dest</span>, <span class='string'>&quot;\\{:X} &quot;</span>, <span class='ident'>b</span>));
-        } <span class='kw'>else</span> {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>dest</span>, <span class='string'>&quot;\\{}&quot;</span>, <span class='ident'>b</span> <span class='kw'>as</span> <span class='ident'>char</span>));
+        <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>[<span class="ident">chunk_start</span>..<span class="ident">i</span>])<span class="question-mark">?</span>;
+        <span class="kw">if</span> <span class="ident">hex</span> {
+            <span class="ident">hex_escape</span>(<span class="ident">b</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>;
+        } <span class="kw">else</span> {
+            <span class="ident">char_escape</span>(<span class="ident">b</span>, <span class="ident">dest</span>)<span class="question-mark">?</span>;
         }
-        <span class='ident'>chunk_start</span> <span class='op'>=</span> <span class='ident'>i</span> <span class='op'>+</span> <span class='number'>1</span>;
+        <span class="ident">chunk_start</span> <span class="op">=</span> <span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>;
     }
-    <span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>value</span>[<span class='ident'>chunk_start</span>..])
+    <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>[<span class="ident">chunk_start</span>..])
 }
 
 
-<span class='doccomment'>/// Write a double-quoted CSS string token, escaping content as necessary.</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>serialize_string</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>(<span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>dest</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> <span class='kw'>where</span> <span class='ident'>W</span>: <span class='ident'>fmt</span>::<span class='ident'>Write</span> {
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;\&quot;&quot;</span>));
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>CssStringWriter</span>::<span class='ident'>new</span>(<span class='ident'>dest</span>).<span class='ident'>write_str</span>(<span class='ident'>value</span>));
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dest</span>.<span class='ident'>write_str</span>(<span class='string'>&quot;\&quot;&quot;</span>));
-    <span class='prelude-val'>Ok</span>(())
+<span class="doccomment">/// Write a double-quoted CSS string token, escaping content as necessary.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">serialize_string</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> <span class="kw">where</span> <span class="ident">W</span>: <span class="ident">fmt</span>::<span class="ident">Write</span> {
+    <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;\&quot;&quot;</span>)<span class="question-mark">?</span>;
+    <span class="ident">CssStringWriter</span>::<span class="ident">new</span>(<span class="ident">dest</span>).<span class="ident">write_str</span>(<span class="ident">value</span>)<span class="question-mark">?</span>;
+    <span class="ident">dest</span>.<span class="ident">write_str</span>(<span class="string">&quot;\&quot;&quot;</span>)<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(())
 }
 
 
-<span class='doccomment'>/// A `fmt::Write` adapter that escapes text for writing as a double-quoted CSS string.</span>
-<span class='doccomment'>/// Quotes are not included.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Typical usage:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```{rust,ignore}</span>
-<span class='doccomment'>/// fn write_foo&lt;W&gt;(foo: &amp;Foo, dest: &amp;mut W) -&gt; fmt::Result where W: fmt::Write {</span>
-<span class='doccomment'>///     try!(dest.write_str(&quot;\&quot;&quot;));</span>
-<span class='doccomment'>///     {</span>
-<span class='doccomment'>///         let mut string_dest = CssStringWriter::new(dest);</span>
-<span class='doccomment'>///         // Write into string_dest...</span>
-<span class='doccomment'>///     }</span>
-<span class='doccomment'>///     try!(dest.write_str(&quot;\&quot;&quot;));</span>
-<span class='doccomment'>///     Ok(())</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>CssStringWriter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>W</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='ident'>inner</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>W</span>,
+<span class="doccomment">/// A `fmt::Write` adapter that escapes text for writing as a double-quoted CSS string.</span>
+<span class="doccomment">/// Quotes are not included.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Typical usage:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```{rust,ignore}</span>
+<span class="doccomment">/// fn write_foo&lt;W&gt;(foo: &amp;Foo, dest: &amp;mut W) -&gt; fmt::Result where W: fmt::Write {</span>
+<span class="doccomment">///     try!(dest.write_str(&quot;\&quot;&quot;));</span>
+<span class="doccomment">///     {</span>
+<span class="doccomment">///         let mut string_dest = CssStringWriter::new(dest);</span>
+<span class="doccomment">///         // Write into string_dest...</span>
+<span class="doccomment">///     }</span>
+<span class="doccomment">///     try!(dest.write_str(&quot;\&quot;&quot;));</span>
+<span class="doccomment">///     Ok(())</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CssStringWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">W</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">W</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>W</span><span class='op'>&gt;</span> <span class='ident'>CssStringWriter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>W</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>W</span>: <span class='ident'>fmt</span>::<span class='ident'>Write</span> {
-    <span class='doccomment'>/// Wrap a text writer to create a `CssStringWriter`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>inner</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>CssStringWriter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>W</span><span class='op'>&gt;</span> {
-        <span class='ident'>CssStringWriter</span> { <span class='ident'>inner</span>: <span class='ident'>inner</span> }
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">W</span><span class="op">&gt;</span> <span class="ident">CssStringWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">W</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">W</span>: <span class="ident">fmt</span>::<span class="ident">Write</span> {
+    <span class="doccomment">/// Wrap a text writer to create a `CssStringWriter`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">CssStringWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">W</span><span class="op">&gt;</span> {
+        <span class="ident">CssStringWriter</span> { <span class="ident">inner</span>: <span class="ident">inner</span> }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>W</span><span class='op'>&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Write</span> <span class='kw'>for</span> <span class='ident'>CssStringWriter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>W</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>W</span>: <span class='ident'>fmt</span>::<span class='ident'>Write</span> {
-    <span class='kw'>fn</span> <span class='ident'>write_str</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>chunk_start</span> <span class='op'>=</span> <span class='number'>0</span>;
-        <span class='kw'>for</span> (<span class='ident'>i</span>, <span class='ident'>b</span>) <span class='kw'>in</span> <span class='ident'>s</span>.<span class='ident'>bytes</span>().<span class='ident'>enumerate</span>() {
-            <span class='kw'>let</span> <span class='ident'>escaped</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>b</span> {
-                <span class='string'>b&#39;&quot;&#39;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;\\\&quot;&quot;</span>,
-                <span class='string'>b&#39;\\&#39;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;\\\\&quot;</span>,
-                <span class='string'>b&#39;\n&#39;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;\\A &quot;</span>,
-                <span class='string'>b&#39;\r&#39;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;\\D &quot;</span>,
-                <span class='string'>b&#39;\x0C&#39;</span> <span class='op'>=&gt;</span> <span class='string'>&quot;\\C &quot;</span>,
-                _ <span class='op'>=&gt;</span> <span class='kw'>continue</span>,
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">W</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">CssStringWriter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">W</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">W</span>: <span class="ident">fmt</span>::<span class="ident">Write</span> {
+    <span class="kw">fn</span> <span class="ident">write_str</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chunk_start</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">b</span>) <span class="kw">in</span> <span class="ident">s</span>.<span class="ident">bytes</span>().<span class="ident">enumerate</span>() {
+            <span class="kw">let</span> <span class="ident">escaped</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">b</span> {
+                <span class="string">b&#39;&quot;&#39;</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="string">&quot;\\\&quot;&quot;</span>),
+                <span class="string">b&#39;\\&#39;</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="string">&quot;\\\\&quot;</span>),
+                <span class="string">b&#39;\0&#39;</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="string">&quot;\u{FFFD}&quot;</span>),
+                <span class="string">b&#39;\x01&#39;</span>...<span class="string">b&#39;\x1F&#39;</span> <span class="op">|</span> <span class="string">b&#39;\x7F&#39;</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">continue</span>,
             };
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>write_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>s</span>[<span class='ident'>chunk_start</span>..<span class='ident'>i</span>]));
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>write_str</span>(<span class='ident'>escaped</span>));
-            <span class='ident'>chunk_start</span> <span class='op'>=</span> <span class='ident'>i</span> <span class='op'>+</span> <span class='number'>1</span>;
+            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">write_str</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>[<span class="ident">chunk_start</span>..<span class="ident">i</span>])<span class="question-mark">?</span>;
+            <span class="kw">match</span> <span class="ident">escaped</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">x</span>) <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">write_str</span>(<span class="ident">x</span>)<span class="question-mark">?</span>,
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">hex_escape</span>(<span class="ident">b</span>, <span class="self">self</span>.<span class="ident">inner</span>)<span class="question-mark">?</span>,
+            };
+            <span class="ident">chunk_start</span> <span class="op">=</span> <span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>;
         }
-        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>write_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>s</span>[<span class='ident'>chunk_start</span>..])
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">write_str</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>[<span class="ident">chunk_start</span>..])
     }
 }
 
 
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>impl_tocss_for_number</span> {
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span>: <span class='ident'>ty</span>) <span class='op'>=&gt;</span> {
-        <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ToCss</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>T</span> {
-            <span class='kw'>fn</span> <span class='ident'>to_css</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>dest</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> <span class='kw'>where</span> <span class='ident'>W</span>: <span class='ident'>fmt</span>::<span class='ident'>Write</span> {
-                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>dest</span>, <span class='string'>&quot;{}&quot;</span>, <span class='op'>*</span><span class='self'>self</span>)
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">impl_tocss_for_int</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">T</span>: <span class="ident">ty</span>) <span class="op">=&gt;</span> {
+        <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ToCss</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">T</span> {
+            <span class="kw">fn</span> <span class="ident">to_css</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> <span class="kw">where</span> <span class="ident">W</span>: <span class="ident">fmt</span>::<span class="ident">Write</span> {
+                <span class="kw">struct</span> <span class="ident">AssumeUtf8</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">fmt</span>::<span class="ident">Write</span><span class="op">&gt;</span>(<span class="ident">W</span>);
+
+                <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">fmt</span>::<span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">AssumeUtf8</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
+                    <span class="attribute">#[<span class="ident">inline</span>]</span>
+                    <span class="kw">fn</span> <span class="ident">write_all</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+                        <span class="comment">// Safety: itoa only emits ASCII, which is also well-formed UTF-8.</span>
+                        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">buf</span>.<span class="ident">is_ascii</span>());
+                        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">write_str</span>(<span class="kw">unsafe</span> { <span class="ident">str</span>::<span class="ident">from_utf8_unchecked</span>(<span class="ident">buf</span>) })
+                            .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>.<span class="ident">into</span>())
+                    }
+
+                    <span class="attribute">#[<span class="ident">inline</span>]</span>
+                    <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+                        <span class="self">self</span>.<span class="ident">write_all</span>(<span class="ident">buf</span>)<span class="question-mark">?</span>;
+                        <span class="prelude-val">Ok</span>(<span class="ident">buf</span>.<span class="ident">len</span>())
+                    }
+
+                    <span class="attribute">#[<span class="ident">inline</span>]</span>
+                    <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+                        <span class="prelude-val">Ok</span>(())
+                    }
+                }
+
+                <span class="kw">match</span> <span class="ident">itoa</span>::<span class="ident">write</span>(<span class="ident">AssumeUtf8</span>(<span class="ident">dest</span>), <span class="kw-2">*</span><span class="self">self</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(()),
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">fmt</span>::<span class="ident">Error</span>)
+                }
             }
         }
     }
 }
 
-<span class='macro'>impl_tocss_for_number</span><span class='macro'>!</span>(<span class='ident'>f32</span>);
-<span class='macro'>impl_tocss_for_number</span><span class='macro'>!</span>(<span class='ident'>f64</span>);
-<span class='macro'>impl_tocss_for_number</span><span class='macro'>!</span>(<span class='ident'>i8</span>);
-<span class='macro'>impl_tocss_for_number</span><span class='macro'>!</span>(<span class='ident'>u8</span>);
-<span class='macro'>impl_tocss_for_number</span><span class='macro'>!</span>(<span class='ident'>i16</span>);
-<span class='macro'>impl_tocss_for_number</span><span class='macro'>!</span>(<span class='ident'>u16</span>);
-<span class='macro'>impl_tocss_for_number</span><span class='macro'>!</span>(<span class='ident'>i32</span>);
-<span class='macro'>impl_tocss_for_number</span><span class='macro'>!</span>(<span class='ident'>u32</span>);
-<span class='macro'>impl_tocss_for_number</span><span class='macro'>!</span>(<span class='ident'>i64</span>);
-<span class='macro'>impl_tocss_for_number</span><span class='macro'>!</span>(<span class='ident'>u64</span>);
+<span class="macro">impl_tocss_for_int</span><span class="macro">!</span>(<span class="ident">i8</span>);
+<span class="macro">impl_tocss_for_int</span><span class="macro">!</span>(<span class="ident">u8</span>);
+<span class="macro">impl_tocss_for_int</span><span class="macro">!</span>(<span class="ident">i16</span>);
+<span class="macro">impl_tocss_for_int</span><span class="macro">!</span>(<span class="ident">u16</span>);
+<span class="macro">impl_tocss_for_int</span><span class="macro">!</span>(<span class="ident">i32</span>);
+<span class="macro">impl_tocss_for_int</span><span class="macro">!</span>(<span class="ident">u32</span>);
+<span class="macro">impl_tocss_for_int</span><span class="macro">!</span>(<span class="ident">i64</span>);
+<span class="macro">impl_tocss_for_int</span><span class="macro">!</span>(<span class="ident">u64</span>);
 
-
-<span class='doccomment'>/// A category of token. See the `needs_separator_when_before` method.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Debug</span>)]</span>
-<span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;heap_size&quot;</span>, <span class='ident'>derive</span>(<span class='ident'>HeapSizeOf</span>))]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TokenSerializationType</span>(<span class='ident'>TokenSerializationTypeVariants</span>);
-
-<span class='kw'>impl</span> <span class='ident'>TokenSerializationType</span> {
-    <span class='doccomment'>/// Return a value that represents the absence of a token, e.g. before the start of the input.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>nothing</span>() <span class='op'>-&gt;</span> <span class='ident'>TokenSerializationType</span> {
-        <span class='ident'>TokenSerializationType</span>(<span class='ident'>TokenSerializationTypeVariants</span>::<span class='ident'>Nothing</span>)
-    }
-
-    <span class='doccomment'>/// If this value is `TokenSerializationType::nothing()`, set it to the given value instead.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_if_nothing</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>new_value</span>: <span class='ident'>TokenSerializationType</span>) {
-        <span class='kw'>if</span> <span class='self'>self</span>.<span class='number'>0</span> <span class='op'>==</span> <span class='ident'>TokenSerializationTypeVariants</span>::<span class='ident'>Nothing</span> {
-            <span class='self'>self</span>.<span class='number'>0</span> <span class='op'>=</span> <span class='ident'>new_value</span>.<span class='number'>0</span>
-        }
-    }
-
-    <span class='doccomment'>/// Return true if, when a token of category `self` is serialized just before</span>
-    <span class='doccomment'>/// a token of category `other` with no whitespace in between,</span>
-    <span class='doccomment'>/// an empty comment `/**/` needs to be inserted between them</span>
-    <span class='doccomment'>/// so that they are not re-parsed as a single token.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// See https://drafts.csswg.org/css-syntax/#serialization</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>needs_separator_when_before</span>(<span class='self'>self</span>, <span class='ident'>other</span>: <span class='ident'>TokenSerializationType</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>TokenSerializationTypeVariants</span>::<span class='op'>*</span>;
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='number'>0</span> {
-            <span class='ident'>Ident</span> <span class='op'>=&gt;</span> <span class='macro'>matches</span><span class='macro'>!</span>(<span class='ident'>other</span>.<span class='number'>0</span>,
-                <span class='ident'>Ident</span> <span class='op'>|</span> <span class='ident'>Function</span> <span class='op'>|</span> <span class='ident'>UrlOrBadUrl</span> <span class='op'>|</span> <span class='ident'>DelimMinus</span> <span class='op'>|</span> <span class='ident'>Number</span> <span class='op'>|</span> <span class='ident'>Percentage</span> <span class='op'>|</span> <span class='ident'>Dimension</span> <span class='op'>|</span>
-                <span class='ident'>UnicodeRange</span> <span class='op'>|</span> <span class='ident'>CDC</span> <span class='op'>|</span> <span class='ident'>OpenParen</span>),
-            <span class='ident'>AtKeywordOrHash</span> <span class='op'>|</span> <span class='ident'>Dimension</span> <span class='op'>=&gt;</span> <span class='macro'>matches</span><span class='macro'>!</span>(<span class='ident'>other</span>.<span class='number'>0</span>,
-                <span class='ident'>Ident</span> <span class='op'>|</span> <span class='ident'>Function</span> <span class='op'>|</span> <span class='ident'>UrlOrBadUrl</span> <span class='op'>|</span> <span class='ident'>DelimMinus</span> <span class='op'>|</span> <span class='ident'>Number</span> <span class='op'>|</span> <span class='ident'>Percentage</span> <span class='op'>|</span> <span class='ident'>Dimension</span> <span class='op'>|</span>
-                <span class='ident'>UnicodeRange</span> <span class='op'>|</span> <span class='ident'>CDC</span>),
-            <span class='ident'>DelimHash</span> <span class='op'>|</span> <span class='ident'>DelimMinus</span> <span class='op'>|</span> <span class='ident'>Number</span> <span class='op'>=&gt;</span> <span class='macro'>matches</span><span class='macro'>!</span>(<span class='ident'>other</span>.<span class='number'>0</span>,
-                <span class='ident'>Ident</span> <span class='op'>|</span> <span class='ident'>Function</span> <span class='op'>|</span> <span class='ident'>UrlOrBadUrl</span> <span class='op'>|</span> <span class='ident'>DelimMinus</span> <span class='op'>|</span> <span class='ident'>Number</span> <span class='op'>|</span> <span class='ident'>Percentage</span> <span class='op'>|</span> <span class='ident'>Dimension</span> <span class='op'>|</span>
-                <span class='ident'>UnicodeRange</span>),
-            <span class='ident'>DelimAt</span> <span class='op'>=&gt;</span> <span class='macro'>matches</span><span class='macro'>!</span>(<span class='ident'>other</span>.<span class='number'>0</span>,
-                <span class='ident'>Ident</span> <span class='op'>|</span> <span class='ident'>Function</span> <span class='op'>|</span> <span class='ident'>UrlOrBadUrl</span> <span class='op'>|</span> <span class='ident'>DelimMinus</span> <span class='op'>|</span> <span class='ident'>UnicodeRange</span>),
-            <span class='ident'>UnicodeRange</span> <span class='op'>=&gt;</span> <span class='macro'>matches</span><span class='macro'>!</span>(<span class='ident'>other</span>.<span class='number'>0</span>,
-                <span class='ident'>Ident</span> <span class='op'>|</span> <span class='ident'>Function</span> <span class='op'>|</span> <span class='ident'>Number</span> <span class='op'>|</span> <span class='ident'>Percentage</span> <span class='op'>|</span> <span class='ident'>Dimension</span> <span class='op'>|</span> <span class='ident'>DelimQuestion</span>),
-            <span class='ident'>DelimDotOrPlus</span> <span class='op'>=&gt;</span> <span class='macro'>matches</span><span class='macro'>!</span>(<span class='ident'>other</span>.<span class='number'>0</span>, <span class='ident'>Number</span> <span class='op'>|</span> <span class='ident'>Percentage</span> <span class='op'>|</span> <span class='ident'>Dimension</span>),
-            <span class='ident'>DelimAssorted</span> <span class='op'>|</span> <span class='ident'>DelimAsterisk</span> <span class='op'>=&gt;</span> <span class='macro'>matches</span><span class='macro'>!</span>(<span class='ident'>other</span>.<span class='number'>0</span>, <span class='ident'>DelimEquals</span>),
-            <span class='ident'>DelimBar</span> <span class='op'>=&gt;</span> <span class='macro'>matches</span><span class='macro'>!</span>(<span class='ident'>other</span>.<span class='number'>0</span>, <span class='ident'>DelimEquals</span> <span class='op'>|</span> <span class='ident'>DelimBar</span> <span class='op'>|</span> <span class='ident'>DashMatch</span>),
-            <span class='ident'>DelimSlash</span> <span class='op'>=&gt;</span> <span class='macro'>matches</span><span class='macro'>!</span>(<span class='ident'>other</span>.<span class='number'>0</span>, <span class='ident'>DelimAsterisk</span> <span class='op'>|</span> <span class='ident'>SubstringMatch</span>),
-            <span class='ident'>Nothing</span> <span class='op'>|</span> <span class='ident'>WhiteSpace</span> <span class='op'>|</span> <span class='ident'>Percentage</span> <span class='op'>|</span> <span class='ident'>UrlOrBadUrl</span> <span class='op'>|</span> <span class='ident'>Function</span> <span class='op'>|</span> <span class='ident'>CDC</span> <span class='op'>|</span> <span class='ident'>OpenParen</span> <span class='op'>|</span>
-            <span class='ident'>DashMatch</span> <span class='op'>|</span> <span class='ident'>SubstringMatch</span> <span class='op'>|</span> <span class='ident'>DelimQuestion</span> <span class='op'>|</span> <span class='ident'>DelimEquals</span> <span class='op'>|</span> <span class='ident'>Other</span> <span class='op'>=&gt;</span> <span class='boolvalue'>false</span>,
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">impl_tocss_for_float</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">T</span>: <span class="ident">ty</span>) <span class="op">=&gt;</span> {
+        <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ToCss</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">T</span> {
+            <span class="kw">fn</span> <span class="ident">to_css</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> <span class="kw">where</span> <span class="ident">W</span>: <span class="ident">fmt</span>::<span class="ident">Write</span> {
+                <span class="ident">dtoa_short</span>::<span class="ident">write</span>(<span class="ident">dest</span>, <span class="kw-2">*</span><span class="self">self</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ())
+            }
         }
     }
 }
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Debug</span>)]</span>
-<span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;heap_size&quot;</span>, <span class='ident'>derive</span>(<span class='ident'>HeapSizeOf</span>))]</span>
-<span class='kw'>enum</span> <span class='ident'>TokenSerializationTypeVariants</span> {
-    <span class='ident'>Nothing</span>,
-    <span class='ident'>WhiteSpace</span>,
-    <span class='ident'>AtKeywordOrHash</span>,
-    <span class='ident'>Number</span>,
-    <span class='ident'>Dimension</span>,
-    <span class='ident'>Percentage</span>,
-    <span class='ident'>UnicodeRange</span>,
-    <span class='ident'>UrlOrBadUrl</span>,
-    <span class='ident'>Function</span>,
-    <span class='ident'>Ident</span>,
-    <span class='ident'>CDC</span>,
-    <span class='ident'>DashMatch</span>,
-    <span class='ident'>SubstringMatch</span>,
-    <span class='ident'>OpenParen</span>,         <span class='comment'>// &#39;(&#39;</span>
-    <span class='ident'>DelimHash</span>,         <span class='comment'>// &#39;#&#39;</span>
-    <span class='ident'>DelimAt</span>,           <span class='comment'>// &#39;@&#39;</span>
-    <span class='ident'>DelimDotOrPlus</span>,    <span class='comment'>// &#39;.&#39;, &#39;+&#39;</span>
-    <span class='ident'>DelimMinus</span>,        <span class='comment'>// &#39;-&#39;</span>
-    <span class='ident'>DelimQuestion</span>,     <span class='comment'>// &#39;?&#39;</span>
-    <span class='ident'>DelimAssorted</span>,     <span class='comment'>// &#39;$&#39;, &#39;^&#39;, &#39;~&#39;</span>
-    <span class='ident'>DelimEquals</span>,       <span class='comment'>// &#39;=&#39;</span>
-    <span class='ident'>DelimBar</span>,          <span class='comment'>// &#39;|&#39;</span>
-    <span class='ident'>DelimSlash</span>,        <span class='comment'>// &#39;/&#39;</span>
-    <span class='ident'>DelimAsterisk</span>,     <span class='comment'>// &#39;*&#39;</span>
-    <span class='ident'>Other</span>,             <span class='comment'>// anything else</span>
+<span class="macro">impl_tocss_for_float</span><span class="macro">!</span>(<span class="ident">f32</span>);
+<span class="macro">impl_tocss_for_float</span><span class="macro">!</span>(<span class="ident">f64</span>);
+
+<span class="doccomment">/// A category of token. See the `needs_separator_when_before` method.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TokenSerializationType</span>(<span class="ident">TokenSerializationTypeVariants</span>);
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;heapsize&quot;</span>)]</span>
+<span class="macro">known_heap_size</span><span class="macro">!</span>(<span class="number">0</span>, <span class="ident">TokenSerializationType</span>);
+
+<span class="kw">impl</span> <span class="ident">TokenSerializationType</span> {
+    <span class="doccomment">/// Return a value that represents the absence of a token, e.g. before the start of the input.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">nothing</span>() <span class="op">-&gt;</span> <span class="ident">TokenSerializationType</span> {
+        <span class="ident">TokenSerializationType</span>(<span class="ident">TokenSerializationTypeVariants</span>::<span class="ident">Nothing</span>)
+    }
+
+    <span class="doccomment">/// If this value is `TokenSerializationType::nothing()`, set it to the given value instead.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_if_nothing</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">new_value</span>: <span class="ident">TokenSerializationType</span>) {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="number">0</span> <span class="op">==</span> <span class="ident">TokenSerializationTypeVariants</span>::<span class="ident">Nothing</span> {
+            <span class="self">self</span>.<span class="number">0</span> <span class="op">=</span> <span class="ident">new_value</span>.<span class="number">0</span>
+        }
+    }
+
+    <span class="doccomment">/// Return true if, when a token of category `self` is serialized just before</span>
+    <span class="doccomment">/// a token of category `other` with no whitespace in between,</span>
+    <span class="doccomment">/// an empty comment `/**/` needs to be inserted between them</span>
+    <span class="doccomment">/// so that they are not re-parsed as a single token.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See https://drafts.csswg.org/css-syntax/#serialization</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">needs_separator_when_before</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">TokenSerializationType</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">use</span> <span class="self">self</span>::<span class="ident">TokenSerializationTypeVariants</span>::<span class="kw-2">*</span>;
+        <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span> {
+            <span class="ident">Ident</span> <span class="op">=&gt;</span> <span class="macro">matches</span><span class="macro">!</span>(<span class="ident">other</span>.<span class="number">0</span>,
+                <span class="ident">Ident</span> <span class="op">|</span> <span class="ident">Function</span> <span class="op">|</span> <span class="ident">UrlOrBadUrl</span> <span class="op">|</span> <span class="ident">DelimMinus</span> <span class="op">|</span> <span class="ident">Number</span> <span class="op">|</span> <span class="ident">Percentage</span> <span class="op">|</span> <span class="ident">Dimension</span> <span class="op">|</span>
+                <span class="ident">CDC</span> <span class="op">|</span> <span class="ident">OpenParen</span>),
+            <span class="ident">AtKeywordOrHash</span> <span class="op">|</span> <span class="ident">Dimension</span> <span class="op">=&gt;</span> <span class="macro">matches</span><span class="macro">!</span>(<span class="ident">other</span>.<span class="number">0</span>,
+                <span class="ident">Ident</span> <span class="op">|</span> <span class="ident">Function</span> <span class="op">|</span> <span class="ident">UrlOrBadUrl</span> <span class="op">|</span> <span class="ident">DelimMinus</span> <span class="op">|</span> <span class="ident">Number</span> <span class="op">|</span> <span class="ident">Percentage</span> <span class="op">|</span> <span class="ident">Dimension</span> <span class="op">|</span>
+                <span class="ident">CDC</span>),
+            <span class="ident">DelimHash</span> <span class="op">|</span> <span class="ident">DelimMinus</span> <span class="op">|</span> <span class="ident">Number</span> <span class="op">=&gt;</span> <span class="macro">matches</span><span class="macro">!</span>(<span class="ident">other</span>.<span class="number">0</span>,
+                <span class="ident">Ident</span> <span class="op">|</span> <span class="ident">Function</span> <span class="op">|</span> <span class="ident">UrlOrBadUrl</span> <span class="op">|</span> <span class="ident">DelimMinus</span> <span class="op">|</span> <span class="ident">Number</span> <span class="op">|</span> <span class="ident">Percentage</span> <span class="op">|</span> <span class="ident">Dimension</span>),
+            <span class="ident">DelimAt</span> <span class="op">=&gt;</span> <span class="macro">matches</span><span class="macro">!</span>(<span class="ident">other</span>.<span class="number">0</span>,
+                <span class="ident">Ident</span> <span class="op">|</span> <span class="ident">Function</span> <span class="op">|</span> <span class="ident">UrlOrBadUrl</span> <span class="op">|</span> <span class="ident">DelimMinus</span>),
+            <span class="ident">DelimDotOrPlus</span> <span class="op">=&gt;</span> <span class="macro">matches</span><span class="macro">!</span>(<span class="ident">other</span>.<span class="number">0</span>, <span class="ident">Number</span> <span class="op">|</span> <span class="ident">Percentage</span> <span class="op">|</span> <span class="ident">Dimension</span>),
+            <span class="ident">DelimAssorted</span> <span class="op">|</span> <span class="ident">DelimAsterisk</span> <span class="op">=&gt;</span> <span class="macro">matches</span><span class="macro">!</span>(<span class="ident">other</span>.<span class="number">0</span>, <span class="ident">DelimEquals</span>),
+            <span class="ident">DelimBar</span> <span class="op">=&gt;</span> <span class="macro">matches</span><span class="macro">!</span>(<span class="ident">other</span>.<span class="number">0</span>, <span class="ident">DelimEquals</span> <span class="op">|</span> <span class="ident">DelimBar</span> <span class="op">|</span> <span class="ident">DashMatch</span>),
+            <span class="ident">DelimSlash</span> <span class="op">=&gt;</span> <span class="macro">matches</span><span class="macro">!</span>(<span class="ident">other</span>.<span class="number">0</span>, <span class="ident">DelimAsterisk</span> <span class="op">|</span> <span class="ident">SubstringMatch</span>),
+            <span class="ident">Nothing</span> <span class="op">|</span> <span class="ident">WhiteSpace</span> <span class="op">|</span> <span class="ident">Percentage</span> <span class="op">|</span> <span class="ident">UrlOrBadUrl</span> <span class="op">|</span> <span class="ident">Function</span> <span class="op">|</span> <span class="ident">CDC</span> <span class="op">|</span> <span class="ident">OpenParen</span> <span class="op">|</span>
+            <span class="ident">DashMatch</span> <span class="op">|</span> <span class="ident">SubstringMatch</span> <span class="op">|</span> <span class="ident">DelimQuestion</span> <span class="op">|</span> <span class="ident">DelimEquals</span> <span class="op">|</span> <span class="ident">Other</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+        }
+    }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Token</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Categorize a token into a type that determines when `/**/` needs to be inserted</span>
-    <span class='doccomment'>/// between two tokens when serialized next to each other without whitespace in between.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// See the `TokenSerializationType::needs_separator_when_before` method.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>serialization_type</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>TokenSerializationType</span> {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>TokenSerializationTypeVariants</span>::<span class='op'>*</span>;
-        <span class='ident'>TokenSerializationType</span>(<span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>Token</span>::<span class='ident'>Ident</span>(_) <span class='op'>=&gt;</span> <span class='ident'>Ident</span>,
-            <span class='ident'>Token</span>::<span class='ident'>AtKeyword</span>(_) <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>Hash</span>(_) <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>IDHash</span>(_) <span class='op'>=&gt;</span> <span class='ident'>AtKeywordOrHash</span>,
-            <span class='ident'>Token</span>::<span class='ident'>UnquotedUrl</span>(_) <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>BadUrl</span> <span class='op'>=&gt;</span> <span class='ident'>UrlOrBadUrl</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Delim</span>(<span class='string'>&#39;#&#39;</span>) <span class='op'>=&gt;</span> <span class='ident'>DelimHash</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Delim</span>(<span class='string'>&#39;@&#39;</span>) <span class='op'>=&gt;</span> <span class='ident'>DelimAt</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Delim</span>(<span class='string'>&#39;.&#39;</span>) <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>Delim</span>(<span class='string'>&#39;+&#39;</span>) <span class='op'>=&gt;</span> <span class='ident'>DelimDotOrPlus</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Delim</span>(<span class='string'>&#39;-&#39;</span>) <span class='op'>=&gt;</span> <span class='ident'>DelimMinus</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Delim</span>(<span class='string'>&#39;?&#39;</span>) <span class='op'>=&gt;</span> <span class='ident'>DelimQuestion</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Delim</span>(<span class='string'>&#39;$&#39;</span>) <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>Delim</span>(<span class='string'>&#39;^&#39;</span>) <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>Delim</span>(<span class='string'>&#39;~&#39;</span>) <span class='op'>=&gt;</span> <span class='ident'>DelimAssorted</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Delim</span>(<span class='string'>&#39;=&#39;</span>) <span class='op'>=&gt;</span> <span class='ident'>DelimEquals</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Delim</span>(<span class='string'>&#39;|&#39;</span>) <span class='op'>=&gt;</span> <span class='ident'>DelimBar</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Delim</span>(<span class='string'>&#39;/&#39;</span>) <span class='op'>=&gt;</span> <span class='ident'>DelimSlash</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Delim</span>(<span class='string'>&#39;*&#39;</span>) <span class='op'>=&gt;</span> <span class='ident'>DelimAsterisk</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Number</span>(_) <span class='op'>=&gt;</span> <span class='ident'>Number</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Percentage</span>(_) <span class='op'>=&gt;</span> <span class='ident'>Percentage</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Dimension</span>(..) <span class='op'>=&gt;</span> <span class='ident'>Dimension</span>,
-            <span class='ident'>Token</span>::<span class='ident'>UnicodeRange</span>(..) <span class='op'>=&gt;</span> <span class='ident'>UnicodeRange</span>,
-            <span class='ident'>Token</span>::<span class='ident'>WhiteSpace</span>(_) <span class='op'>=&gt;</span> <span class='ident'>WhiteSpace</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Comment</span>(_) <span class='op'>=&gt;</span> <span class='ident'>DelimSlash</span>,
-            <span class='ident'>Token</span>::<span class='ident'>DashMatch</span> <span class='op'>=&gt;</span> <span class='ident'>DashMatch</span>,
-            <span class='ident'>Token</span>::<span class='ident'>SubstringMatch</span> <span class='op'>=&gt;</span> <span class='ident'>SubstringMatch</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Column</span> <span class='op'>=&gt;</span> <span class='ident'>DelimBar</span>,
-            <span class='ident'>Token</span>::<span class='ident'>CDC</span> <span class='op'>=&gt;</span> <span class='ident'>CDC</span>,
-            <span class='ident'>Token</span>::<span class='ident'>Function</span>(_) <span class='op'>=&gt;</span> <span class='ident'>Function</span>,
-            <span class='ident'>Token</span>::<span class='ident'>ParenthesisBlock</span> <span class='op'>=&gt;</span> <span class='ident'>OpenParen</span>,
-            <span class='ident'>Token</span>::<span class='ident'>SquareBracketBlock</span> <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>CurlyBracketBlock</span> <span class='op'>|</span>
-            <span class='ident'>Token</span>::<span class='ident'>CloseParenthesis</span> <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>CloseSquareBracket</span> <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>CloseCurlyBracket</span> <span class='op'>|</span>
-            <span class='ident'>Token</span>::<span class='ident'>QuotedString</span>(_) <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>BadString</span> <span class='op'>|</span>
-            <span class='ident'>Token</span>::<span class='ident'>Delim</span>(_) <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>Colon</span> <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>Semicolon</span> <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>Comma</span> <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>CDO</span> <span class='op'>|</span>
-            <span class='ident'>Token</span>::<span class='ident'>IncludeMatch</span> <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>PrefixMatch</span> <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>SuffixMatch</span>
-            <span class='op'>=&gt;</span> <span class='ident'>Other</span>,
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">enum</span> <span class="ident">TokenSerializationTypeVariants</span> {
+    <span class="ident">Nothing</span>,
+    <span class="ident">WhiteSpace</span>,
+    <span class="ident">AtKeywordOrHash</span>,
+    <span class="ident">Number</span>,
+    <span class="ident">Dimension</span>,
+    <span class="ident">Percentage</span>,
+    <span class="ident">UrlOrBadUrl</span>,
+    <span class="ident">Function</span>,
+    <span class="ident">Ident</span>,
+    <span class="ident">CDC</span>,
+    <span class="ident">DashMatch</span>,
+    <span class="ident">SubstringMatch</span>,
+    <span class="ident">OpenParen</span>,         <span class="comment">// &#39;(&#39;</span>
+    <span class="ident">DelimHash</span>,         <span class="comment">// &#39;#&#39;</span>
+    <span class="ident">DelimAt</span>,           <span class="comment">// &#39;@&#39;</span>
+    <span class="ident">DelimDotOrPlus</span>,    <span class="comment">// &#39;.&#39;, &#39;+&#39;</span>
+    <span class="ident">DelimMinus</span>,        <span class="comment">// &#39;-&#39;</span>
+    <span class="ident">DelimQuestion</span>,     <span class="comment">// &#39;?&#39;</span>
+    <span class="ident">DelimAssorted</span>,     <span class="comment">// &#39;$&#39;, &#39;^&#39;, &#39;~&#39;</span>
+    <span class="ident">DelimEquals</span>,       <span class="comment">// &#39;=&#39;</span>
+    <span class="ident">DelimBar</span>,          <span class="comment">// &#39;|&#39;</span>
+    <span class="ident">DelimSlash</span>,        <span class="comment">// &#39;/&#39;</span>
+    <span class="ident">DelimAsterisk</span>,     <span class="comment">// &#39;*&#39;</span>
+    <span class="ident">Other</span>,             <span class="comment">// anything else</span>
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Token</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Categorize a token into a type that determines when `/**/` needs to be inserted</span>
+    <span class="doccomment">/// between two tokens when serialized next to each other without whitespace in between.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See the `TokenSerializationType::needs_separator_when_before` method.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">serialization_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">TokenSerializationType</span> {
+        <span class="kw">use</span> <span class="self">self</span>::<span class="ident">TokenSerializationTypeVariants</span>::<span class="kw-2">*</span>;
+        <span class="ident">TokenSerializationType</span>(<span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Token</span>::<span class="ident">Ident</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">Ident</span>,
+            <span class="ident">Token</span>::<span class="ident">AtKeyword</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">Hash</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">IDHash</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">AtKeywordOrHash</span>,
+            <span class="ident">Token</span>::<span class="ident">UnquotedUrl</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">BadUrl</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">UrlOrBadUrl</span>,
+            <span class="ident">Token</span>::<span class="ident">Delim</span>(<span class="string">&#39;#&#39;</span>) <span class="op">=&gt;</span> <span class="ident">DelimHash</span>,
+            <span class="ident">Token</span>::<span class="ident">Delim</span>(<span class="string">&#39;@&#39;</span>) <span class="op">=&gt;</span> <span class="ident">DelimAt</span>,
+            <span class="ident">Token</span>::<span class="ident">Delim</span>(<span class="string">&#39;.&#39;</span>) <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">Delim</span>(<span class="string">&#39;+&#39;</span>) <span class="op">=&gt;</span> <span class="ident">DelimDotOrPlus</span>,
+            <span class="ident">Token</span>::<span class="ident">Delim</span>(<span class="string">&#39;-&#39;</span>) <span class="op">=&gt;</span> <span class="ident">DelimMinus</span>,
+            <span class="ident">Token</span>::<span class="ident">Delim</span>(<span class="string">&#39;?&#39;</span>) <span class="op">=&gt;</span> <span class="ident">DelimQuestion</span>,
+            <span class="ident">Token</span>::<span class="ident">Delim</span>(<span class="string">&#39;$&#39;</span>) <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">Delim</span>(<span class="string">&#39;^&#39;</span>) <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">Delim</span>(<span class="string">&#39;~&#39;</span>) <span class="op">=&gt;</span> <span class="ident">DelimAssorted</span>,
+            <span class="ident">Token</span>::<span class="ident">Delim</span>(<span class="string">&#39;=&#39;</span>) <span class="op">=&gt;</span> <span class="ident">DelimEquals</span>,
+            <span class="ident">Token</span>::<span class="ident">Delim</span>(<span class="string">&#39;|&#39;</span>) <span class="op">=&gt;</span> <span class="ident">DelimBar</span>,
+            <span class="ident">Token</span>::<span class="ident">Delim</span>(<span class="string">&#39;/&#39;</span>) <span class="op">=&gt;</span> <span class="ident">DelimSlash</span>,
+            <span class="ident">Token</span>::<span class="ident">Delim</span>(<span class="string">&#39;*&#39;</span>) <span class="op">=&gt;</span> <span class="ident">DelimAsterisk</span>,
+            <span class="ident">Token</span>::<span class="ident">Number</span> { .. } <span class="op">=&gt;</span> <span class="ident">Number</span>,
+            <span class="ident">Token</span>::<span class="ident">Percentage</span> { .. } <span class="op">=&gt;</span> <span class="ident">Percentage</span>,
+            <span class="ident">Token</span>::<span class="ident">Dimension</span> { .. } <span class="op">=&gt;</span> <span class="ident">Dimension</span>,
+            <span class="ident">Token</span>::<span class="ident">WhiteSpace</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">WhiteSpace</span>,
+            <span class="ident">Token</span>::<span class="ident">Comment</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">DelimSlash</span>,
+            <span class="ident">Token</span>::<span class="ident">DashMatch</span> <span class="op">=&gt;</span> <span class="ident">DashMatch</span>,
+            <span class="ident">Token</span>::<span class="ident">SubstringMatch</span> <span class="op">=&gt;</span> <span class="ident">SubstringMatch</span>,
+            <span class="ident">Token</span>::<span class="ident">CDC</span> <span class="op">=&gt;</span> <span class="ident">CDC</span>,
+            <span class="ident">Token</span>::<span class="ident">Function</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">Function</span>,
+            <span class="ident">Token</span>::<span class="ident">ParenthesisBlock</span> <span class="op">=&gt;</span> <span class="ident">OpenParen</span>,
+            <span class="ident">Token</span>::<span class="ident">SquareBracketBlock</span> <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">CurlyBracketBlock</span> <span class="op">|</span>
+            <span class="ident">Token</span>::<span class="ident">CloseParenthesis</span> <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">CloseSquareBracket</span> <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">CloseCurlyBracket</span> <span class="op">|</span>
+            <span class="ident">Token</span>::<span class="ident">QuotedString</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">BadString</span>(<span class="kw">_</span>) <span class="op">|</span>
+            <span class="ident">Token</span>::<span class="ident">Delim</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">Colon</span> <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">Semicolon</span> <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">Comma</span> <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">CDO</span> <span class="op">|</span>
+            <span class="ident">Token</span>::<span class="ident">IncludeMatch</span> <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">PrefixMatch</span> <span class="op">|</span> <span class="ident">Token</span>::<span class="ident">SuffixMatch</span>
+            <span class="op">=&gt;</span> <span class="ident">Other</span>,
         })
     }
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt>?</dt>
-                    <dd>Show this help dialog</dd>
-                    <dt>S</dt>
-                    <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
-                    <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
-                    <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
-                    <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "cssparser";
-        window.playgroundUrl = "";
-    </script>
-    <script src="../../jquery.js"></script>
-    <script src="../../main.js"></script>
-    
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "cssparser";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

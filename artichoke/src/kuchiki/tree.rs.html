@@ -1,48 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/git/checkouts/kuchiki-1305be684854c41b/master/src/tree.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>tree.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
-    
-
-    
-    
-</head>
-<body class="rustdoc">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        
-        
-    </nav>
-
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/git/checkouts/kuchiki-1305be684854c41b/616690f/src/tree.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tree.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../kuchiki/index.html'><img src='../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -492,519 +448,476 @@
 <span id="448">448</span>
 <span id="449">449</span>
 <span id="450">450</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>move_cell</span>::<span class='ident'>MoveCell</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cell</span>::{<span class='ident'>Cell</span>, <span class='ident'>RefCell</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Deref</span>;
-<span class='kw'>use</span> <span class='ident'>html5ever</span>::<span class='ident'>tree_builder</span>::<span class='ident'>QuirksMode</span>;
-<span class='kw'>use</span> <span class='ident'>rc</span>::{<span class='ident'>Rc</span>, <span class='ident'>Weak</span>};
-<span class='kw'>use</span> <span class='ident'>string_cache</span>::<span class='ident'>QualName</span>;
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+</pre><div class="example-wrap"><pre class="rust ">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cell</span>::{<span class="ident">Cell</span>, <span class="ident">RefCell</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Deref</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">rc</span>::{<span class="ident">Rc</span>, <span class="ident">Weak</span>};
+<span class="kw">use</span> <span class="ident">html5ever</span>::<span class="ident">tree_builder</span>::<span class="ident">QuirksMode</span>;
+<span class="kw">use</span> <span class="ident">html5ever</span>::<span class="ident">QualName</span>;
 
-<span class='kw'>use</span> <span class='ident'>attributes</span>::<span class='ident'>Attributes</span>;
-<span class='kw'>use</span> <span class='ident'>iter</span>::<span class='ident'>NodeIterator</span>;
+<span class="kw">use</span> <span class="ident">attributes</span>::{<span class="ident">Attributes</span>, <span class="ident">ExpandedName</span>, <span class="ident">Attribute</span>};
+<span class="kw">use</span> <span class="ident">cell_extras</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">iter</span>::<span class="ident">NodeIterator</span>;
 
 
-<span class='doccomment'>/// Node data specific to the node type.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>NodeData</span> {
-    <span class='doccomment'>/// Element node</span>
-    <span class='ident'>Element</span>(<span class='ident'>ElementData</span>),
+<span class="doccomment">/// Node data specific to the node type.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">NodeData</span> {
+    <span class="doccomment">/// Element node</span>
+    <span class="ident">Element</span>(<span class="ident">ElementData</span>),
 
-    <span class='doccomment'>/// Text node</span>
-    <span class='ident'>Text</span>(<span class='ident'>RefCell</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>),
+    <span class="doccomment">/// Text node</span>
+    <span class="ident">Text</span>(<span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>),
 
-    <span class='doccomment'>/// Comment node</span>
-    <span class='ident'>Comment</span>(<span class='ident'>RefCell</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>),
+    <span class="doccomment">/// Comment node</span>
+    <span class="ident">Comment</span>(<span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>),
 
-    <span class='doccomment'>/// Doctype node</span>
-    <span class='ident'>Doctype</span>(<span class='ident'>Doctype</span>),
+    <span class="doccomment">/// Processing instruction node</span>
+    <span class="ident">ProcessingInstruction</span>(<span class="ident">RefCell</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">String</span>)<span class="op">&gt;</span>),
 
-    <span class='doccomment'>/// Document node</span>
-    <span class='ident'>Document</span>(<span class='ident'>DocumentData</span>),
+    <span class="doccomment">/// Doctype node</span>
+    <span class="ident">Doctype</span>(<span class="ident">Doctype</span>),
 
-    <span class='doccomment'>/// Document fragment node</span>
-    <span class='ident'>DocumentFragment</span>,
+    <span class="doccomment">/// Document node</span>
+    <span class="ident">Document</span>(<span class="ident">DocumentData</span>),
+
+    <span class="doccomment">/// Document fragment node</span>
+    <span class="ident">DocumentFragment</span>,
 }
 
-<span class='doccomment'>/// Data specific to doctype nodes.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Doctype</span> {
-    <span class='doccomment'>/// The name of the doctype</span>
-    <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='ident'>String</span>,
+<span class="doccomment">/// Data specific to doctype nodes.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Doctype</span> {
+    <span class="doccomment">/// The name of the doctype</span>
+    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
 
-    <span class='doccomment'>/// The public ID of the doctype</span>
-    <span class='kw'>pub</span> <span class='ident'>public_id</span>: <span class='ident'>String</span>,
+    <span class="doccomment">/// The public ID of the doctype</span>
+    <span class="kw">pub</span> <span class="ident">public_id</span>: <span class="ident">String</span>,
 
-    <span class='doccomment'>/// The system ID of the doctype</span>
-    <span class='kw'>pub</span> <span class='ident'>system_id</span>: <span class='ident'>String</span>,
+    <span class="doccomment">/// The system ID of the doctype</span>
+    <span class="kw">pub</span> <span class="ident">system_id</span>: <span class="ident">String</span>,
 }
 
-<span class='doccomment'>/// Data specific to element nodes.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ElementData</span> {
-    <span class='doccomment'>/// The namespace and local name of the element, such as `ns!(html)` and `body`.</span>
-    <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='ident'>QualName</span>,
+<span class="doccomment">/// Data specific to element nodes.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ElementData</span> {
+    <span class="doccomment">/// The namespace and local name of the element, such as `ns!(html)` and `body`.</span>
+    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">QualName</span>,
 
-    <span class='doccomment'>/// The attributes of the elements.</span>
-    <span class='kw'>pub</span> <span class='ident'>attributes</span>: <span class='ident'>RefCell</span><span class='op'>&lt;</span><span class='ident'>Attributes</span><span class='op'>&gt;</span>,
+    <span class="doccomment">/// The attributes of the elements.</span>
+    <span class="kw">pub</span> <span class="ident">attributes</span>: <span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Attributes</span><span class="op">&gt;</span>,
 
-    <span class='doccomment'>/// If the element is an HTML `&lt;template&gt;` element,</span>
-    <span class='doccomment'>/// the document fragment node that is the root of template contents.</span>
-    <span class='kw'>pub</span> <span class='ident'>template_contents</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NodeRef</span><span class='op'>&gt;</span>,
+    <span class="doccomment">/// If the element is an HTML `&lt;template&gt;` element,</span>
+    <span class="doccomment">/// the document fragment node that is the root of template contents.</span>
+    <span class="kw">pub</span> <span class="ident">template_contents</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeRef</span><span class="op">&gt;</span>,
 }
 
-<span class='doccomment'>/// Data specific to document nodes.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>DocumentData</span> {
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-    <span class='kw'>pub</span> <span class='ident'>_quirks_mode</span>: <span class='ident'>Cell</span><span class='op'>&lt;</span><span class='ident'>QuirksMode</span><span class='op'>&gt;</span>,
+<span class="doccomment">/// Data specific to document nodes.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DocumentData</span> {
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">_quirks_mode</span>: <span class="ident">Cell</span><span class="op">&lt;</span><span class="ident">QuirksMode</span><span class="op">&gt;</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>DocumentData</span> {
-    <span class='doccomment'>/// The quirks mode of the document, as determined by the HTML parser.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>quirks_mode</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>QuirksMode</span> {
-        <span class='self'>self</span>.<span class='ident'>_quirks_mode</span>.<span class='ident'>get</span>()
+<span class="kw">impl</span> <span class="ident">DocumentData</span> {
+    <span class="doccomment">/// The quirks mode of the document, as determined by the HTML parser.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">quirks_mode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">QuirksMode</span> {
+        <span class="self">self</span>.<span class="ident">_quirks_mode</span>.<span class="ident">get</span>()
     }
 }
 
-<span class='doccomment'>/// A strong reference to a node.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// A node is destroyed when the last strong reference to it dropped.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Each node holds a strong reference to its first child and next sibling (if any),</span>
-<span class='doccomment'>/// but only a weak reference to its last child, previous sibling, and parent.</span>
-<span class='doccomment'>/// This is to avoid strong reference cycles, which would cause memory leaks.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// As a result, a single `NodeRef` is sufficient to keep alive a node</span>
-<span class='doccomment'>/// and nodes that are after it in tree order</span>
-<span class='doccomment'>/// (its descendants, its following siblings, and their descendants)</span>
-<span class='doccomment'>/// but not other nodes in a tree.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// To avoid detroying nodes prematurely,</span>
-<span class='doccomment'>/// programs typically hold a strong reference to the root of a document</span>
-<span class='doccomment'>/// until they’re done with that document.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>NodeRef</span>(<span class='kw'>pub</span> <span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>Node</span><span class='op'>&gt;</span>);
+<span class="doccomment">/// A strong reference to a node.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// A node is destroyed when the last strong reference to it dropped.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Each node holds a strong reference to its first child and next sibling (if any),</span>
+<span class="doccomment">/// but only a weak reference to its last child, previous sibling, and parent.</span>
+<span class="doccomment">/// This is to avoid strong reference cycles, which would cause memory leaks.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// As a result, a single `NodeRef` is sufficient to keep alive a node</span>
+<span class="doccomment">/// and nodes that are after it in tree order</span>
+<span class="doccomment">/// (its descendants, its following siblings, and their descendants)</span>
+<span class="doccomment">/// but not other nodes in a tree.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// To avoid detroying nodes prematurely,</span>
+<span class="doccomment">/// programs typically hold a strong reference to the root of a document</span>
+<span class="doccomment">/// until they’re done with that document.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NodeRef</span>(<span class="kw">pub</span> <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Node</span><span class="op">&gt;</span>);
 
-<span class='kw'>impl</span> <span class='ident'>Deref</span> <span class='kw'>for</span> <span class='ident'>NodeRef</span> {
-    <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> <span class='ident'>Node</span>;
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>deref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Node</span> {
-        <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='self'>self</span>.<span class='number'>0</span>
+<span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">NodeRef</span> {
+    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">Node</span>;
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Node</span> {
+        <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="number">0</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Eq</span> <span class='kw'>for</span> <span class='ident'>NodeRef</span> {}
-<span class='kw'>impl</span> <span class='ident'>PartialEq</span> <span class='kw'>for</span> <span class='ident'>NodeRef</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>eq</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='ident'>NodeRef</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>let</span> <span class='ident'>a</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Node</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='self'>self</span>.<span class='number'>0</span>;
-        <span class='kw'>let</span> <span class='ident'>b</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Node</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>other</span>.<span class='number'>0</span>;
-        <span class='ident'>a</span> <span class='op'>==</span> <span class='ident'>b</span>
+<span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">NodeRef</span> {}
+<span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">NodeRef</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">NodeRef</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">let</span> <span class="ident">a</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">Node</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="number">0</span>;
+        <span class="kw">let</span> <span class="ident">b</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">Node</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">other</span>.<span class="number">0</span>;
+        <span class="ident">a</span> <span class="op">==</span> <span class="ident">b</span>
     }
 }
 
-<span class='doccomment'>/// A node inside a DOM-like tree.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Node</span> {
-    <span class='ident'>parent</span>: <span class='ident'>MoveCell</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Weak</span><span class='op'>&lt;</span><span class='ident'>Node</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
-    <span class='ident'>previous_sibling</span>: <span class='ident'>MoveCell</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Weak</span><span class='op'>&lt;</span><span class='ident'>Node</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
-    <span class='ident'>next_sibling</span>: <span class='ident'>MoveCell</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>Node</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
-    <span class='ident'>first_child</span>: <span class='ident'>MoveCell</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>Node</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
-    <span class='ident'>last_child</span>: <span class='ident'>MoveCell</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Weak</span><span class='op'>&lt;</span><span class='ident'>Node</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span>,
-    <span class='ident'>data</span>: <span class='ident'>NodeData</span>,
+<span class="doccomment">/// A node inside a DOM-like tree.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Node</span> {
+    <span class="ident">parent</span>: <span class="ident">Cell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Weak</span><span class="op">&lt;</span><span class="ident">Node</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">previous_sibling</span>: <span class="ident">Cell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Weak</span><span class="op">&lt;</span><span class="ident">Node</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">next_sibling</span>: <span class="ident">Cell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Node</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">first_child</span>: <span class="ident">Cell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Node</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">last_child</span>: <span class="ident">Cell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Weak</span><span class="op">&lt;</span><span class="ident">Node</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">data</span>: <span class="ident">NodeData</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span> <span class='kw'>for</span> <span class='ident'>Node</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>fmt</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{:?} @ {:?}&quot;</span>, <span class='self'>self</span>.<span class='ident'>data</span>, <span class='self'>self</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>Node</span>)
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Node</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{:?} @ {:?}&quot;</span>, <span class="self">self</span>.<span class="ident">data</span>, <span class="self">self</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">Node</span>)
     }
 }
 
-<span class='doccomment'>/// Prevent implicit recursion when dropping nodes to avoid overflowing the stack.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The implicit drop is correct, but recursive.</span>
-<span class='doccomment'>/// In the worst case (where no node has both a next sibling and a child),</span>
-<span class='doccomment'>/// a tree of a few tens of thousands of nodes could cause a stack overflow.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This `Drop` implementations makes sure the recursion does not happen.</span>
-<span class='doccomment'>/// Instead, it has an explicit `Vec&lt;Rc&lt;Node&gt;&gt;` stack to traverse the subtree,</span>
-<span class='doccomment'>/// but only following `Rc&lt;Node&gt;` references that are &quot;unique&quot;:</span>
-<span class='doccomment'>/// that have a strong reference count of 1.</span>
-<span class='doccomment'>/// Those are the nodes that would have been dropped recursively.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The stack holds ancestors of the current node rather than preceding siblings,</span>
-<span class='doccomment'>/// on the assumption that large document trees are typically wider than deep.</span>
-<span class='kw'>impl</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>Node</span> {
-    <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='comment'>// `.take_if_unique_strong()` temporarily leaves the tree in an inconsistent state,</span>
-        <span class='comment'>// as the corresponding `Weak` reference in the other direction is not removed.</span>
-        <span class='comment'>// It is important that all `Some(_)` strong references it returns</span>
-        <span class='comment'>// are dropped by the end of this `drop` call,</span>
-        <span class='comment'>// and that no user code is invoked in-between.</span>
+<span class="doccomment">/// Prevent implicit recursion when dropping nodes to avoid overflowing the stack.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The implicit drop is correct, but recursive.</span>
+<span class="doccomment">/// In the worst case (where no node has both a next sibling and a child),</span>
+<span class="doccomment">/// a tree of a few tens of thousands of nodes could cause a stack overflow.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This `Drop` implementations makes sure the recursion does not happen.</span>
+<span class="doccomment">/// Instead, it has an explicit `Vec&lt;Rc&lt;Node&gt;&gt;` stack to traverse the subtree,</span>
+<span class="doccomment">/// but only following `Rc&lt;Node&gt;` references that are &quot;unique&quot;:</span>
+<span class="doccomment">/// that have a strong reference count of 1.</span>
+<span class="doccomment">/// Those are the nodes that would have been dropped recursively.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The stack holds ancestors of the current node rather than preceding siblings,</span>
+<span class="doccomment">/// on the assumption that large document trees are typically wider than deep.</span>
+<span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Node</span> {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="comment">// `.take_if_unique_strong()` temporarily leaves the tree in an inconsistent state,</span>
+        <span class="comment">// as the corresponding `Weak` reference in the other direction is not removed.</span>
+        <span class="comment">// It is important that all `Some(_)` strong references it returns</span>
+        <span class="comment">// are dropped by the end of this `drop` call,</span>
+        <span class="comment">// and that no user code is invoked in-between.</span>
 
-        <span class='comment'>// Sharing `stack` between these two calls is not necessary,</span>
-        <span class='comment'>// but it allows re-using memory allocations.</span>
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>stack</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>rc</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>first_child</span>.<span class='ident'>take_if_unique_strong</span>() {
-            <span class='ident'>non_recursive_drop_unique_rc</span>(<span class='ident'>rc</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>stack</span>);
+        <span class="comment">// Sharing `stack` between these two calls is not necessary,</span>
+        <span class="comment">// but it allows re-using memory allocations.</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stack</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">rc</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">first_child</span>.<span class="ident">take_if_unique_strong</span>() {
+            <span class="ident">non_recursive_drop_unique_rc</span>(<span class="ident">rc</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">stack</span>);
         }
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>rc</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>next_sibling</span>.<span class='ident'>take_if_unique_strong</span>() {
-            <span class='ident'>non_recursive_drop_unique_rc</span>(<span class='ident'>rc</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>stack</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">rc</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_sibling</span>.<span class="ident">take_if_unique_strong</span>() {
+            <span class="ident">non_recursive_drop_unique_rc</span>(<span class="ident">rc</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">stack</span>);
         }
 
-        <span class='kw'>fn</span> <span class='ident'>non_recursive_drop_unique_rc</span>(<span class='kw-2'>mut</span> <span class='ident'>rc</span>: <span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>Node</span><span class='op'>&gt;</span>, <span class='ident'>stack</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Rc</span><span class='op'>&lt;</span><span class='ident'>Node</span><span class='op'>&gt;&gt;</span>) {
-            <span class='kw'>loop</span> {
-                <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>child</span>) <span class='op'>=</span> <span class='ident'>rc</span>.<span class='ident'>first_child</span>.<span class='ident'>take_if_unique_strong</span>() {
-                    <span class='ident'>stack</span>.<span class='ident'>push</span>(<span class='ident'>rc</span>);
-                    <span class='ident'>rc</span> <span class='op'>=</span> <span class='ident'>child</span>;
-                    <span class='kw'>continue</span>
+        <span class="kw">fn</span> <span class="ident">non_recursive_drop_unique_rc</span>(<span class="kw-2">mut</span> <span class="ident">rc</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Node</span><span class="op">&gt;</span>, <span class="ident">stack</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Node</span><span class="op">&gt;&gt;</span>) {
+            <span class="kw">loop</span> {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">child</span>) <span class="op">=</span> <span class="ident">rc</span>.<span class="ident">first_child</span>.<span class="ident">take_if_unique_strong</span>() {
+                    <span class="ident">stack</span>.<span class="ident">push</span>(<span class="ident">rc</span>);
+                    <span class="ident">rc</span> <span class="op">=</span> <span class="ident">child</span>;
+                    <span class="kw">continue</span>
                 }
-                <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>sibling</span>) <span class='op'>=</span> <span class='ident'>rc</span>.<span class='ident'>next_sibling</span>.<span class='ident'>take_if_unique_strong</span>() {
-                    <span class='comment'>// The previous value of `rc: Rc&lt;Node&gt;` is dropped here.</span>
-                    <span class='comment'>// Since it was unique, the corresponding `Node` is dropped as well.</span>
-                    <span class='comment'>// `&lt;Node as Drop&gt;::drop` does not call `drop_rc`</span>
-                    <span class='comment'>// as both the first child and next sibling were already taken.</span>
-                    <span class='comment'>// Weak reference counts decremented here for `MoveCell`s that are `Some`:</span>
-                    <span class='comment'>// * `rc.parent`: still has a strong reference in `stack` or elsewhere</span>
-                    <span class='comment'>// * `rc.last_child`: this is the last weak ref. Deallocated now.</span>
-                    <span class='comment'>// * `rc.previous_sibling`: this is the last weak ref. Deallocated now.</span>
-                    <span class='ident'>rc</span> <span class='op'>=</span> <span class='ident'>sibling</span>;
-                    <span class='kw'>continue</span>
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">sibling</span>) <span class="op">=</span> <span class="ident">rc</span>.<span class="ident">next_sibling</span>.<span class="ident">take_if_unique_strong</span>() {
+                    <span class="comment">// The previous value of `rc: Rc&lt;Node&gt;` is dropped here.</span>
+                    <span class="comment">// Since it was unique, the corresponding `Node` is dropped as well.</span>
+                    <span class="comment">// `&lt;Node as Drop&gt;::drop` does not call `drop_rc`</span>
+                    <span class="comment">// as both the first child and next sibling were already taken.</span>
+                    <span class="comment">// Weak reference counts decremented here for `Cell`s that are `Some`:</span>
+                    <span class="comment">// * `rc.parent`: still has a strong reference in `stack` or elsewhere</span>
+                    <span class="comment">// * `rc.last_child`: this is the last weak ref. Deallocated now.</span>
+                    <span class="comment">// * `rc.previous_sibling`: this is the last weak ref. Deallocated now.</span>
+                    <span class="ident">rc</span> <span class="op">=</span> <span class="ident">sibling</span>;
+                    <span class="kw">continue</span>
                 }
-                <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent</span>) <span class='op'>=</span> <span class='ident'>stack</span>.<span class='ident'>pop</span>() {
-                    <span class='comment'>// Same as in the above comment.</span>
-                    <span class='ident'>rc</span> <span class='op'>=</span> <span class='ident'>parent</span>;
-                    <span class='kw'>continue</span>
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span> <span class="ident">stack</span>.<span class="ident">pop</span>() {
+                    <span class="comment">// Same as in the above comment.</span>
+                    <span class="ident">rc</span> <span class="op">=</span> <span class="ident">parent</span>;
+                    <span class="kw">continue</span>
                 }
-                <span class='kw'>return</span>
+                <span class="kw">return</span>
             }
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>NodeRef</span> {
-    <span class='doccomment'>/// Create a new node.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>data</span>: <span class='ident'>NodeData</span>) <span class='op'>-&gt;</span> <span class='ident'>NodeRef</span> {
-        <span class='ident'>NodeRef</span>(<span class='ident'>Rc</span>::<span class='ident'>new</span>(<span class='ident'>Node</span> {
-            <span class='ident'>parent</span>: <span class='ident'>MoveCell</span>::<span class='ident'>new</span>(<span class='prelude-val'>None</span>),
-            <span class='ident'>first_child</span>: <span class='ident'>MoveCell</span>::<span class='ident'>new</span>(<span class='prelude-val'>None</span>),
-            <span class='ident'>last_child</span>: <span class='ident'>MoveCell</span>::<span class='ident'>new</span>(<span class='prelude-val'>None</span>),
-            <span class='ident'>previous_sibling</span>: <span class='ident'>MoveCell</span>::<span class='ident'>new</span>(<span class='prelude-val'>None</span>),
-            <span class='ident'>next_sibling</span>: <span class='ident'>MoveCell</span>::<span class='ident'>new</span>(<span class='prelude-val'>None</span>),
-            <span class='ident'>data</span>: <span class='ident'>data</span>,
+<span class="kw">impl</span> <span class="ident">NodeRef</span> {
+    <span class="doccomment">/// Create a new node.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">data</span>: <span class="ident">NodeData</span>) <span class="op">-&gt;</span> <span class="ident">NodeRef</span> {
+        <span class="ident">NodeRef</span>(<span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">Node</span> {
+            <span class="ident">parent</span>: <span class="ident">Cell</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>),
+            <span class="ident">first_child</span>: <span class="ident">Cell</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>),
+            <span class="ident">last_child</span>: <span class="ident">Cell</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>),
+            <span class="ident">previous_sibling</span>: <span class="ident">Cell</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>),
+            <span class="ident">next_sibling</span>: <span class="ident">Cell</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>),
+            <span class="ident">data</span>: <span class="ident">data</span>,
         }))
     }
 
-    <span class='doccomment'>/// Create a new element node.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_element</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>(<span class='ident'>name</span>: <span class='ident'>QualName</span>, <span class='ident'>attributes</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='ident'>NodeRef</span>
-                          <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span>(<span class='ident'>QualName</span>, <span class='ident'>String</span>)<span class='op'>&gt;</span> {
-        <span class='ident'>NodeRef</span>::<span class='ident'>new</span>(<span class='ident'>NodeData</span>::<span class='ident'>Element</span>(<span class='ident'>ElementData</span> {
-            <span class='ident'>template_contents</span>: <span class='kw'>if</span> <span class='ident'>name</span> <span class='op'>==</span> <span class='macro'>qualname</span><span class='macro'>!</span>(<span class='ident'>html</span>, <span class='string'>&quot;template&quot;</span>) {
-                <span class='prelude-val'>Some</span>(<span class='ident'>NodeRef</span>::<span class='ident'>new</span>(<span class='ident'>NodeData</span>::<span class='ident'>DocumentFragment</span>))
-            } <span class='kw'>else</span> {
-                <span class='prelude-val'>None</span>
+    <span class="doccomment">/// Create a new element node.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_element</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">name</span>: <span class="ident">QualName</span>, <span class="ident">attributes</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="ident">NodeRef</span>
+                          <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span>(<span class="ident">ExpandedName</span>, <span class="ident">Attribute</span>)<span class="op">&gt;</span> {
+        <span class="ident">NodeRef</span>::<span class="ident">new</span>(<span class="ident">NodeData</span>::<span class="ident">Element</span>(<span class="ident">ElementData</span> {
+            <span class="ident">template_contents</span>: <span class="kw">if</span> <span class="ident">name</span>.<span class="ident">expanded</span>() <span class="op">==</span> <span class="macro">expanded_name</span><span class="macro">!</span>(<span class="ident">html</span> <span class="string">&quot;template&quot;</span>) {
+                <span class="prelude-val">Some</span>(<span class="ident">NodeRef</span>::<span class="ident">new</span>(<span class="ident">NodeData</span>::<span class="ident">DocumentFragment</span>))
+            } <span class="kw">else</span> {
+                <span class="prelude-val">None</span>
             },
-            <span class='ident'>name</span>: <span class='ident'>name</span>,
-            <span class='ident'>attributes</span>: <span class='ident'>RefCell</span>::<span class='ident'>new</span>(<span class='ident'>Attributes</span> {
-                <span class='ident'>map</span>: <span class='ident'>attributes</span>.<span class='ident'>into_iter</span>().<span class='ident'>collect</span>()
+            <span class="ident">name</span>: <span class="ident">name</span>,
+            <span class="ident">attributes</span>: <span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="ident">Attributes</span> {
+                <span class="ident">map</span>: <span class="ident">attributes</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>()
             }),
         }))
     }
 
-    <span class='doccomment'>/// Create a new text node.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_text</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>(<span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>NodeRef</span> {
-        <span class='ident'>NodeRef</span>::<span class='ident'>new</span>(<span class='ident'>NodeData</span>::<span class='ident'>Text</span>(<span class='ident'>RefCell</span>::<span class='ident'>new</span>(<span class='ident'>value</span>.<span class='ident'>into</span>())))
+    <span class="doccomment">/// Create a new text node.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_text</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>(<span class="ident">value</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">NodeRef</span> {
+        <span class="ident">NodeRef</span>::<span class="ident">new</span>(<span class="ident">NodeData</span>::<span class="ident">Text</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="ident">value</span>.<span class="ident">into</span>())))
     }
 
-    <span class='doccomment'>/// Create a new comment node.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_comment</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>(<span class='ident'>value</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>NodeRef</span> {
-        <span class='ident'>NodeRef</span>::<span class='ident'>new</span>(<span class='ident'>NodeData</span>::<span class='ident'>Comment</span>(<span class='ident'>RefCell</span>::<span class='ident'>new</span>(<span class='ident'>value</span>.<span class='ident'>into</span>())))
+    <span class="doccomment">/// Create a new comment node.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_comment</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>(<span class="ident">value</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">NodeRef</span> {
+        <span class="ident">NodeRef</span>::<span class="ident">new</span>(<span class="ident">NodeData</span>::<span class="ident">Comment</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="ident">value</span>.<span class="ident">into</span>())))
     }
 
-    <span class='doccomment'>/// Create a new doctype node.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_doctype</span><span class='op'>&lt;</span><span class='ident'>T1</span>, <span class='ident'>T2</span>, <span class='ident'>T3</span><span class='op'>&gt;</span>(<span class='ident'>name</span>: <span class='ident'>T1</span>, <span class='ident'>public_id</span>: <span class='ident'>T2</span>, <span class='ident'>system_id</span>: <span class='ident'>T3</span>) <span class='op'>-&gt;</span> <span class='ident'>NodeRef</span>
-                                   <span class='kw'>where</span> <span class='ident'>T1</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>, <span class='ident'>T2</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>, <span class='ident'>T3</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-        <span class='ident'>NodeRef</span>::<span class='ident'>new</span>(<span class='ident'>NodeData</span>::<span class='ident'>Doctype</span>(<span class='ident'>Doctype</span> {
-            <span class='ident'>name</span>: <span class='ident'>name</span>.<span class='ident'>into</span>(),
-            <span class='ident'>public_id</span>: <span class='ident'>public_id</span>.<span class='ident'>into</span>(),
-            <span class='ident'>system_id</span>: <span class='ident'>system_id</span>.<span class='ident'>into</span>(),
+    <span class="doccomment">/// Create a new processing instruction node.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_processing_instruction</span><span class="op">&lt;</span><span class="ident">T1</span>, <span class="ident">T2</span><span class="op">&gt;</span>(<span class="ident">target</span>: <span class="ident">T1</span>, <span class="ident">data</span>: <span class="ident">T2</span>) <span class="op">-&gt;</span> <span class="ident">NodeRef</span>
+                                              <span class="kw">where</span> <span class="ident">T1</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">T2</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="ident">NodeRef</span>::<span class="ident">new</span>(<span class="ident">NodeData</span>::<span class="ident">ProcessingInstruction</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>((<span class="ident">target</span>.<span class="ident">into</span>(), <span class="ident">data</span>.<span class="ident">into</span>()))))
+    }
+
+    <span class="doccomment">/// Create a new doctype node.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_doctype</span><span class="op">&lt;</span><span class="ident">T1</span>, <span class="ident">T2</span>, <span class="ident">T3</span><span class="op">&gt;</span>(<span class="ident">name</span>: <span class="ident">T1</span>, <span class="ident">public_id</span>: <span class="ident">T2</span>, <span class="ident">system_id</span>: <span class="ident">T3</span>) <span class="op">-&gt;</span> <span class="ident">NodeRef</span>
+                                   <span class="kw">where</span> <span class="ident">T1</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">T2</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">T3</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="ident">NodeRef</span>::<span class="ident">new</span>(<span class="ident">NodeData</span>::<span class="ident">Doctype</span>(<span class="ident">Doctype</span> {
+            <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">into</span>(),
+            <span class="ident">public_id</span>: <span class="ident">public_id</span>.<span class="ident">into</span>(),
+            <span class="ident">system_id</span>: <span class="ident">system_id</span>.<span class="ident">into</span>(),
         }))
     }
 
-    <span class='doccomment'>/// Create a new document node.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_document</span>() <span class='op'>-&gt;</span> <span class='ident'>NodeRef</span> {
-        <span class='ident'>NodeRef</span>::<span class='ident'>new</span>(<span class='ident'>NodeData</span>::<span class='ident'>Document</span>(<span class='ident'>DocumentData</span> {
-            <span class='ident'>_quirks_mode</span>: <span class='ident'>Cell</span>::<span class='ident'>new</span>(<span class='ident'>QuirksMode</span>::<span class='ident'>NoQuirks</span>),
+    <span class="doccomment">/// Create a new document node.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_document</span>() <span class="op">-&gt;</span> <span class="ident">NodeRef</span> {
+        <span class="ident">NodeRef</span>::<span class="ident">new</span>(<span class="ident">NodeData</span>::<span class="ident">Document</span>(<span class="ident">DocumentData</span> {
+            <span class="ident">_quirks_mode</span>: <span class="ident">Cell</span>::<span class="ident">new</span>(<span class="ident">QuirksMode</span>::<span class="ident">NoQuirks</span>),
         }))
     }
 
-    <span class='doccomment'>/// Return the concatenation of all text nodes in this subtree.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>text_contents</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
-        <span class='kw'>for</span> <span class='ident'>text_node</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>inclusive_descendants</span>().<span class='ident'>text_nodes</span>() {
-            <span class='ident'>s</span>.<span class='ident'>push_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>text_node</span>.<span class='ident'>borrow</span>());
+    <span class="doccomment">/// Return the concatenation of all text nodes in this subtree.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text_contents</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
+        <span class="kw">for</span> <span class="ident">text_node</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">inclusive_descendants</span>().<span class="ident">text_nodes</span>() {
+            <span class="ident">s</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="ident">text_node</span>.<span class="ident">borrow</span>());
         }
-        <span class='ident'>s</span>
+        <span class="ident">s</span>
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>Node</span> {
-    <span class='doccomment'>/// Return a reference to this node’s node-type-specific data.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>data</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>NodeData</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>data</span>
+<span class="kw">impl</span> <span class="ident">Node</span> {
+    <span class="doccomment">/// Return a reference to this node’s node-type-specific data.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">NodeData</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>
     }
 
-    <span class='doccomment'>/// If this node is an element, return a reference to element-specific data.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_element</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>ElementData</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>data</span> {
-            <span class='ident'>NodeData</span>::<span class='ident'>Element</span>(<span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>value</span>),
-            _ <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>
+    <span class="doccomment">/// If this node is an element, return a reference to element-specific data.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_element</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">ElementData</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">data</span> {
+            <span class="ident">NodeData</span>::<span class="ident">Element</span>(<span class="kw-2">ref</span> <span class="ident">value</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>),
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>
         }
     }
 
-    <span class='doccomment'>/// If this node is a text node, return a reference to its contents.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_text</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>RefCell</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>data</span> {
-            <span class='ident'>NodeData</span>::<span class='ident'>Text</span>(<span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>value</span>),
-            _ <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>
+    <span class="doccomment">/// If this node is a text node, return a reference to its contents.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_text</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">data</span> {
+            <span class="ident">NodeData</span>::<span class="ident">Text</span>(<span class="kw-2">ref</span> <span class="ident">value</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>),
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>
         }
     }
 
-    <span class='doccomment'>/// If this node is a comment, return a reference to its contents.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_comment</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>RefCell</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>data</span> {
-            <span class='ident'>NodeData</span>::<span class='ident'>Comment</span>(<span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>value</span>),
-            _ <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>
+    <span class="doccomment">/// If this node is a comment, return a reference to its contents.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_comment</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">data</span> {
+            <span class="ident">NodeData</span>::<span class="ident">Comment</span>(<span class="kw-2">ref</span> <span class="ident">value</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>),
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>
         }
     }
 
-    <span class='doccomment'>/// If this node is a document, return a reference to doctype-specific data.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_doctype</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Doctype</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>data</span> {
-            <span class='ident'>NodeData</span>::<span class='ident'>Doctype</span>(<span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>value</span>),
-            _ <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>
+    <span class="doccomment">/// If this node is a document, return a reference to doctype-specific data.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_doctype</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Doctype</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">data</span> {
+            <span class="ident">NodeData</span>::<span class="ident">Doctype</span>(<span class="kw-2">ref</span> <span class="ident">value</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>),
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>
         }
     }
 
-    <span class='doccomment'>/// If this node is a document, return a reference to document-specific data.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_document</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>DocumentData</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>data</span> {
-            <span class='ident'>NodeData</span>::<span class='ident'>Document</span>(<span class='kw-2'>ref</span> <span class='ident'>value</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>value</span>),
-            _ <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>
+    <span class="doccomment">/// If this node is a document, return a reference to document-specific data.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_document</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">DocumentData</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">data</span> {
+            <span class="ident">NodeData</span>::<span class="ident">Document</span>(<span class="kw-2">ref</span> <span class="ident">value</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>),
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>
         }
     }
 
-    <span class='doccomment'>/// Return a reference to the parent node, unless this node is the root of the tree.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parent</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NodeRef</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>parent</span>.<span class='ident'>upgrade</span>().<span class='ident'>map</span>(<span class='ident'>NodeRef</span>)
+    <span class="doccomment">/// Return a reference to the parent node, unless this node is the root of the tree.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parent</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeRef</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">parent</span>.<span class="ident">upgrade</span>().<span class="ident">map</span>(<span class="ident">NodeRef</span>)
     }
 
-    <span class='doccomment'>/// Return a reference to the first child of this node, unless it has no child.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>first_child</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NodeRef</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>first_child</span>.<span class='ident'>clone_inner</span>().<span class='ident'>map</span>(<span class='ident'>NodeRef</span>)
+    <span class="doccomment">/// Return a reference to the first child of this node, unless it has no child.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">first_child</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeRef</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">first_child</span>.<span class="ident">clone_inner</span>().<span class="ident">map</span>(<span class="ident">NodeRef</span>)
     }
 
-    <span class='doccomment'>/// Return a reference to the last child of this node, unless it has no child.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>last_child</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NodeRef</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>last_child</span>.<span class='ident'>upgrade</span>().<span class='ident'>map</span>(<span class='ident'>NodeRef</span>)
+    <span class="doccomment">/// Return a reference to the last child of this node, unless it has no child.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">last_child</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeRef</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">last_child</span>.<span class="ident">upgrade</span>().<span class="ident">map</span>(<span class="ident">NodeRef</span>)
     }
 
-    <span class='doccomment'>/// Return a reference to the previous sibling of this node, unless it is a first child.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>previous_sibling</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NodeRef</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>upgrade</span>().<span class='ident'>map</span>(<span class='ident'>NodeRef</span>)
+    <span class="doccomment">/// Return a reference to the previous sibling of this node, unless it is a first child.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">previous_sibling</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeRef</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">previous_sibling</span>.<span class="ident">upgrade</span>().<span class="ident">map</span>(<span class="ident">NodeRef</span>)
     }
 
-    <span class='doccomment'>/// Return a reference to the previous sibling of this node, unless it is a last child.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>next_sibling</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NodeRef</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>next_sibling</span>.<span class='ident'>clone_inner</span>().<span class='ident'>map</span>(<span class='ident'>NodeRef</span>)
+    <span class="doccomment">/// Return a reference to the previous sibling of this node, unless it is a last child.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_sibling</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeRef</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">next_sibling</span>.<span class="ident">clone_inner</span>().<span class="ident">map</span>(<span class="ident">NodeRef</span>)
     }
 
-    <span class='doccomment'>/// Detach a node from its parent and siblings. Children are not affected.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// To remove a node and its descendants, detach it and drop any strong reference to it.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>detach</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) {
-        <span class='kw'>let</span> <span class='ident'>parent_weak</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>parent</span>.<span class='ident'>take</span>();
-        <span class='kw'>let</span> <span class='ident'>previous_sibling_weak</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>take</span>();
-        <span class='kw'>let</span> <span class='ident'>next_sibling_strong</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>next_sibling</span>.<span class='ident'>take</span>();
+    <span class="doccomment">/// Detach a node from its parent and siblings. Children are not affected.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// To remove a node and its descendants, detach it and drop any strong reference to it.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">detach</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+        <span class="kw">let</span> <span class="ident">parent_weak</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">parent</span>.<span class="ident">take</span>();
+        <span class="kw">let</span> <span class="ident">previous_sibling_weak</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">previous_sibling</span>.<span class="ident">take</span>();
+        <span class="kw">let</span> <span class="ident">next_sibling_strong</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_sibling</span>.<span class="ident">take</span>();
 
-        <span class='kw'>let</span> <span class='ident'>previous_sibling_opt</span> <span class='op'>=</span> <span class='ident'>previous_sibling_weak</span>.<span class='ident'>as_ref</span>().<span class='ident'>and_then</span>(<span class='op'>|</span><span class='ident'>weak</span><span class='op'>|</span> <span class='ident'>weak</span>.<span class='ident'>upgrade</span>());
+        <span class="kw">let</span> <span class="ident">previous_sibling_opt</span> <span class="op">=</span> <span class="ident">previous_sibling_weak</span>.<span class="ident">as_ref</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">weak</span><span class="op">|</span> <span class="ident">weak</span>.<span class="ident">upgrade</span>());
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>next_sibling_ref</span>) <span class='op'>=</span> <span class='ident'>next_sibling_strong</span>.<span class='ident'>as_ref</span>() {
-            <span class='ident'>next_sibling_ref</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>replace</span>(<span class='ident'>previous_sibling_weak</span>);
-        } <span class='kw'>else</span> <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent_ref</span>) <span class='op'>=</span> <span class='ident'>parent_weak</span>.<span class='ident'>as_ref</span>() {
-            <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent_strong</span>) <span class='op'>=</span> <span class='ident'>parent_ref</span>.<span class='ident'>upgrade</span>() {
-                <span class='ident'>parent_strong</span>.<span class='ident'>last_child</span>.<span class='ident'>replace</span>(<span class='ident'>previous_sibling_weak</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">next_sibling_ref</span>) <span class="op">=</span> <span class="ident">next_sibling_strong</span>.<span class="ident">as_ref</span>() {
+            <span class="ident">next_sibling_ref</span>.<span class="ident">previous_sibling</span>.<span class="ident">replace</span>(<span class="ident">previous_sibling_weak</span>);
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent_ref</span>) <span class="op">=</span> <span class="ident">parent_weak</span>.<span class="ident">as_ref</span>() {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent_strong</span>) <span class="op">=</span> <span class="ident">parent_ref</span>.<span class="ident">upgrade</span>() {
+                <span class="ident">parent_strong</span>.<span class="ident">last_child</span>.<span class="ident">replace</span>(<span class="ident">previous_sibling_weak</span>);
             }
         }
 
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>previous_sibling_strong</span>) <span class='op'>=</span> <span class='ident'>previous_sibling_opt</span> {
-            <span class='ident'>previous_sibling_strong</span>.<span class='ident'>next_sibling</span>.<span class='ident'>replace</span>(<span class='ident'>next_sibling_strong</span>);
-        } <span class='kw'>else</span> <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent_ref</span>) <span class='op'>=</span> <span class='ident'>parent_weak</span>.<span class='ident'>as_ref</span>() {
-            <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent_strong</span>) <span class='op'>=</span> <span class='ident'>parent_ref</span>.<span class='ident'>upgrade</span>() {
-                <span class='ident'>parent_strong</span>.<span class='ident'>first_child</span>.<span class='ident'>replace</span>(<span class='ident'>next_sibling_strong</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">previous_sibling_strong</span>) <span class="op">=</span> <span class="ident">previous_sibling_opt</span> {
+            <span class="ident">previous_sibling_strong</span>.<span class="ident">next_sibling</span>.<span class="ident">replace</span>(<span class="ident">next_sibling_strong</span>);
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent_ref</span>) <span class="op">=</span> <span class="ident">parent_weak</span>.<span class="ident">as_ref</span>() {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent_strong</span>) <span class="op">=</span> <span class="ident">parent_ref</span>.<span class="ident">upgrade</span>() {
+                <span class="ident">parent_strong</span>.<span class="ident">first_child</span>.<span class="ident">replace</span>(<span class="ident">next_sibling_strong</span>);
             }
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>NodeRef</span> {
-    <span class='doccomment'>/// Append a new child to this node, after existing children.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The new child is detached from its previous position.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>append</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>new_child</span>: <span class='ident'>NodeRef</span>) {
-        <span class='ident'>new_child</span>.<span class='ident'>detach</span>();
-        <span class='ident'>new_child</span>.<span class='ident'>parent</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>)));
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>last_child_weak</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>last_child</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_child</span>.<span class='number'>0</span>))) {
-            <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>last_child</span>) <span class='op'>=</span> <span class='ident'>last_child_weak</span>.<span class='ident'>upgrade</span>() {
-                <span class='ident'>new_child</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>last_child_weak</span>));
-                <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>last_child</span>.<span class='ident'>next_sibling</span>.<span class='ident'>is_none</span>());
-                <span class='ident'>last_child</span>.<span class='ident'>next_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_child</span>.<span class='number'>0</span>));
-                <span class='kw'>return</span>
+<span class="kw">impl</span> <span class="ident">NodeRef</span> {
+    <span class="doccomment">/// Append a new child to this node, after existing children.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The new child is detached from its previous position.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">new_child</span>: <span class="ident">NodeRef</span>) {
+        <span class="ident">new_child</span>.<span class="ident">detach</span>();
+        <span class="ident">new_child</span>.<span class="ident">parent</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">Rc</span>::<span class="ident">downgrade</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>)));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">last_child_weak</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">last_child</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">Rc</span>::<span class="ident">downgrade</span>(<span class="kw-2">&amp;</span><span class="ident">new_child</span>.<span class="number">0</span>))) {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">last_child</span>) <span class="op">=</span> <span class="ident">last_child_weak</span>.<span class="ident">upgrade</span>() {
+                <span class="ident">new_child</span>.<span class="ident">previous_sibling</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">last_child_weak</span>));
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">last_child</span>.<span class="ident">next_sibling</span>.<span class="ident">is_none</span>());
+                <span class="ident">last_child</span>.<span class="ident">next_sibling</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">new_child</span>.<span class="number">0</span>));
+                <span class="kw">return</span>
             }
         }
-        <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>first_child</span>.<span class='ident'>is_none</span>());
-        <span class='self'>self</span>.<span class='ident'>first_child</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_child</span>.<span class='number'>0</span>));
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">first_child</span>.<span class="ident">is_none</span>());
+        <span class="self">self</span>.<span class="ident">first_child</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">new_child</span>.<span class="number">0</span>));
     }
 
-    <span class='doccomment'>/// Prepend a new child to this node, before existing children.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The new child is detached from its previous position.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>prepend</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>new_child</span>: <span class='ident'>NodeRef</span>) {
-        <span class='ident'>new_child</span>.<span class='ident'>detach</span>();
-        <span class='ident'>new_child</span>.<span class='ident'>parent</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>)));
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>first_child</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>first_child</span>.<span class='ident'>take</span>() {
-            <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>first_child</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>is_none</span>());
-            <span class='ident'>first_child</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_child</span>.<span class='number'>0</span>)));
-            <span class='ident'>new_child</span>.<span class='ident'>next_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>first_child</span>));
-        } <span class='kw'>else</span> {
-            <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>first_child</span>.<span class='ident'>is_none</span>());
-            <span class='self'>self</span>.<span class='ident'>last_child</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_child</span>.<span class='number'>0</span>)));
+    <span class="doccomment">/// Prepend a new child to this node, before existing children.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The new child is detached from its previous position.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prepend</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">new_child</span>: <span class="ident">NodeRef</span>) {
+        <span class="ident">new_child</span>.<span class="ident">detach</span>();
+        <span class="ident">new_child</span>.<span class="ident">parent</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">Rc</span>::<span class="ident">downgrade</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>)));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">first_child</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">first_child</span>.<span class="ident">take</span>() {
+            <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">first_child</span>.<span class="ident">previous_sibling</span>.<span class="ident">is_none</span>());
+            <span class="ident">first_child</span>.<span class="ident">previous_sibling</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">Rc</span>::<span class="ident">downgrade</span>(<span class="kw-2">&amp;</span><span class="ident">new_child</span>.<span class="number">0</span>)));
+            <span class="ident">new_child</span>.<span class="ident">next_sibling</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">first_child</span>));
+        } <span class="kw">else</span> {
+            <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">first_child</span>.<span class="ident">is_none</span>());
+            <span class="self">self</span>.<span class="ident">last_child</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">Rc</span>::<span class="ident">downgrade</span>(<span class="kw-2">&amp;</span><span class="ident">new_child</span>.<span class="number">0</span>)));
         }
-        <span class='self'>self</span>.<span class='ident'>first_child</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_child</span>.<span class='number'>0</span>));
+        <span class="self">self</span>.<span class="ident">first_child</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">new_child</span>.<span class="number">0</span>));
     }
 
-    <span class='doccomment'>/// Insert a new sibling after this node.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The new sibling is detached from its previous position.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert_after</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>new_sibling</span>: <span class='ident'>NodeRef</span>) {
-        <span class='ident'>new_sibling</span>.<span class='ident'>detach</span>();
-        <span class='ident'>new_sibling</span>.<span class='ident'>parent</span>.<span class='ident'>replace</span>(<span class='self'>self</span>.<span class='ident'>parent</span>.<span class='ident'>clone_inner</span>());
-        <span class='ident'>new_sibling</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span>)));
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>next_sibling</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>next_sibling</span>.<span class='ident'>take</span>() {
-            <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>next_sibling</span>.<span class='ident'>previous_sibling</span>().<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='op'>*</span><span class='self'>self</span>);
-            <span class='ident'>next_sibling</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_sibling</span>.<span class='number'>0</span>)));
-            <span class='ident'>new_sibling</span>.<span class='ident'>next_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>next_sibling</span>));
-        } <span class='kw'>else</span> <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>parent</span>() {
-            <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>parent</span>.<span class='ident'>last_child</span>().<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='op'>*</span><span class='self'>self</span>);
-            <span class='ident'>parent</span>.<span class='ident'>last_child</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_sibling</span>.<span class='number'>0</span>)));
+    <span class="doccomment">/// Insert a new sibling after this node.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The new sibling is detached from its previous position.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insert_after</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">new_sibling</span>: <span class="ident">NodeRef</span>) {
+        <span class="ident">new_sibling</span>.<span class="ident">detach</span>();
+        <span class="ident">new_sibling</span>.<span class="ident">parent</span>.<span class="ident">replace</span>(<span class="self">self</span>.<span class="ident">parent</span>.<span class="ident">clone_inner</span>());
+        <span class="ident">new_sibling</span>.<span class="ident">previous_sibling</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">Rc</span>::<span class="ident">downgrade</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>)));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">next_sibling</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">next_sibling</span>.<span class="ident">take</span>() {
+            <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">next_sibling</span>.<span class="ident">previous_sibling</span>().<span class="ident">unwrap</span>() <span class="op">==</span> <span class="kw-2">*</span><span class="self">self</span>);
+            <span class="ident">next_sibling</span>.<span class="ident">previous_sibling</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">Rc</span>::<span class="ident">downgrade</span>(<span class="kw-2">&amp;</span><span class="ident">new_sibling</span>.<span class="number">0</span>)));
+            <span class="ident">new_sibling</span>.<span class="ident">next_sibling</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">next_sibling</span>));
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">parent</span>() {
+            <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">parent</span>.<span class="ident">last_child</span>().<span class="ident">unwrap</span>() <span class="op">==</span> <span class="kw-2">*</span><span class="self">self</span>);
+            <span class="ident">parent</span>.<span class="ident">last_child</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">Rc</span>::<span class="ident">downgrade</span>(<span class="kw-2">&amp;</span><span class="ident">new_sibling</span>.<span class="number">0</span>)));
         }
-        <span class='self'>self</span>.<span class='ident'>next_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_sibling</span>.<span class='number'>0</span>));
+        <span class="self">self</span>.<span class="ident">next_sibling</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">new_sibling</span>.<span class="number">0</span>));
     }
 
-    <span class='doccomment'>/// Insert a new sibling before this node.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The new sibling is detached from its previous position.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insert_before</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>new_sibling</span>: <span class='ident'>NodeRef</span>) {
-        <span class='ident'>new_sibling</span>.<span class='ident'>detach</span>();
-        <span class='ident'>new_sibling</span>.<span class='ident'>parent</span>.<span class='ident'>replace</span>(<span class='self'>self</span>.<span class='ident'>parent</span>.<span class='ident'>clone_inner</span>());
-        <span class='ident'>new_sibling</span>.<span class='ident'>next_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>clone</span>()));
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>previous_sibling_weak</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>replace</span>(
-                <span class='prelude-val'>Some</span>(<span class='ident'>Rc</span>::<span class='ident'>downgrade</span>(<span class='kw-2'>&amp;</span><span class='ident'>new_sibling</span>.<span class='number'>0</span>))) {
-            <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>previous_sibling</span>) <span class='op'>=</span> <span class='ident'>previous_sibling_weak</span>.<span class='ident'>upgrade</span>() {
-                <span class='ident'>new_sibling</span>.<span class='ident'>previous_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>previous_sibling_weak</span>));
-                <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>previous_sibling</span>.<span class='ident'>next_sibling</span>().<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='op'>*</span><span class='self'>self</span>);
-                <span class='ident'>previous_sibling</span>.<span class='ident'>next_sibling</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_sibling</span>.<span class='number'>0</span>));
-                <span class='kw'>return</span>
+    <span class="doccomment">/// Insert a new sibling before this node.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The new sibling is detached from its previous position.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insert_before</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">new_sibling</span>: <span class="ident">NodeRef</span>) {
+        <span class="ident">new_sibling</span>.<span class="ident">detach</span>();
+        <span class="ident">new_sibling</span>.<span class="ident">parent</span>.<span class="ident">replace</span>(<span class="self">self</span>.<span class="ident">parent</span>.<span class="ident">clone_inner</span>());
+        <span class="ident">new_sibling</span>.<span class="ident">next_sibling</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>()));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">previous_sibling_weak</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">previous_sibling</span>.<span class="ident">replace</span>(
+                <span class="prelude-val">Some</span>(<span class="ident">Rc</span>::<span class="ident">downgrade</span>(<span class="kw-2">&amp;</span><span class="ident">new_sibling</span>.<span class="number">0</span>))) {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">previous_sibling</span>) <span class="op">=</span> <span class="ident">previous_sibling_weak</span>.<span class="ident">upgrade</span>() {
+                <span class="ident">new_sibling</span>.<span class="ident">previous_sibling</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">previous_sibling_weak</span>));
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">previous_sibling</span>.<span class="ident">next_sibling</span>().<span class="ident">unwrap</span>() <span class="op">==</span> <span class="kw-2">*</span><span class="self">self</span>);
+                <span class="ident">previous_sibling</span>.<span class="ident">next_sibling</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">new_sibling</span>.<span class="number">0</span>));
+                <span class="kw">return</span>
             }
         }
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>parent</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>parent</span>() {
-            <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>parent</span>.<span class='ident'>first_child</span>().<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='op'>*</span><span class='self'>self</span>);
-            <span class='ident'>parent</span>.<span class='ident'>first_child</span>.<span class='ident'>replace</span>(<span class='prelude-val'>Some</span>(<span class='ident'>new_sibling</span>.<span class='number'>0</span>));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">parent</span>() {
+            <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">parent</span>.<span class="ident">first_child</span>().<span class="ident">unwrap</span>() <span class="op">==</span> <span class="kw-2">*</span><span class="self">self</span>);
+            <span class="ident">parent</span>.<span class="ident">first_child</span>.<span class="ident">replace</span>(<span class="prelude-val">Some</span>(<span class="ident">new_sibling</span>.<span class="number">0</span>));
         }
     }
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt>?</dt>
-                    <dd>Show this help dialog</dd>
-                    <dt>S</dt>
-                    <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
-                    <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
-                    <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
-                    <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "kuchiki";
-        window.playgroundUrl = "";
-    </script>
-    <script src="../../jquery.js"></script>
-    <script src="../../main.js"></script>
-    
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "kuchiki";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

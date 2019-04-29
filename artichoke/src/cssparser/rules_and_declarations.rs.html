@@ -1,48 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/cssparser-0.5.6/src/rules_and_declarations.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>rules_and_declarations.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
-    
-
-    
-    
-</head>
-<body class="rustdoc">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        
-        
-    </nav>
-
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/cssparser-0.24.1/src/rules_and_declarations.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>rules_and_declarations.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../cssparser/index.html'><img src='../../rust-logo.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -474,501 +430,624 @@
 <span id="430">430</span>
 <span id="431">431</span>
 <span id="432">432</span>
-</pre><pre class='rust '>
-<span class='comment'>/* This Source Code Form is subject to the terms of the Mozilla Public
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+</pre><div class="example-wrap"><pre class="rust ">
+<span class="comment">/* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */</span>
 
-<span class='comment'>// https://drafts.csswg.org/css-syntax/#parsing</span>
+<span class="comment">// https://drafts.csswg.org/css-syntax/#parsing</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Range</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Cow</span>;
-<span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Token</span>, <span class='ident'>Parser</span>, <span class='ident'>Delimiter</span>, <span class='ident'>SourcePosition</span>};
+<span class="kw">use</span> <span class="ident">cow_rc_str</span>::<span class="ident">CowRcStr</span>;
+<span class="kw">use</span> <span class="ident">parser</span>::{<span class="ident">parse_until_before</span>, <span class="ident">parse_until_after</span>, <span class="ident">parse_nested_block</span>, <span class="ident">ParserState</span>};
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_imports</span>)]</span> <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ascii</span>::<span class="ident">AsciiExt</span>;
+<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">BasicParseError</span>, <span class="ident">BasicParseErrorKind</span>, <span class="ident">Delimiter</span>};
+<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">ParseError</span>, <span class="ident">Parser</span>, <span class="ident">SourceLocation</span>, <span class="ident">Token</span>};
 
-
-<span class='doccomment'>/// Parse `!important`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Typical usage is `input.try(parse_important).is_ok()`</span>
-<span class='doccomment'>/// at the end of a `DeclarationParser::parse_value` implementation.</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_important</span>(<span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), ()<span class='op'>&gt;</span> {
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>input</span>.<span class='ident'>expect_delim</span>(<span class='string'>&#39;!&#39;</span>));
-    <span class='ident'>input</span>.<span class='ident'>expect_ident_matching</span>(<span class='string'>&quot;important&quot;</span>)
+<span class="doccomment">/// Parse `!important`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Typical usage is `input.try(parse_important).is_ok()`</span>
+<span class="doccomment">/// at the end of a `DeclarationParser::parse_value` implementation.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_important</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">BasicParseError</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;&gt;</span> {
+    <span class="ident">input</span>.<span class="ident">expect_delim</span>(<span class="string">&#39;!&#39;</span>)<span class="question-mark">?</span>;
+    <span class="ident">input</span>.<span class="ident">expect_ident_matching</span>(<span class="string">&quot;important&quot;</span>)
 }
 
+<span class="doccomment">/// The return value for `AtRuleParser::parse_prelude`.</span>
+<span class="doccomment">/// Indicates whether the at-rule is expected to have a `{ /* ... */ }` block</span>
+<span class="doccomment">/// or end with a `;` semicolon.</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AtRuleType</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">PB</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// The at-rule is expected to end with a `;` semicolon. Example: `@import`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The value is the representation of all data of the rule which would be</span>
+    <span class="doccomment">/// handled in rule_without_block.</span>
+    <span class="ident">WithoutBlock</span>(<span class="ident">P</span>),
 
-<span class='doccomment'>/// The return value for `AtRuleParser::parse_prelude`.</span>
-<span class='doccomment'>/// Indicates whether the at-rule is expected to have a `{ /* ... */ }` block</span>
-<span class='doccomment'>/// or end with a `;` semicolon.</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>AtRuleType</span><span class='op'>&lt;</span><span class='ident'>P</span>, <span class='ident'>R</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// The at-rule is expected to end with a `;` semicolon. Example: `@import`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The value is the finished representation of an at-rule</span>
-    <span class='doccomment'>/// as returned by `RuleListParser::next` or `DeclarationListParser::next`.</span>
-    <span class='ident'>WithoutBlock</span>(<span class='ident'>R</span>),
-
-    <span class='doccomment'>/// The at-rule is expected to have a a `{ /* ... */ }` block. Example: `@media`</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The value is the representation of the &quot;prelude&quot; part of the rule.</span>
-    <span class='ident'>WithBlock</span>(<span class='ident'>P</span>),
-
-    <span class='doccomment'>/// The at-rule may either have a block or end with a semicolon.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This is mostly for testing. As of this writing no real CSS at-rule behaves like this.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The value is the representation of the &quot;prelude&quot; part of the rule.</span>
-    <span class='ident'>OptionalBlock</span>(<span class='ident'>P</span>),
+    <span class="doccomment">/// The at-rule is expected to have a a `{ /* ... */ }` block. Example: `@media`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The value is the representation of the &quot;prelude&quot; part of the rule.</span>
+    <span class="ident">WithBlock</span>(<span class="ident">PB</span>),
 }
 
+<span class="doccomment">/// A trait to provide various parsing of declaration values.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// For example, there could be different implementations for property declarations in style rules</span>
+<span class="doccomment">/// and for descriptors in `@font-face` rules.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">DeclarationParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// The finished representation of a declaration.</span>
+    <span class="kw">type</span> <span class="ident">Declaration</span>;
 
-<span class='doccomment'>/// A trait to provide various parsing of declaration values.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// For example, there could be different implementations for property declarations in style rules</span>
-<span class='doccomment'>/// and for descriptors in `@font-face` rules.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>DeclarationParser</span> {
-    <span class='doccomment'>/// The finished representation of a declaration.</span>
-    <span class='kw'>type</span> <span class='ident'>Declaration</span>;
+    <span class="doccomment">/// The error type that is included in the ParseError value that can be returned.</span>
+    <span class="kw">type</span> <span class="ident">Error</span>: <span class="lifetime">&#39;i</span>;
 
-    <span class='doccomment'>/// Parse the value of a declaration with the given `name`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Return the finished representation for the declaration</span>
-    <span class='doccomment'>/// as returned by `DeclarationListParser::next`,</span>
-    <span class='doccomment'>/// or `Err(())` to ignore the entire declaration as invalid.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Declaration name matching should be case-insensitive in the ASCII range.</span>
-    <span class='doccomment'>/// This can be done with `std::ascii::Ascii::eq_ignore_ascii_case`,</span>
-    <span class='doccomment'>/// or with the `match_ignore_ascii_case!` macro.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The given `input` is a &quot;delimited&quot; parser</span>
-    <span class='doccomment'>/// that ends wherever the declaration value should end.</span>
-    <span class='doccomment'>/// (In declaration lists, before the next semicolon or end of the current block.)</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If `!important` can be used in a given context,</span>
-    <span class='doccomment'>/// `input.try(parse_important).is_ok()` should be used at the end</span>
-    <span class='doccomment'>/// of the implementation of this method and the result should be part of the return value.</span>
-    <span class='kw'>fn</span> <span class='ident'>parse_value</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Declaration</span>, ()<span class='op'>&gt;</span>;
+    <span class="doccomment">/// Parse the value of a declaration with the given `name`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Return the finished representation for the declaration</span>
+    <span class="doccomment">/// as returned by `DeclarationListParser::next`,</span>
+    <span class="doccomment">/// or `Err(())` to ignore the entire declaration as invalid.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Declaration name matching should be case-insensitive in the ASCII range.</span>
+    <span class="doccomment">/// This can be done with `std::ascii::Ascii::eq_ignore_ascii_case`,</span>
+    <span class="doccomment">/// or with the `match_ignore_ascii_case!` macro.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The given `input` is a &quot;delimited&quot; parser</span>
+    <span class="doccomment">/// that ends wherever the declaration value should end.</span>
+    <span class="doccomment">/// (In declaration lists, before the next semicolon or end of the current block.)</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If `!important` can be used in a given context,</span>
+    <span class="doccomment">/// `input.try(parse_important).is_ok()` should be used at the end</span>
+    <span class="doccomment">/// of the implementation of this method and the result should be part of the return value.</span>
+    <span class="kw">fn</span> <span class="ident">parse_value</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="ident">CowRcStr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>)
+                       <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Declaration</span>, <span class="ident">ParseError</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;&gt;</span>;
 }
 
+<span class="doccomment">/// A trait to provide various parsing of at-rules.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// For example, there could be different implementations for top-level at-rules</span>
+<span class="doccomment">/// (`@media`, `@font-face`, …)</span>
+<span class="doccomment">/// and for page-margin rules inside `@page`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Default implementations that reject all at-rules are provided,</span>
+<span class="doccomment">/// so that `impl AtRuleParser&lt;(), ()&gt; for ... {}` can be used</span>
+<span class="doccomment">/// for using `DeclarationListParser` to parse a declartions list with only qualified rules.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">AtRuleParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// The intermediate representation of prelude of an at-rule without block;</span>
+    <span class="kw">type</span> <span class="ident">PreludeNoBlock</span>;
 
-<span class='doccomment'>/// A trait to provide various parsing of at-rules.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// For example, there could be different implementations for top-level at-rules</span>
-<span class='doccomment'>/// (`@media`, `@font-face`, …)</span>
-<span class='doccomment'>/// and for page-margin rules inside `@page`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Default implementations that reject all at-rules are provided,</span>
-<span class='doccomment'>/// so that `impl AtRuleParser&lt;(), ()&gt; for ... {}` can be used</span>
-<span class='doccomment'>/// for using `DeclarationListParser` to parse a declartions list with only qualified rules.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>AtRuleParser</span> {
-    <span class='doccomment'>/// The intermediate representation of an at-rule prelude.</span>
-    <span class='kw'>type</span> <span class='ident'>Prelude</span>;
+    <span class="doccomment">/// The intermediate representation of prelude of an at-rule with block;</span>
+    <span class="kw">type</span> <span class="ident">PreludeBlock</span>;
 
-    <span class='doccomment'>/// The finished representation of an at-rule.</span>
-    <span class='kw'>type</span> <span class='ident'>AtRule</span>;
+    <span class="doccomment">/// The finished representation of an at-rule.</span>
+    <span class="kw">type</span> <span class="ident">AtRule</span>;
 
-    <span class='doccomment'>/// Parse the prelude of an at-rule with the given `name`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Return the representation of the prelude and the type of at-rule,</span>
-    <span class='doccomment'>/// or `Err(())` to ignore the entire at-rule as invalid.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// See `AtRuleType`’s documentation for the return value.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The prelude is the part after the at-keyword</span>
-    <span class='doccomment'>/// and before the `;` semicolon or `{ /* ... */ }` block.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// At-rule name matching should be case-insensitive in the ASCII range.</span>
-    <span class='doccomment'>/// This can be done with `std::ascii::Ascii::eq_ignore_ascii_case`,</span>
-    <span class='doccomment'>/// or with the `match_ignore_ascii_case!` macro.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The given `input` is a &quot;delimited&quot; parser</span>
-    <span class='doccomment'>/// that ends wherever the prelude should end.</span>
-    <span class='doccomment'>/// (Before the next semicolon, the next `{`, or the end of the current block.)</span>
-    <span class='kw'>fn</span> <span class='ident'>parse_prelude</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>)
-                     <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>AtRuleType</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Prelude</span>, <span class='self'>Self</span>::<span class='ident'>AtRule</span><span class='op'>&gt;</span>, ()<span class='op'>&gt;</span> {
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>name</span>;
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>input</span>;
-        <span class='prelude-val'>Err</span>(())
+    <span class="doccomment">/// The error type that is included in the ParseError value that can be returned.</span>
+    <span class="kw">type</span> <span class="ident">Error</span>: <span class="lifetime">&#39;i</span>;
+
+    <span class="doccomment">/// Parse the prelude of an at-rule with the given `name`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Return the representation of the prelude and the type of at-rule,</span>
+    <span class="doccomment">/// or `Err(())` to ignore the entire at-rule as invalid.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See `AtRuleType`’s documentation for the return value.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The prelude is the part after the at-keyword</span>
+    <span class="doccomment">/// and before the `;` semicolon or `{ /* ... */ }` block.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// At-rule name matching should be case-insensitive in the ASCII range.</span>
+    <span class="doccomment">/// This can be done with `std::ascii::Ascii::eq_ignore_ascii_case`,</span>
+    <span class="doccomment">/// or with the `match_ignore_ascii_case!` macro.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The given `input` is a &quot;delimited&quot; parser</span>
+    <span class="doccomment">/// that ends wherever the prelude should end.</span>
+    <span class="doccomment">/// (Before the next semicolon, the next `{`, or the end of the current block.)</span>
+    <span class="kw">fn</span> <span class="ident">parse_prelude</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="ident">CowRcStr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>)
+                     <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">AtRuleType</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">PreludeNoBlock</span>, <span class="self">Self</span>::<span class="ident">PreludeBlock</span><span class="op">&gt;</span>,
+                               <span class="ident">ParseError</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">name</span>;
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">input</span>;
+        <span class="prelude-val">Err</span>(<span class="ident">input</span>.<span class="ident">new_error</span>(<span class="ident">BasicParseErrorKind</span>::<span class="ident">AtRuleInvalid</span>(<span class="ident">name</span>)))
     }
 
-    <span class='doccomment'>/// Parse the content of a `{ /* ... */ }` block for the body of the at-rule.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Return the finished representation of the at-rule</span>
-    <span class='doccomment'>/// as returned by `RuleListParser::next` or `DeclarationListParser::next`,</span>
-    <span class='doccomment'>/// or `Err(())` to ignore the entire at-rule as invalid.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This is only called when `parse_prelude` returned `WithBlock` or `OptionalBlock`,</span>
-    <span class='doccomment'>/// and a block was indeed found following the prelude.</span>
-    <span class='kw'>fn</span> <span class='ident'>parse_block</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>prelude</span>: <span class='self'>Self</span>::<span class='ident'>Prelude</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>)
-                   <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>AtRule</span>, ()<span class='op'>&gt;</span> {
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>prelude</span>;
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>input</span>;
-        <span class='prelude-val'>Err</span>(())
+    <span class="doccomment">/// End an at-rule which doesn&#39;t have block. Return the finished</span>
+    <span class="doccomment">/// representation of the at-rule.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The location passed in is source location of the start of the prelude.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is only called when `parse_prelude` returned `WithoutBlock`, and</span>
+    <span class="doccomment">/// either the `;` semicolon indeed follows the prelude, or parser is at</span>
+    <span class="doccomment">/// the end of the input.</span>
+    <span class="kw">fn</span> <span class="ident">rule_without_block</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">prelude</span>: <span class="self">Self</span>::<span class="ident">PreludeNoBlock</span>,
+        <span class="ident">location</span>: <span class="ident">SourceLocation</span>,
+    ) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">AtRule</span> {
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">prelude</span>;
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">location</span>;
+        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;The `AtRuleParser::rule_without_block` method must be overriden \
+                if `AtRuleParser::parse_prelude` ever returns `AtRuleType::WithoutBlock`.&quot;</span>)
     }
 
-    <span class='doccomment'>/// An `OptionalBlock` prelude was followed by `;`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Convert the prelude into the finished representation of the at-rule</span>
-    <span class='doccomment'>/// as returned by `RuleListParser::next` or `DeclarationListParser::next`.</span>
-    <span class='kw'>fn</span> <span class='ident'>rule_without_block</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>prelude</span>: <span class='self'>Self</span>::<span class='ident'>Prelude</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>::<span class='ident'>AtRule</span> {
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>prelude</span>;
-        <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;The `AtRuleParser::rule_without_block` method must be overriden \
-                if `AtRuleParser::parse_prelude` ever returns `AtRuleType::OptionalBlock`.&quot;</span>)
-    }
-}
-
-
-<span class='doccomment'>/// A trait to provide various parsing of qualified rules.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// For example, there could be different implementations</span>
-<span class='doccomment'>/// for top-level qualified rules (i.e. style rules with Selectors as prelude)</span>
-<span class='doccomment'>/// and for qualified rules inside `@keyframes` (keyframe rules with keyframe selectors as prelude).</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Default implementations that reject all qualified rules are provided,</span>
-<span class='doccomment'>/// so that `impl QualifiedRuleParser&lt;(), ()&gt; for ... {}` can be used</span>
-<span class='doccomment'>/// for example for using `RuleListParser` to parse a rule list with only at-rules</span>
-<span class='doccomment'>/// (such as inside `@font-feature-values`).</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>QualifiedRuleParser</span> {
-    <span class='doccomment'>/// The intermediate representation of a qualified rule prelude.</span>
-    <span class='kw'>type</span> <span class='ident'>Prelude</span>;
-
-    <span class='doccomment'>/// The finished representation of a qualified rule.</span>
-    <span class='kw'>type</span> <span class='ident'>QualifiedRule</span>;
-
-    <span class='doccomment'>/// Parse the prelude of a qualified rule. For style rules, this is as Selector list.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Return the representation of the prelude,</span>
-    <span class='doccomment'>/// or `Err(())` to ignore the entire at-rule as invalid.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The prelude is the part before the `{ /* ... */ }` block.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The given `input` is a &quot;delimited&quot; parser</span>
-    <span class='doccomment'>/// that ends where the prelude should end (before the next `{`).</span>
-    <span class='kw'>fn</span> <span class='ident'>parse_prelude</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Prelude</span>, ()<span class='op'>&gt;</span> {
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>input</span>;
-        <span class='prelude-val'>Err</span>(())
-    }
-
-    <span class='doccomment'>/// Parse the content of a `{ /* ... */ }` block for the body of the qualified rule.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Return the finished representation of the qualified rule</span>
-    <span class='doccomment'>/// as returned by `RuleListParser::next`,</span>
-    <span class='doccomment'>/// or `Err(())` to ignore the entire at-rule as invalid.</span>
-    <span class='kw'>fn</span> <span class='ident'>parse_block</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>prelude</span>: <span class='self'>Self</span>::<span class='ident'>Prelude</span>, <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>)
-                   <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>QualifiedRule</span>, ()<span class='op'>&gt;</span> {
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>prelude</span>;
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>input</span>;
-        <span class='prelude-val'>Err</span>(())
+    <span class="doccomment">/// Parse the content of a `{ /* ... */ }` block for the body of the at-rule.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The location passed in is source location of the start of the prelude.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Return the finished representation of the at-rule</span>
+    <span class="doccomment">/// as returned by `RuleListParser::next` or `DeclarationListParser::next`,</span>
+    <span class="doccomment">/// or `Err(())` to ignore the entire at-rule as invalid.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is only called when `parse_prelude` returned `WithBlock`, and a block</span>
+    <span class="doccomment">/// was indeed found following the prelude.</span>
+    <span class="kw">fn</span> <span class="ident">parse_block</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">prelude</span>: <span class="self">Self</span>::<span class="ident">PreludeBlock</span>,
+        <span class="ident">location</span>: <span class="ident">SourceLocation</span>,
+        <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">AtRule</span>, <span class="ident">ParseError</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">prelude</span>;
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">location</span>;
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">input</span>;
+        <span class="prelude-val">Err</span>(<span class="ident">input</span>.<span class="ident">new_error</span>(<span class="ident">BasicParseErrorKind</span>::<span class="ident">AtRuleBodyInvalid</span>))
     }
 }
 
+<span class="doccomment">/// A trait to provide various parsing of qualified rules.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// For example, there could be different implementations</span>
+<span class="doccomment">/// for top-level qualified rules (i.e. style rules with Selectors as prelude)</span>
+<span class="doccomment">/// and for qualified rules inside `@keyframes` (keyframe rules with keyframe selectors as prelude).</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Default implementations that reject all qualified rules are provided,</span>
+<span class="doccomment">/// so that `impl QualifiedRuleParser&lt;(), ()&gt; for ... {}` can be used</span>
+<span class="doccomment">/// for example for using `RuleListParser` to parse a rule list with only at-rules</span>
+<span class="doccomment">/// (such as inside `@font-feature-values`).</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">QualifiedRuleParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// The intermediate representation of a qualified rule prelude.</span>
+    <span class="kw">type</span> <span class="ident">Prelude</span>;
 
-<span class='doccomment'>/// Provides an iterator for declaration list parsing.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>DeclarationListParser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>: <span class='lifetime'>&#39;t</span>, <span class='lifetime'>&#39;t</span>: <span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;a</span>, <span class='ident'>I</span>, <span class='ident'>P</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>P</span>: <span class='ident'>DeclarationParser</span><span class='op'>&lt;</span><span class='ident'>Declaration</span> <span class='op'>=</span> <span class='ident'>I</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>AtRuleParser</span><span class='op'>&lt;</span><span class='ident'>AtRule</span> <span class='op'>=</span> <span class='ident'>I</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// The input given to `DeclarationListParser::new`</span>
-    <span class='kw'>pub</span> <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>Parser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>, <span class='lifetime'>&#39;t</span><span class='op'>&gt;</span>,
+    <span class="doccomment">/// The finished representation of a qualified rule.</span>
+    <span class="kw">type</span> <span class="ident">QualifiedRule</span>;
 
-    <span class='doccomment'>/// The parser given to `DeclarationListParser::new`</span>
-    <span class='kw'>pub</span> <span class='ident'>parser</span>: <span class='ident'>P</span>,
+    <span class="doccomment">/// The error type that is included in the ParseError value that can be returned.</span>
+    <span class="kw">type</span> <span class="ident">Error</span>: <span class="lifetime">&#39;i</span>;
+
+    <span class="doccomment">/// Parse the prelude of a qualified rule. For style rules, this is as Selector list.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Return the representation of the prelude,</span>
+    <span class="doccomment">/// or `Err(())` to ignore the entire at-rule as invalid.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The prelude is the part before the `{ /* ... */ }` block.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The given `input` is a &quot;delimited&quot; parser</span>
+    <span class="doccomment">/// that ends where the prelude should end (before the next `{`).</span>
+    <span class="kw">fn</span> <span class="ident">parse_prelude</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>)
+                         <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Prelude</span>, <span class="ident">ParseError</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">input</span>;
+        <span class="prelude-val">Err</span>(<span class="ident">input</span>.<span class="ident">new_error</span>(<span class="ident">BasicParseErrorKind</span>::<span class="ident">QualifiedRuleInvalid</span>))
+    }
+
+    <span class="doccomment">/// Parse the content of a `{ /* ... */ }` block for the body of the qualified rule.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The location passed in is source location of the start of the prelude.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Return the finished representation of the qualified rule</span>
+    <span class="doccomment">/// as returned by `RuleListParser::next`,</span>
+    <span class="doccomment">/// or `Err(())` to ignore the entire at-rule as invalid.</span>
+    <span class="kw">fn</span> <span class="ident">parse_block</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">prelude</span>: <span class="self">Self</span>::<span class="ident">Prelude</span>,
+        <span class="ident">location</span>: <span class="ident">SourceLocation</span>,
+        <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">QualifiedRule</span>, <span class="ident">ParseError</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">prelude</span>;
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">location</span>;
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">input</span>;
+        <span class="prelude-val">Err</span>(<span class="ident">input</span>.<span class="ident">new_error</span>(<span class="ident">BasicParseErrorKind</span>::<span class="ident">QualifiedRuleInvalid</span>))
+    }
 }
 
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>, <span class='lifetime'>&#39;t</span>, <span class='lifetime'>&#39;a</span>, <span class='ident'>I</span>, <span class='ident'>P</span><span class='op'>&gt;</span> <span class='ident'>DeclarationListParser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>, <span class='lifetime'>&#39;t</span>, <span class='lifetime'>&#39;a</span>, <span class='ident'>I</span>, <span class='ident'>P</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>P</span>: <span class='ident'>DeclarationParser</span><span class='op'>&lt;</span><span class='ident'>Declaration</span> <span class='op'>=</span> <span class='ident'>I</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>AtRuleParser</span><span class='op'>&lt;</span><span class='ident'>AtRule</span> <span class='op'>=</span> <span class='ident'>I</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Create a new `DeclarationListParser` for the given `input` and `parser`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Note that all CSS declaration lists can on principle contain at-rules.</span>
-    <span class='doccomment'>/// Even if no such valid at-rule exists (yet),</span>
-    <span class='doccomment'>/// this affects error handling: at-rules end at `{}` blocks, not just semicolons.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The given `parser` therefore needs to implement</span>
-    <span class='doccomment'>/// both `DeclarationParser` and `AtRuleParser` traits.</span>
-    <span class='doccomment'>/// However, the latter can be an empty `impl`</span>
-    <span class='doccomment'>/// since `AtRuleParser` provides default implementations of its methods.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The return type for finished declarations and at-rules also needs to be the same,</span>
-    <span class='doccomment'>/// since `&lt;DeclarationListParser as Iterator&gt;::next` can return either.</span>
-    <span class='doccomment'>/// It could be a custom enum.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>Parser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>, <span class='lifetime'>&#39;t</span><span class='op'>&gt;</span>, <span class='ident'>parser</span>: <span class='ident'>P</span>)
-               <span class='op'>-&gt;</span> <span class='ident'>DeclarationListParser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>, <span class='lifetime'>&#39;t</span>, <span class='lifetime'>&#39;a</span>, <span class='ident'>I</span>, <span class='ident'>P</span><span class='op'>&gt;</span> {
-        <span class='ident'>DeclarationListParser</span> {
-            <span class='ident'>input</span>: <span class='ident'>input</span>,
-            <span class='ident'>parser</span>: <span class='ident'>parser</span>,
+<span class="doccomment">/// Provides an iterator for declaration list parsing.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DeclarationListParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>: <span class="lifetime">&#39;t</span>, <span class="lifetime">&#39;t</span>: <span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;a</span>, <span class="ident">P</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// The input given to `DeclarationListParser::new`</span>
+    <span class="kw">pub</span> <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>,
+
+    <span class="doccomment">/// The parser given to `DeclarationListParser::new`</span>
+    <span class="kw">pub</span> <span class="ident">parser</span>: <span class="ident">P</span>,
+}
+
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>: <span class="lifetime">&#39;t</span>, <span class="lifetime">&#39;t</span>: <span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">P</span>, <span class="ident">E</span>: <span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">DeclarationListParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>, <span class="lifetime">&#39;a</span>, <span class="ident">P</span><span class="op">&gt;</span>
+<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">DeclarationParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">Declaration</span> <span class="op">=</span> <span class="ident">I</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> <span class="op">+</span>
+         <span class="ident">AtRuleParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">AtRule</span> <span class="op">=</span> <span class="ident">I</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Create a new `DeclarationListParser` for the given `input` and `parser`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that all CSS declaration lists can on principle contain at-rules.</span>
+    <span class="doccomment">/// Even if no such valid at-rule exists (yet),</span>
+    <span class="doccomment">/// this affects error handling: at-rules end at `{}` blocks, not just semicolons.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The given `parser` therefore needs to implement</span>
+    <span class="doccomment">/// both `DeclarationParser` and `AtRuleParser` traits.</span>
+    <span class="doccomment">/// However, the latter can be an empty `impl`</span>
+    <span class="doccomment">/// since `AtRuleParser` provides default implementations of its methods.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The return type for finished declarations and at-rules also needs to be the same,</span>
+    <span class="doccomment">/// since `&lt;DeclarationListParser as Iterator&gt;::next` can return either.</span>
+    <span class="doccomment">/// It could be a custom enum.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>, <span class="ident">parser</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">DeclarationListParser</span> {
+            <span class="ident">input</span>: <span class="ident">input</span>,
+            <span class="ident">parser</span>: <span class="ident">parser</span>,
         }
     }
 }
 
-<span class='doccomment'>/// `DeclarationListParser` is an iterator that yields `Ok(_)` for a valid declaration or at-rule</span>
-<span class='doccomment'>/// or `Err(())` for an invalid one.</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>, <span class='lifetime'>&#39;t</span>, <span class='lifetime'>&#39;a</span>, <span class='ident'>I</span>, <span class='ident'>P</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>DeclarationListParser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>, <span class='lifetime'>&#39;t</span>, <span class='lifetime'>&#39;a</span>, <span class='ident'>I</span>, <span class='ident'>P</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>P</span>: <span class='ident'>DeclarationParser</span><span class='op'>&lt;</span><span class='ident'>Declaration</span> <span class='op'>=</span> <span class='ident'>I</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>AtRuleParser</span><span class='op'>&lt;</span><span class='ident'>AtRule</span> <span class='op'>=</span> <span class='ident'>I</span><span class='op'>&gt;</span> {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>Range</span><span class='op'>&lt;</span><span class='ident'>SourcePosition</span><span class='op'>&gt;&gt;</span>;
+<span class="doccomment">/// `DeclarationListParser` is an iterator that yields `Ok(_)` for a valid declaration or at-rule</span>
+<span class="doccomment">/// or `Err(())` for an invalid one.</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>: <span class="lifetime">&#39;t</span>, <span class="lifetime">&#39;t</span>: <span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;a</span>, <span class="ident">I</span>, <span class="ident">P</span>, <span class="ident">E</span>: <span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">DeclarationListParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>, <span class="lifetime">&#39;a</span>, <span class="ident">P</span><span class="op">&gt;</span>
+<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">DeclarationParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">Declaration</span> <span class="op">=</span> <span class="ident">I</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> <span class="op">+</span>
+         <span class="ident">AtRuleParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">AtRule</span> <span class="op">=</span> <span class="ident">I</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">I</span>, (<span class="ident">ParseError</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">E</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;i</span> <span class="ident">str</span>)<span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>Range</span><span class='op'>&lt;</span><span class='ident'>SourcePosition</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span> {
-        <span class='kw'>loop</span> {
-            <span class='kw'>let</span> <span class='ident'>start_position</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>position</span>();
-            <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>next_including_whitespace_and_comments</span>() {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>WhiteSpace</span>(_)) <span class='op'>|</span> <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>Comment</span>(_)) <span class='op'>|</span> <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>Semicolon</span>) <span class='op'>=&gt;</span> {}
-                <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>Ident</span>(<span class='ident'>name</span>)) <span class='op'>=&gt;</span> {
-                    <span class='kw'>return</span> <span class='prelude-val'>Some</span>({
-                        <span class='kw'>let</span> <span class='ident'>parser</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>parser</span>;
-                        <span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>parse_until_after</span>(<span class='ident'>Delimiter</span>::<span class='ident'>Semicolon</span>, <span class='op'>|</span><span class='ident'>input</span><span class='op'>|</span> {
-                            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>input</span>.<span class='ident'>expect_colon</span>());
-                            <span class='ident'>parser</span>.<span class='ident'>parse_value</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>name</span>, <span class='ident'>input</span>)
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span> {
+        <span class="kw">loop</span> {
+            <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">state</span>();
+            <span class="comment">// FIXME: remove intermediate variable when lifetimes are non-lexical</span>
+            <span class="kw">let</span> <span class="ident">ident</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">next_including_whitespace_and_comments</span>() {
+                <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="ident">Token</span>::<span class="ident">WhiteSpace</span>(<span class="kw">_</span>)) <span class="op">|</span> <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="ident">Token</span>::<span class="ident">Comment</span>(<span class="kw">_</span>)) <span class="op">|</span> <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="ident">Token</span>::<span class="ident">Semicolon</span>) <span class="op">=&gt;</span> <span class="kw">continue</span>,
+                <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="ident">Token</span>::<span class="ident">Ident</span>(<span class="kw-2">ref</span> <span class="ident">name</span>)) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="ident">name</span>.<span class="ident">clone</span>())),
+                <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="ident">Token</span>::<span class="ident">AtKeyword</span>(<span class="kw-2">ref</span> <span class="ident">name</span>)) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(<span class="ident">name</span>.<span class="ident">clone</span>())),
+                <span class="prelude-val">Ok</span>(<span class="ident">token</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">token</span>.<span class="ident">clone</span>()),
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
+            };
+            <span class="kw">match</span> <span class="ident">ident</span> {
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="ident">name</span>)) <span class="op">=&gt;</span> {
+                    <span class="comment">// Ident</span>
+                    <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> {
+                        <span class="kw">let</span> <span class="ident">parser</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">parser</span>;
+                        <span class="comment">// FIXME: https://github.com/rust-lang/rust/issues/42508</span>
+                        <span class="ident">parse_until_after</span>::<span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="self">self</span>.<span class="ident">input</span>, <span class="ident">Delimiter</span>::<span class="ident">Semicolon</span>, <span class="op">|</span><span class="ident">input</span><span class="op">|</span> {
+                            <span class="ident">input</span>.<span class="ident">expect_colon</span>()<span class="question-mark">?</span>;
+                            <span class="ident">parser</span>.<span class="ident">parse_value</span>(<span class="ident">name</span>, <span class="ident">input</span>)
                         })
-                    }.<span class='ident'>map_err</span>(<span class='op'>|</span>()<span class='op'>|</span> <span class='ident'>start_position</span>..<span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>position</span>()))
+                    };
+                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">result</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">slice_from</span>(<span class="ident">start</span>.<span class="ident">position</span>()))))
                 }
-                <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>AtKeyword</span>(<span class='ident'>name</span>)) <span class='op'>=&gt;</span> {
-                    <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>parse_at_rule</span>(<span class='ident'>start_position</span>, <span class='ident'>name</span>, <span class='self'>self</span>.<span class='ident'>input</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>parser</span>))
+                <span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(<span class="ident">name</span>)) <span class="op">=&gt;</span> {
+                    <span class="comment">// At-keyword</span>
+                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">parse_at_rule</span>(<span class="kw-2">&amp;</span><span class="ident">start</span>, <span class="ident">name</span>, <span class="self">self</span>.<span class="ident">input</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">parser</span>))
                 }
-                <span class='prelude-val'>Ok</span>(_) <span class='op'>=&gt;</span> {
-                    <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>parse_until_after</span>(<span class='ident'>Delimiter</span>::<span class='ident'>Semicolon</span>, <span class='op'>|</span>_<span class='op'>|</span> <span class='prelude-val'>Err</span>(()))
-                                .<span class='ident'>map_err</span>(<span class='op'>|</span>()<span class='op'>|</span> <span class='ident'>start_position</span>..<span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>position</span>()))
+                <span class="prelude-val">Err</span>(<span class="ident">token</span>) <span class="op">=&gt;</span> {
+                    <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">parse_until_after</span>(<span class="ident">Delimiter</span>::<span class="ident">Semicolon</span>, <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
+                        <span class="prelude-val">Err</span>(<span class="ident">start</span>.<span class="ident">source_location</span>().<span class="ident">new_unexpected_token_error</span>(<span class="ident">token</span>.<span class="ident">clone</span>()))
+                    });
+                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">result</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">slice_from</span>(<span class="ident">start</span>.<span class="ident">position</span>()))))
                 }
-                <span class='prelude-val'>Err</span>(()) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>None</span>,
+            }
+        }
+    }
+}
+
+
+<span class="doccomment">/// Provides an iterator for rule list parsing.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RuleListParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>: <span class="lifetime">&#39;t</span>, <span class="lifetime">&#39;t</span>: <span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;a</span>, <span class="ident">P</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// The input given to `RuleListParser::new`</span>
+    <span class="kw">pub</span> <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>,
+
+    <span class="doccomment">/// The parser given to `RuleListParser::new`</span>
+    <span class="kw">pub</span> <span class="ident">parser</span>: <span class="ident">P</span>,
+
+    <span class="ident">is_stylesheet</span>: <span class="ident">bool</span>,
+    <span class="ident">any_rule_so_far</span>: <span class="ident">bool</span>,
+}
+
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>: <span class="lifetime">&#39;t</span>, <span class="lifetime">&#39;t</span>: <span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;a</span>, <span class="ident">R</span>, <span class="ident">P</span>, <span class="ident">E</span>: <span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">RuleListParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>, <span class="lifetime">&#39;a</span>, <span class="ident">P</span><span class="op">&gt;</span>
+<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">QualifiedRuleParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">QualifiedRule</span> <span class="op">=</span> <span class="ident">R</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> <span class="op">+</span>
+         <span class="ident">AtRuleParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">AtRule</span> <span class="op">=</span> <span class="ident">R</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Create a new `RuleListParser` for the given `input` at the top-level of a stylesheet</span>
+    <span class="doccomment">/// and the given `parser`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The given `parser` needs to implement both `QualifiedRuleParser` and `AtRuleParser` traits.</span>
+    <span class="doccomment">/// However, either of them can be an empty `impl`</span>
+    <span class="doccomment">/// since the traits provide default implementations of their methods.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The return type for finished qualified rules and at-rules also needs to be the same,</span>
+    <span class="doccomment">/// since `&lt;RuleListParser as Iterator&gt;::next` can return either.</span>
+    <span class="doccomment">/// It could be a custom enum.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_for_stylesheet</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>, <span class="ident">parser</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">RuleListParser</span> {
+            <span class="ident">input</span>: <span class="ident">input</span>,
+            <span class="ident">parser</span>: <span class="ident">parser</span>,
+            <span class="ident">is_stylesheet</span>: <span class="bool-val">true</span>,
+            <span class="ident">any_rule_so_far</span>: <span class="bool-val">false</span>,
+        }
+    }
+
+    <span class="doccomment">/// Same is `new_for_stylesheet`, but should be used for rule lists inside a block</span>
+    <span class="doccomment">/// such as the body of an `@media` rule.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This differs in that `&lt;!--` and `--&gt;` tokens</span>
+    <span class="doccomment">/// should only be ignored at the stylesheet top-level.</span>
+    <span class="doccomment">/// (This is to deal with legacy work arounds for `&lt;style&gt;` HTML element parsing.)</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_for_nested_rule</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>, <span class="ident">parser</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">RuleListParser</span> {
+            <span class="ident">input</span>: <span class="ident">input</span>,
+            <span class="ident">parser</span>: <span class="ident">parser</span>,
+            <span class="ident">is_stylesheet</span>: <span class="bool-val">false</span>,
+            <span class="ident">any_rule_so_far</span>: <span class="bool-val">false</span>,
+        }
+    }
+}
+
+
+
+<span class="doccomment">/// `RuleListParser` is an iterator that yields `Ok(_)` for a rule or `Err(())` for an invalid one.</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>: <span class="lifetime">&#39;t</span>, <span class="lifetime">&#39;t</span>: <span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;a</span>, <span class="ident">R</span>, <span class="ident">P</span>, <span class="ident">E</span>: <span class="lifetime">&#39;i</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">RuleListParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>, <span class="lifetime">&#39;a</span>, <span class="ident">P</span><span class="op">&gt;</span>
+<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">QualifiedRuleParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">QualifiedRule</span> <span class="op">=</span> <span class="ident">R</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> <span class="op">+</span>
+         <span class="ident">AtRuleParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">AtRule</span> <span class="op">=</span> <span class="ident">R</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, (<span class="ident">ParseError</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">E</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;i</span> <span class="ident">str</span>)<span class="op">&gt;</span>;
+
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span> {
+        <span class="kw">loop</span> {
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_stylesheet</span> {
+                <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">skip_cdc_and_cdo</span>()
+            } <span class="kw">else</span> {
+                <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">skip_whitespace</span>()
+            }
+            <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">state</span>();
+
+            <span class="kw">let</span> <span class="ident">at_keyword</span>;
+            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">next_byte</span>() {
+                <span class="prelude-val">Some</span>(<span class="string">b&#39;@&#39;</span>) <span class="op">=&gt;</span> {
+                    <span class="kw">match</span> <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">next_including_whitespace_and_comments</span>() {
+                        <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="ident">Token</span>::<span class="ident">AtKeyword</span>(<span class="kw-2">ref</span> <span class="ident">name</span>)) <span class="op">=&gt;</span> <span class="ident">at_keyword</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">name</span>.<span class="ident">clone</span>()),
+                        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">at_keyword</span> <span class="op">=</span> <span class="prelude-val">None</span>,
+                    }
+                    <span class="comment">// FIXME: move this back inside `match` when lifetimes are non-lexical</span>
+                    <span class="kw">if</span> <span class="ident">at_keyword</span>.<span class="ident">is_none</span>() {
+                        <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="ident">start</span>)
+                    }
+                }
+                <span class="prelude-val">Some</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">at_keyword</span> <span class="op">=</span> <span class="prelude-val">None</span>,
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>
+            }
+
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">name</span>) <span class="op">=</span> <span class="ident">at_keyword</span> {
+                <span class="kw">let</span> <span class="ident">first_stylesheet_rule</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">is_stylesheet</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">any_rule_so_far</span>;
+                <span class="self">self</span>.<span class="ident">any_rule_so_far</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                <span class="kw">if</span> <span class="ident">first_stylesheet_rule</span> <span class="op">&amp;&amp;</span> <span class="ident">name</span>.<span class="ident">eq_ignore_ascii_case</span>(<span class="string">&quot;charset&quot;</span>) {
+                    <span class="kw">let</span> <span class="ident">delimiters</span> <span class="op">=</span> <span class="ident">Delimiter</span>::<span class="ident">Semicolon</span> <span class="op">|</span> <span class="ident">Delimiter</span>::<span class="ident">CurlyBracketBlock</span>;
+                    <span class="kw">let</span> <span class="kw">_</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ParseError</span><span class="op">&lt;</span>()<span class="op">&gt;&gt;</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">parse_until_after</span>(<span class="ident">delimiters</span>, <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="prelude-val">Ok</span>(()));
+                } <span class="kw">else</span> {
+                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">parse_at_rule</span>(<span class="kw-2">&amp;</span><span class="ident">start</span>, <span class="ident">name</span>.<span class="ident">clone</span>(), <span class="self">self</span>.<span class="ident">input</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">parser</span>))
+                }
+            } <span class="kw">else</span> {
+                <span class="self">self</span>.<span class="ident">any_rule_so_far</span> <span class="op">=</span> <span class="bool-val">true</span>;
+                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_qualified_rule</span>(<span class="self">self</span>.<span class="ident">input</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">parser</span>);
+                <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">result</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="self">self</span>.<span class="ident">input</span>.<span class="ident">slice_from</span>(<span class="ident">start</span>.<span class="ident">position</span>()))))
             }
         }
     }
 }
 
 
-<span class='doccomment'>/// Provides an iterator for rule list parsing.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>RuleListParser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>: <span class='lifetime'>&#39;t</span>, <span class='lifetime'>&#39;t</span>: <span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;a</span>, <span class='ident'>R</span>, <span class='ident'>P</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>P</span>: <span class='ident'>QualifiedRuleParser</span><span class='op'>&lt;</span><span class='ident'>QualifiedRule</span> <span class='op'>=</span> <span class='ident'>R</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>AtRuleParser</span><span class='op'>&lt;</span><span class='ident'>AtRule</span> <span class='op'>=</span> <span class='ident'>R</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// The input given to `RuleListParser::new`</span>
-    <span class='kw'>pub</span> <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>Parser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>, <span class='lifetime'>&#39;t</span><span class='op'>&gt;</span>,
-
-    <span class='doccomment'>/// The parser given to `RuleListParser::new`</span>
-    <span class='kw'>pub</span> <span class='ident'>parser</span>: <span class='ident'>P</span>,
-
-    <span class='ident'>is_stylesheet</span>: <span class='ident'>bool</span>,
+<span class="doccomment">/// Parse a single declaration, such as an `( /* ... */ )` parenthesis in an `@supports` prelude.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_one_declaration</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>, <span class="ident">P</span>, <span class="ident">E</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>, <span class="ident">parser</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">P</span>)
+                                           <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;&lt;</span><span class="ident">P</span> <span class="kw">as</span> <span class="ident">DeclarationParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;&gt;</span>::<span class="ident">Declaration</span>,
+                                                     (<span class="ident">ParseError</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">E</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;i</span> <span class="ident">str</span>)<span class="op">&gt;</span>
+                                           <span class="kw">where</span> <span class="ident">P</span>: <span class="ident">DeclarationParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">start_position</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">position</span>();
+    <span class="ident">input</span>.<span class="ident">parse_entirely</span>(<span class="op">|</span><span class="ident">input</span><span class="op">|</span> {
+        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">expect_ident</span>()<span class="question-mark">?</span>.<span class="ident">clone</span>();
+        <span class="ident">input</span>.<span class="ident">expect_colon</span>()<span class="question-mark">?</span>;
+        <span class="ident">parser</span>.<span class="ident">parse_value</span>(<span class="ident">name</span>, <span class="ident">input</span>)
+    })
+    .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="ident">input</span>.<span class="ident">slice_from</span>(<span class="ident">start_position</span>)))
 }
 
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>: <span class='lifetime'>&#39;t</span>, <span class='lifetime'>&#39;t</span>: <span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;a</span>, <span class='ident'>R</span>, <span class='ident'>P</span><span class='op'>&gt;</span> <span class='ident'>RuleListParser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>, <span class='lifetime'>&#39;t</span>, <span class='lifetime'>&#39;a</span>, <span class='ident'>R</span>, <span class='ident'>P</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>P</span>: <span class='ident'>QualifiedRuleParser</span><span class='op'>&lt;</span><span class='ident'>QualifiedRule</span> <span class='op'>=</span> <span class='ident'>R</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>AtRuleParser</span><span class='op'>&lt;</span><span class='ident'>AtRule</span> <span class='op'>=</span> <span class='ident'>R</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Create a new `RuleListParser` for the given `input` at the top-level of a stylesheet</span>
-    <span class='doccomment'>/// and the given `parser`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The given `parser` needs to implement both `QualifiedRuleParser` and `AtRuleParser` traits.</span>
-    <span class='doccomment'>/// However, either of them can be an empty `impl`</span>
-    <span class='doccomment'>/// since the traits provide default implementations of their methods.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The return type for finished qualified rules and at-rules also needs to be the same,</span>
-    <span class='doccomment'>/// since `&lt;RuleListParser as Iterator&gt;::next` can return either.</span>
-    <span class='doccomment'>/// It could be a custom enum.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_for_stylesheet</span>(<span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>Parser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>, <span class='lifetime'>&#39;t</span><span class='op'>&gt;</span>, <span class='ident'>parser</span>: <span class='ident'>P</span>)
-                              <span class='op'>-&gt;</span> <span class='ident'>RuleListParser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>, <span class='lifetime'>&#39;t</span>, <span class='lifetime'>&#39;a</span>, <span class='ident'>R</span>, <span class='ident'>P</span><span class='op'>&gt;</span> {
-        <span class='ident'>RuleListParser</span> {
-            <span class='ident'>input</span>: <span class='ident'>input</span>,
-            <span class='ident'>parser</span>: <span class='ident'>parser</span>,
-            <span class='ident'>is_stylesheet</span>: <span class='boolvalue'>true</span>,
-        }
-    }
+<span class="doccomment">/// Parse a single rule, such as for CSSOM’s `CSSStyleSheet.insertRule`.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_one_rule</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>, <span class="ident">R</span>, <span class="ident">P</span>, <span class="ident">E</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>, <span class="ident">parser</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">P</span>)
+                                       <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">ParseError</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">E</span><span class="op">&gt;&gt;</span>
+<span class="kw">where</span> <span class="ident">P</span>: <span class="ident">QualifiedRuleParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">QualifiedRule</span> <span class="op">=</span> <span class="ident">R</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> <span class="op">+</span>
+         <span class="ident">AtRuleParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">AtRule</span> <span class="op">=</span> <span class="ident">R</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> {
+    <span class="ident">input</span>.<span class="ident">parse_entirely</span>(<span class="op">|</span><span class="ident">input</span><span class="op">|</span> {
+        <span class="ident">input</span>.<span class="ident">skip_whitespace</span>();
+        <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">state</span>();
 
-    <span class='doccomment'>/// Same is `new_for_stylesheet`, but should be used for rule lists inside a block</span>
-    <span class='doccomment'>/// such as the body of an `@media` rule.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This differs in that `&lt;!--` and `--&gt;` tokens</span>
-    <span class='doccomment'>/// should only be ignored at the stylesheet top-level.</span>
-    <span class='doccomment'>/// (This is to deal with legacy work arounds for `&lt;style&gt;` HTML element parsing.)</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_for_nested_rule</span>(<span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>Parser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>, <span class='lifetime'>&#39;t</span><span class='op'>&gt;</span>, <span class='ident'>parser</span>: <span class='ident'>P</span>)
-                               <span class='op'>-&gt;</span> <span class='ident'>RuleListParser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>, <span class='lifetime'>&#39;t</span>, <span class='lifetime'>&#39;a</span>, <span class='ident'>R</span>, <span class='ident'>P</span><span class='op'>&gt;</span> {
-        <span class='ident'>RuleListParser</span> {
-            <span class='ident'>input</span>: <span class='ident'>input</span>,
-            <span class='ident'>parser</span>: <span class='ident'>parser</span>,
-            <span class='ident'>is_stylesheet</span>: <span class='boolvalue'>false</span>,
-        }
-    }
-}
-
-
-
-<span class='doccomment'>/// `RuleListParser` is an iterator that yields `Ok(_)` for a rule or `Err(())` for an invalid one.</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>, <span class='lifetime'>&#39;t</span>, <span class='lifetime'>&#39;a</span>, <span class='ident'>R</span>, <span class='ident'>P</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>RuleListParser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;i</span>, <span class='lifetime'>&#39;t</span>, <span class='lifetime'>&#39;a</span>, <span class='ident'>R</span>, <span class='ident'>P</span><span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>P</span>: <span class='ident'>QualifiedRuleParser</span><span class='op'>&lt;</span><span class='ident'>QualifiedRule</span> <span class='op'>=</span> <span class='ident'>R</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>AtRuleParser</span><span class='op'>&lt;</span><span class='ident'>AtRule</span> <span class='op'>=</span> <span class='ident'>R</span><span class='op'>&gt;</span> {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>Range</span><span class='op'>&lt;</span><span class='ident'>SourcePosition</span><span class='op'>&gt;&gt;</span>;
-
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>Range</span><span class='op'>&lt;</span><span class='ident'>SourcePosition</span><span class='op'>&gt;&gt;</span><span class='op'>&gt;</span> {
-        <span class='kw'>loop</span> {
-            <span class='kw'>let</span> <span class='ident'>start_position</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>position</span>();
-            <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>next_including_whitespace_and_comments</span>() {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>WhiteSpace</span>(_)) <span class='op'>|</span> <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>Comment</span>(_)) <span class='op'>=&gt;</span> {}
-                <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>CDO</span>) <span class='op'>|</span> <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>CDC</span>) <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>is_stylesheet</span> <span class='op'>=&gt;</span> {}
-                <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>AtKeyword</span>(<span class='ident'>name</span>)) <span class='op'>=&gt;</span> {
-                    <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>parse_at_rule</span>(<span class='ident'>start_position</span>, <span class='ident'>name</span>, <span class='self'>self</span>.<span class='ident'>input</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>parser</span>))
-                }
-                <span class='prelude-val'>Ok</span>(_) <span class='op'>=&gt;</span> {
-                    <span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>reset</span>(<span class='ident'>start_position</span>);
-                    <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>parse_qualified_rule</span>(<span class='self'>self</span>.<span class='ident'>input</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>parser</span>)
-                                .<span class='ident'>map_err</span>(<span class='op'>|</span>()<span class='op'>|</span> <span class='ident'>start_position</span>..<span class='self'>self</span>.<span class='ident'>input</span>.<span class='ident'>position</span>()))
-                }
-                <span class='prelude-val'>Err</span>(()) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>None</span>,
+        <span class="kw">let</span> <span class="ident">at_keyword</span>;
+        <span class="kw">if</span> <span class="ident">input</span>.<span class="ident">next_byte</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="string">b&#39;@&#39;</span>) {
+            <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">input</span>.<span class="ident">next_including_whitespace_and_comments</span>()<span class="question-mark">?</span> {
+                <span class="ident">Token</span>::<span class="ident">AtKeyword</span>(<span class="kw-2">ref</span> <span class="ident">name</span>) <span class="op">=&gt;</span> <span class="ident">at_keyword</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">name</span>.<span class="ident">clone</span>()),
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">at_keyword</span> <span class="op">=</span> <span class="prelude-val">None</span>,
             }
-        }
-    }
-}
-
-
-<span class='doccomment'>/// Parse a single declaration, such as an `( /* ... */ )` parenthesis in an `@supports` prelude.</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_one_declaration</span><span class='op'>&lt;</span><span class='ident'>P</span><span class='op'>&gt;</span>(<span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>, <span class='ident'>parser</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>P</span>)
-                                <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;&lt;</span><span class='ident'>P</span> <span class='kw'>as</span> <span class='ident'>DeclarationParser</span><span class='op'>&gt;</span>::<span class='ident'>Declaration</span>,
-                                          <span class='ident'>Range</span><span class='op'>&lt;</span><span class='ident'>SourcePosition</span><span class='op'>&gt;&gt;</span>
-                                <span class='kw'>where</span> <span class='ident'>P</span>: <span class='ident'>DeclarationParser</span> {
-    <span class='kw'>let</span> <span class='ident'>start_position</span> <span class='op'>=</span> <span class='ident'>input</span>.<span class='ident'>position</span>();
-    <span class='ident'>input</span>.<span class='ident'>parse_entirely</span>(<span class='op'>|</span><span class='ident'>input</span><span class='op'>|</span> {
-        <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>input</span>.<span class='ident'>expect_ident</span>());
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>input</span>.<span class='ident'>expect_colon</span>());
-        <span class='ident'>parser</span>.<span class='ident'>parse_value</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>name</span>, <span class='ident'>input</span>)
-    }).<span class='ident'>map_err</span>(<span class='op'>|</span>()<span class='op'>|</span> <span class='ident'>start_position</span>..<span class='ident'>input</span>.<span class='ident'>position</span>())
-}
-
-
-<span class='doccomment'>/// Parse a single rule, such as for CSSOM’s `CSSStyleSheet.insertRule`.</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_one_rule</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>P</span><span class='op'>&gt;</span>(<span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>, <span class='ident'>parser</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>R</span>, ()<span class='op'>&gt;</span>
-<span class='kw'>where</span> <span class='ident'>P</span>: <span class='ident'>QualifiedRuleParser</span><span class='op'>&lt;</span><span class='ident'>QualifiedRule</span> <span class='op'>=</span> <span class='ident'>R</span><span class='op'>&gt;</span> <span class='op'>+</span> <span class='ident'>AtRuleParser</span><span class='op'>&lt;</span><span class='ident'>AtRule</span> <span class='op'>=</span> <span class='ident'>R</span><span class='op'>&gt;</span> {
-    <span class='ident'>input</span>.<span class='ident'>parse_entirely</span>(<span class='op'>|</span><span class='ident'>input</span><span class='op'>|</span> {
-        <span class='kw'>loop</span> {
-            <span class='kw'>let</span> <span class='ident'>start_position</span> <span class='op'>=</span> <span class='ident'>input</span>.<span class='ident'>position</span>();
-            <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>input</span>.<span class='ident'>next_including_whitespace_and_comments</span>()) {
-                <span class='ident'>Token</span>::<span class='ident'>WhiteSpace</span>(_) <span class='op'>|</span> <span class='ident'>Token</span>::<span class='ident'>Comment</span>(_) <span class='op'>=&gt;</span> {}
-                <span class='ident'>Token</span>::<span class='ident'>AtKeyword</span>(<span class='ident'>name</span>) <span class='op'>=&gt;</span> {
-                    <span class='kw'>return</span> <span class='ident'>parse_at_rule</span>(<span class='ident'>start_position</span>, <span class='ident'>name</span>, <span class='ident'>input</span>, <span class='ident'>parser</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
-                }
-                _ <span class='op'>=&gt;</span> {
-                    <span class='ident'>input</span>.<span class='ident'>reset</span>(<span class='ident'>start_position</span>);
-                    <span class='kw'>return</span> <span class='ident'>parse_qualified_rule</span>(<span class='ident'>input</span>, <span class='ident'>parser</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
-                }
+            <span class="comment">// FIXME: move this back inside `match` when lifetimes are non-lexical</span>
+            <span class="kw">if</span> <span class="ident">at_keyword</span>.<span class="ident">is_none</span>() {
+                <span class="ident">input</span>.<span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="ident">start</span>)
             }
+        } <span class="kw">else</span> {
+            <span class="ident">at_keyword</span> <span class="op">=</span> <span class="prelude-val">None</span>
+        }
+
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">name</span>) <span class="op">=</span> <span class="ident">at_keyword</span> {
+            <span class="ident">parse_at_rule</span>(<span class="kw-2">&amp;</span><span class="ident">start</span>, <span class="ident">name</span>, <span class="ident">input</span>, <span class="ident">parser</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="number">0</span>)
+        } <span class="kw">else</span> {
+            <span class="ident">parse_qualified_rule</span>(<span class="ident">input</span>, <span class="ident">parser</span>)
         }
     })
 }
 
-
-<span class='kw'>fn</span> <span class='ident'>parse_at_rule</span><span class='op'>&lt;</span><span class='ident'>P</span><span class='op'>&gt;</span>(<span class='ident'>start_position</span>: <span class='ident'>SourcePosition</span>, <span class='ident'>name</span>: <span class='ident'>Cow</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;</span>,
-                    <span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>, <span class='ident'>parser</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>P</span>)
-                    <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;&lt;</span><span class='ident'>P</span> <span class='kw'>as</span> <span class='ident'>AtRuleParser</span><span class='op'>&gt;</span>::<span class='ident'>AtRule</span>, <span class='ident'>Range</span><span class='op'>&lt;</span><span class='ident'>SourcePosition</span><span class='op'>&gt;&gt;</span>
-                    <span class='kw'>where</span> <span class='ident'>P</span>: <span class='ident'>AtRuleParser</span> {
-    <span class='kw'>let</span> <span class='ident'>delimiters</span> <span class='op'>=</span> <span class='ident'>Delimiter</span>::<span class='ident'>Semicolon</span> <span class='op'>|</span> <span class='ident'>Delimiter</span>::<span class='ident'>CurlyBracketBlock</span>;
-    <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>input</span>.<span class='ident'>parse_until_before</span>(<span class='ident'>delimiters</span>, <span class='op'>|</span><span class='ident'>input</span><span class='op'>|</span> {
-        <span class='ident'>parser</span>.<span class='ident'>parse_prelude</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>name</span>, <span class='ident'>input</span>)
+<span class="kw">fn</span> <span class="ident">parse_at_rule</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>: <span class="lifetime">&#39;t</span>, <span class="lifetime">&#39;t</span>, <span class="ident">P</span>, <span class="ident">E</span><span class="op">&gt;</span>(
+    <span class="ident">start</span>: <span class="kw-2">&amp;</span><span class="ident">ParserState</span>,
+    <span class="ident">name</span>: <span class="ident">CowRcStr</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;</span>,
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>,
+    <span class="ident">parser</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">P</span>,
+) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;&lt;</span><span class="ident">P</span> <span class="kw">as</span> <span class="ident">AtRuleParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;&gt;</span>::<span class="ident">AtRule</span>, (<span class="ident">ParseError</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">E</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;i</span> <span class="ident">str</span>)<span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">P</span>: <span class="ident">AtRuleParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span>
+{
+    <span class="kw">let</span> <span class="ident">location</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">current_source_location</span>();
+    <span class="kw">let</span> <span class="ident">delimiters</span> <span class="op">=</span> <span class="ident">Delimiter</span>::<span class="ident">Semicolon</span> <span class="op">|</span> <span class="ident">Delimiter</span>::<span class="ident">CurlyBracketBlock</span>;
+    <span class="comment">// FIXME: https://github.com/rust-lang/rust/issues/42508</span>
+    <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_until_before</span>::<span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">input</span>, <span class="ident">delimiters</span>, <span class="op">|</span><span class="ident">input</span><span class="op">|</span> {
+        <span class="ident">parser</span>.<span class="ident">parse_prelude</span>(<span class="ident">name</span>, <span class="ident">input</span>)
     });
-    <span class='kw'>match</span> <span class='ident'>result</span> {
-        <span class='prelude-val'>Ok</span>(<span class='ident'>AtRuleType</span>::<span class='ident'>WithoutBlock</span>(<span class='ident'>rule</span>)) <span class='op'>=&gt;</span> {
-            <span class='kw'>match</span> <span class='ident'>input</span>.<span class='ident'>next</span>() {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>Semicolon</span>) <span class='op'>|</span> <span class='prelude-val'>Err</span>(()) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>rule</span>),
-                <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>CurlyBracketBlock</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>start_position</span>..<span class='ident'>input</span>.<span class='ident'>position</span>()),
-                <span class='prelude-val'>Ok</span>(_) <span class='op'>=&gt;</span> <span class='macro'>unreachable</span><span class='macro'>!</span>()
+    <span class="kw">match</span> <span class="ident">result</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">AtRuleType</span>::<span class="ident">WithoutBlock</span>(<span class="ident">prelude</span>)) <span class="op">=&gt;</span> {
+            <span class="kw">match</span> <span class="ident">input</span>.<span class="ident">next</span>() {
+                <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="ident">Token</span>::<span class="ident">Semicolon</span>) <span class="op">|</span> <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">parser</span>.<span class="ident">rule_without_block</span>(<span class="ident">prelude</span>, <span class="ident">location</span>)),
+                <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="ident">Token</span>::<span class="ident">CurlyBracketBlock</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>((
+                    <span class="ident">input</span>.<span class="ident">new_unexpected_token_error</span>(<span class="ident">Token</span>::<span class="ident">CurlyBracketBlock</span>),
+                    <span class="ident">input</span>.<span class="ident">slice_from</span>(<span class="ident">start</span>.<span class="ident">position</span>()),
+                )),
+                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>()
             }
         }
-        <span class='prelude-val'>Ok</span>(<span class='ident'>AtRuleType</span>::<span class='ident'>WithBlock</span>(<span class='ident'>prelude</span>)) <span class='op'>=&gt;</span> {
-            <span class='kw'>match</span> <span class='ident'>input</span>.<span class='ident'>next</span>() {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>CurlyBracketBlock</span>) <span class='op'>=&gt;</span> {
-                    <span class='ident'>input</span>.<span class='ident'>parse_nested_block</span>(<span class='kw'>move</span> <span class='op'>|</span><span class='ident'>input</span><span class='op'>|</span> <span class='ident'>parser</span>.<span class='ident'>parse_block</span>(<span class='ident'>prelude</span>, <span class='ident'>input</span>))
-                    .<span class='ident'>map_err</span>(<span class='op'>|</span>()<span class='op'>|</span> <span class='ident'>start_position</span>..<span class='ident'>input</span>.<span class='ident'>position</span>())
+        <span class="prelude-val">Ok</span>(<span class="ident">AtRuleType</span>::<span class="ident">WithBlock</span>(<span class="ident">prelude</span>)) <span class="op">=&gt;</span> {
+            <span class="kw">match</span> <span class="ident">input</span>.<span class="ident">next</span>() {
+                <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="ident">Token</span>::<span class="ident">CurlyBracketBlock</span>) <span class="op">=&gt;</span> {
+                    <span class="comment">// FIXME: https://github.com/rust-lang/rust/issues/42508</span>
+                    <span class="ident">parse_nested_block</span>::<span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(
+                        <span class="ident">input</span>,
+                        <span class="kw">move</span> <span class="op">|</span><span class="ident">input</span><span class="op">|</span> <span class="ident">parser</span>.<span class="ident">parse_block</span>(<span class="ident">prelude</span>, <span class="ident">location</span>, <span class="ident">input</span>)
+                    ).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="ident">input</span>.<span class="ident">slice_from</span>(<span class="ident">start</span>.<span class="ident">position</span>())))
                 }
-                <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>Semicolon</span>) <span class='op'>|</span> <span class='prelude-val'>Err</span>(()) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>start_position</span>..<span class='ident'>input</span>.<span class='ident'>position</span>()),
-                <span class='prelude-val'>Ok</span>(_) <span class='op'>=&gt;</span> <span class='macro'>unreachable</span><span class='macro'>!</span>()
+                <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="ident">Token</span>::<span class="ident">Semicolon</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>((
+                    <span class="ident">input</span>.<span class="ident">new_unexpected_token_error</span>(<span class="ident">Token</span>::<span class="ident">Semicolon</span>),
+                    <span class="ident">input</span>.<span class="ident">slice_from</span>(<span class="ident">start</span>.<span class="ident">position</span>()),
+                )),
+                <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>((<span class="ident">e</span>.<span class="ident">into</span>(), <span class="ident">input</span>.<span class="ident">slice_from</span>(<span class="ident">start</span>.<span class="ident">position</span>()))),
+                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>()
             }
         }
-        <span class='prelude-val'>Ok</span>(<span class='ident'>AtRuleType</span>::<span class='ident'>OptionalBlock</span>(<span class='ident'>prelude</span>)) <span class='op'>=&gt;</span> {
-            <span class='kw'>match</span> <span class='ident'>input</span>.<span class='ident'>next</span>() {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>Semicolon</span>) <span class='op'>|</span> <span class='prelude-val'>Err</span>(()) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>parser</span>.<span class='ident'>rule_without_block</span>(<span class='ident'>prelude</span>)),
-                <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>CurlyBracketBlock</span>) <span class='op'>=&gt;</span> {
-                    <span class='ident'>input</span>.<span class='ident'>parse_nested_block</span>(<span class='kw'>move</span> <span class='op'>|</span><span class='ident'>input</span><span class='op'>|</span> <span class='ident'>parser</span>.<span class='ident'>parse_block</span>(<span class='ident'>prelude</span>, <span class='ident'>input</span>))
-                    .<span class='ident'>map_err</span>(<span class='op'>|</span>()<span class='op'>|</span> <span class='ident'>start_position</span>..<span class='ident'>input</span>.<span class='ident'>position</span>())
-                }
-                _ <span class='op'>=&gt;</span> <span class='macro'>unreachable</span><span class='macro'>!</span>()
-            }
-        }
-        <span class='prelude-val'>Err</span>(()) <span class='op'>=&gt;</span> {
-            <span class='kw'>let</span> <span class='ident'>end_position</span> <span class='op'>=</span> <span class='ident'>input</span>.<span class='ident'>position</span>();
-            <span class='kw'>match</span> <span class='ident'>input</span>.<span class='ident'>next</span>() {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>CurlyBracketBlock</span>) <span class='op'>|</span> <span class='prelude-val'>Ok</span>(<span class='ident'>Token</span>::<span class='ident'>Semicolon</span>) <span class='op'>|</span> <span class='prelude-val'>Err</span>(()) <span class='op'>=&gt;</span> {}
-                _ <span class='op'>=&gt;</span> <span class='macro'>unreachable</span><span class='macro'>!</span>()
-            }
-            <span class='prelude-val'>Err</span>(<span class='ident'>start_position</span>..<span class='ident'>end_position</span>)
+        <span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> {
+            <span class="kw">let</span> <span class="ident">end_position</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">position</span>();
+            <span class="kw">match</span> <span class="ident">input</span>.<span class="ident">next</span>() {
+                <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="ident">Token</span>::<span class="ident">CurlyBracketBlock</span>) <span class="op">|</span> <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;</span><span class="ident">Token</span>::<span class="ident">Semicolon</span>) <span class="op">|</span> <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {},
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>()
+            };
+            <span class="prelude-val">Err</span>((<span class="ident">error</span>, <span class="ident">input</span>.<span class="ident">slice</span>(<span class="ident">start</span>.<span class="ident">position</span>()..<span class="ident">end_position</span>)))
         }
     }
 }
 
 
-<span class='kw'>fn</span> <span class='ident'>parse_qualified_rule</span><span class='op'>&lt;</span><span class='ident'>P</span><span class='op'>&gt;</span>(<span class='ident'>input</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parser</span>, <span class='ident'>parser</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>P</span>)
-                           <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;&lt;</span><span class='ident'>P</span> <span class='kw'>as</span> <span class='ident'>QualifiedRuleParser</span><span class='op'>&gt;</span>::<span class='ident'>QualifiedRule</span>, ()<span class='op'>&gt;</span>
-                           <span class='kw'>where</span> <span class='ident'>P</span>: <span class='ident'>QualifiedRuleParser</span> {
-    <span class='kw'>let</span> <span class='ident'>prelude</span> <span class='op'>=</span> <span class='ident'>input</span>.<span class='ident'>parse_until_before</span>(<span class='ident'>Delimiter</span>::<span class='ident'>CurlyBracketBlock</span>, <span class='op'>|</span><span class='ident'>input</span><span class='op'>|</span> {
-        <span class='ident'>parser</span>.<span class='ident'>parse_prelude</span>(<span class='ident'>input</span>)
+<span class="kw">fn</span> <span class="ident">parse_qualified_rule</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>, <span class="ident">P</span>, <span class="ident">E</span><span class="op">&gt;</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span><span class="op">&gt;</span>,
+    <span class="ident">parser</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">P</span>,
+) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;&lt;</span><span class="ident">P</span> <span class="kw">as</span> <span class="ident">QualifiedRuleParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span><span class="op">&gt;&gt;</span>::<span class="ident">QualifiedRule</span>, <span class="ident">ParseError</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">E</span><span class="op">&gt;&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">P</span>: <span class="ident">QualifiedRuleParser</span><span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span>
+{
+    <span class="kw">let</span> <span class="ident">location</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">current_source_location</span>();
+    <span class="comment">// FIXME: https://github.com/rust-lang/rust/issues/42508</span>
+    <span class="kw">let</span> <span class="ident">prelude</span> <span class="op">=</span> <span class="ident">parse_until_before</span>::<span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">input</span>, <span class="ident">Delimiter</span>::<span class="ident">CurlyBracketBlock</span>, <span class="op">|</span><span class="ident">input</span><span class="op">|</span> {
+        <span class="ident">parser</span>.<span class="ident">parse_prelude</span>(<span class="ident">input</span>)
     });
-    <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>input</span>.<span class='ident'>next</span>()) {
-        <span class='ident'>Token</span>::<span class='ident'>CurlyBracketBlock</span> <span class='op'>=&gt;</span> {
-            <span class='comment'>// Do this here so that we consume the `{` even if the prelude is `Err`.</span>
-            <span class='kw'>let</span> <span class='ident'>prelude</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>prelude</span>);
-            <span class='ident'>input</span>.<span class='ident'>parse_nested_block</span>(<span class='kw'>move</span> <span class='op'>|</span><span class='ident'>input</span><span class='op'>|</span> <span class='ident'>parser</span>.<span class='ident'>parse_block</span>(<span class='ident'>prelude</span>, <span class='ident'>input</span>))
+    <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">input</span>.<span class="ident">next</span>()<span class="question-mark">?</span> {
+        <span class="ident">Token</span>::<span class="ident">CurlyBracketBlock</span> <span class="op">=&gt;</span> {
+            <span class="comment">// Do this here so that we consume the `{` even if the prelude is `Err`.</span>
+            <span class="kw">let</span> <span class="ident">prelude</span> <span class="op">=</span> <span class="ident">prelude</span><span class="question-mark">?</span>;
+            <span class="comment">// FIXME: https://github.com/rust-lang/rust/issues/42508</span>
+            <span class="ident">parse_nested_block</span>::<span class="op">&lt;</span><span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;t</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(
+                <span class="ident">input</span>,
+                <span class="kw">move</span> <span class="op">|</span><span class="ident">input</span><span class="op">|</span> <span class="ident">parser</span>.<span class="ident">parse_block</span>(<span class="ident">prelude</span>, <span class="ident">location</span>, <span class="ident">input</span>),
+            )
         }
-        _ <span class='op'>=&gt;</span> <span class='macro'>unreachable</span><span class='macro'>!</span>()
+        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>()
     }
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt>?</dt>
-                    <dd>Show this help dialog</dd>
-                    <dt>S</dt>
-                    <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
-                    <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
-                    <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
-                    <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "cssparser";
-        window.playgroundUrl = "";
-    </script>
-    <script src="../../jquery.js"></script>
-    <script src="../../main.js"></script>
-    
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "cssparser";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
